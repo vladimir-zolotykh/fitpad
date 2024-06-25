@@ -6,20 +6,9 @@ from functools import partial
 import tkinter as tk
 
 
-class ExerBox2(tk.Frame):
-    def __init__(self, parent, exer_name, exer_row):
-        super(ExerBox2, self).__init__(parent)
-        self.grid(column=0, row=0, sticky=tk.EW)
-        tk.Label(self, text=exer_name).grid(column=0, row=0, columnspan=2)
-        tk.Entry(self, width=5).grid(column=0, row=1)
-        tk.Entry(self, width=5).grid(column=1, row=1)
-        tk.Button(self, text='Add set', command=None).grid(
-            column=0, row=2, columnspan=2)
-
-
 class ExerBox(tk.Frame):
     def __init__(self, parent, exer_name, exer_row):
-        self(ExerBox, self).__init__(parent)
+        super(ExerBox, self).__init__(parent)
         self.grid(column=0, row=0, sticky=tk.EW)
         tk.Label(self, text=exer_name).grid(column=0, row=0, columnspan=2)
         tk.Entry(self, width=5).grid(column=0, row=1)
@@ -52,8 +41,7 @@ class Workout(tk.Tk):
             add_exer_menu.add_command(label=exer_name, command=_add_exer)
 
     def add_exer(self, exer_box, exer_name, exer_row):
-        ExerBox2(exer_box, exer_name, exer_row)
-        # ExerBox(exer_box, exer_name, exer_row)
+        ExerBox(exer_box, exer_name, exer_row)
 
 
 if __name__ == '__main__':
