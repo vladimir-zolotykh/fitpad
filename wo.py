@@ -6,15 +6,38 @@ from functools import partial
 import tkinter as tk
 
 
-class ExerBox(tk.Frame):
-    def __init__(self, parent, exer_name, exer_row):
-        super(ExerBox, self).__init__(parent)
-        self.grid(column=0, row=0, sticky=tk.EW)
-        tk.Label(self, text=exer_name).grid(column=0, row=0, columnspan=2)
+class ExerTk(tk.Frame):
+    """Make tk widgets representing an exercise"""
+
+    def __init__(self, parent, name: str, row: int):
+        super(ExerTk, self).__init__(parent)
+        self.grid(column=0, row=row, sticky=tk.EW)
+        tk.Label(self, text=name).grid(column=0, row=0, columnspan=2)
         tk.Entry(self, width=5).grid(column=0, row=1)
         tk.Entry(self, width=5).grid(column=1, row=1)
         tk.Button(self, text='Add set', command=None).grid(
             column=0, row=2, columnspan=2)
+
+
+class ExerDir(dict):
+    """A dict of Workout exercises
+
+    Dict[str, ExerTk]
+    """
+
+    def __init__(self, frame: tk.Frame):
+        super().__init__()
+        self.frame: tk.Frame = frame
+        self.row: int = 0
+
+    def add_exer(self, name: str):
+        self[name] = ExerTk(self.frame, name, self.row)
+        self.row += 1
+
+    def del_exer(self, name: str):
+        exertk = self[name]
+        exertk.destroy()
+        self.row -= 1
 
 
 class Workout(tk.Tk):
@@ -32,16 +55,14 @@ class Workout(tk.Tk):
         self.exer_dir: Dict[str, Any] = {
             'squat': None, 'bench press': Any, 'deadlift': Any
         }
-        exer_box = tk.Frame(self)
-        exer_box.grid(column=0, row=0, sticky=tk.NSEW)
+        frame = tk.Frame(self)
+        frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        for exer_name in self.exer_dir:
-            _add_exer = partial(self.add_exer, exer_box, exer_name, 0)
-            add_exer_menu.add_command(label=exer_name, command=_add_exer)
-
-    def add_exer(self, exer_box, exer_name, exer_row):
-        ExerBox(exer_box, exer_name, exer_row)
+        dir = ExerDir(frame)
+        for name in self.exer_dir:
+            _add_exer = partial(dir.add_exer, name)
+            add_exer_menu.add_command(label=name, command=_add_exer)
 
 
 if __name__ == '__main__':
