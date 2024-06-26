@@ -19,7 +19,7 @@ class ExerTk(tk.Frame):
             column=0, row=2, columnspan=2)
 
 
-class ExerDir(dict):
+class ExerDir(Dict[str, ExerTk]):
     """A dict of Workout exercises
 
     Dict[str, ExerTk]
