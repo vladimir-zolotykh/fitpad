@@ -20,8 +20,15 @@ class ExerTk(tk.Frame):
         tk.Label(self, text=name).grid(column=0, row=0, columnspan=NCOL)
         for c, w in enumerate((2, 10, 2)):
             tk.Entry(self, width=w).grid(column=c, row=1)
-        tk.Button(self, text='Add set', command=None).grid(
-            column=0, row=2, columnspan=NCOL)
+        mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
+        mb.grid(column=0, row=2, columnspan=NCOL)
+        mb.menu = tk.Menu(mb, tearoff=0)
+        mb['menu'] = mb.menu
+        mb.menu.add_command(label='Move up')
+        mb.menu.add_command(label='Move down')
+        mb.menu.add_command(label='Remove')
+        mb.menu.add_command(label='Add set')
+        mb.menu.add_command(label='Edit sets')
 
 
 class ExerDir(Dict[str, ExerTk]):
