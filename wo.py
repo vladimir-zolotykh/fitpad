@@ -11,15 +11,17 @@ class ExerTk(tk.Frame):
 
     def __init__(self, parent, name: str, row: int):
         super(ExerTk, self).__init__(parent)
+        self.config(bd=2, relief=tk.RIDGE)
         self.columnconfigure(0, weight=1)
         self.grid(column=0, row=row, sticky=tk.EW)
-        for c in range(2):
+        NCOL = 3
+        for c in range(NCOL):
             self.columnconfigure(c, weight=1)
-        tk.Label(self, text=name).grid(column=0, row=0, columnspan=2)
-        tk.Entry(self, width=5).grid(column=0, row=1)
-        tk.Entry(self, width=5).grid(column=1, row=1)
+        tk.Label(self, text=name).grid(column=0, row=0, columnspan=NCOL)
+        for c, w in enumerate((2, 10, 2)):
+            tk.Entry(self, width=w).grid(column=c, row=1)
         tk.Button(self, text='Add set', command=None).grid(
-            column=0, row=2, columnspan=2)
+            column=0, row=2, columnspan=NCOL)
 
 
 class ExerDir(Dict[str, ExerTk]):
