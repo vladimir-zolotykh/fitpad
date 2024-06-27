@@ -11,7 +11,10 @@ class ExerTk(tk.Frame):
 
     def __init__(self, parent, name: str, row: int):
         super(ExerTk, self).__init__(parent)
+        self.columnconfigure(0, weight=1)
         self.grid(column=0, row=row, sticky=tk.EW)
+        for c in range(2):
+            self.columnconfigure(c, weight=1)
         tk.Label(self, text=name).grid(column=0, row=0, columnspan=2)
         tk.Entry(self, width=5).grid(column=0, row=1)
         tk.Entry(self, width=5).grid(column=1, row=1)
@@ -60,6 +63,7 @@ class Workout(tk.Tk):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         dir = ExerDir(frame)
+        frame.columnconfigure(0, weight=1)
         for name in self.exer_dir:
             _add_exer = partial(dir.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
