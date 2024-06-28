@@ -14,10 +14,11 @@ class ExerTk(tk.Frame):
 
     def __init__(self, parent, name: str, row: int):
         super(ExerTk, self).__init__(parent)
+        self.grid(column=0, row=row, sticky=tk.EW)
         self.name = name
+        self.last_set: int = 1
         self.config(bd=2, relief=tk.RIDGE)
         self.columnconfigure(0, weight=1)
-        self.grid(column=0, row=row, sticky=tk.EW)
         for c in range(self.NUM_COLUMNS):
             self.columnconfigure(c, weight=1)
         tk.Label(self, text=name).grid(
@@ -27,7 +28,7 @@ class ExerTk(tk.Frame):
         mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
         mb.menu = tk.Menu(mb, tearoff=0)
         mb['menu'] = mb.menu
-        mb.menu.add_command(label='Add set')
+        mb.menu.add_command(label='Add set', command=self.add_set)
         mb.menu.add_command(label='Move up')
         mb.menu.add_command(label='Move down')
         mb.menu.add_command(label='Remove')
@@ -35,7 +36,8 @@ class ExerTk(tk.Frame):
 
     def add_set(self):
         for c, w in enumerate(self.COL_WIDTH.values()):
-            tk.Entry(self, width=w).grid(column=c, row=1)
+            tk.Entry(self, width=w).grid(column=c, row=self.last_set)
+        self.last_set += 1
 
 
 class ExerDir(Dict[str, ExerTk]):
@@ -77,9 +79,8 @@ class Workout(tk.Tk):
         frame = tk.Frame(self)
         frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
-        dir = ExerDir(frame)
         frame.columnconfigure(0, weight=1)
+        dir = ExerDir(frame)
         for name in self.exer_dir:
             _add_exer = partial(dir.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
