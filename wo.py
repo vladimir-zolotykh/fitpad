@@ -9,26 +9,33 @@ import tkinter as tk
 class ExerTk(tk.Frame):
     """Make tk widgets representing an exercise"""
 
+    NUM_COLUMNS = 3
+    COL_WIDTH = {'set_no': 2, 'weight': 10, 'reps': 3}
+
     def __init__(self, parent, name: str, row: int):
         super(ExerTk, self).__init__(parent)
+        self.name = name
         self.config(bd=2, relief=tk.RIDGE)
         self.columnconfigure(0, weight=1)
         self.grid(column=0, row=row, sticky=tk.EW)
-        NCOL = 3
-        for c in range(NCOL):
+        for c in range(self.NUM_COLUMNS):
             self.columnconfigure(c, weight=1)
-        tk.Label(self, text=name).grid(column=0, row=0, columnspan=NCOL)
-        for c, w in enumerate((2, 10, 2)):
-            tk.Entry(self, width=w).grid(column=c, row=1)
+        tk.Label(self, text=name).grid(
+            column=0, row=0, columnspan=self.NUM_COLUMNS)
+        self.add_set()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
-        mb.grid(column=0, row=2, columnspan=NCOL)
+        mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
         mb.menu = tk.Menu(mb, tearoff=0)
         mb['menu'] = mb.menu
+        mb.menu.add_command(label='Add set')
         mb.menu.add_command(label='Move up')
         mb.menu.add_command(label='Move down')
         mb.menu.add_command(label='Remove')
-        mb.menu.add_command(label='Add set')
         mb.menu.add_command(label='Edit sets')
+
+    def add_set(self):
+        for c, w in enumerate(self.COL_WIDTH.values()):
+            tk.Entry(self, width=w).grid(column=c, row=1)
 
 
 class ExerDir(Dict[str, ExerTk]):
