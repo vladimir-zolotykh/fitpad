@@ -35,8 +35,14 @@ class ExerTk(tk.Frame):
         mb.menu.add_command(label='Edit sets')
 
     def add_set(self):
+        set_no = {}
         for c, w in enumerate(self.COL_WIDTH.values()):
-            tk.Entry(self, width=w).grid(column=c, row=self.last_set)
+            set_no[c] = tk.StringVar()
+            e = tk.Entry(self, width=w)
+            e.grid(column=c, row=self.last_set)
+            if c == 0:
+                e.config(textvariable=set_no[c])
+                set_no[c].set('1')
         self.last_set += 1
 
 
