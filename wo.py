@@ -35,11 +35,9 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Remove')
         mb_menu.add_command(label='Edit sets')
 
-    def add_set2(self):
-        num_rows = self.grid_size()[1]
-        print(f'add_set0 {num_rows = }')         # num_rows = 3
-        mb = self.grid_slaves(row=num_rows-1)[0]  # menu button
-        last_set_row = num_rows - 1
+    def _grid_add_set_fields(self, last_set_row=None):
+        if last_set_row is None:
+            last_set_row = self.last_set
         set_no = self.set_no
         for c, w in enumerate(self.COL_WIDTH.values()):
             set_no[c] = tk.StringVar()
@@ -48,19 +46,35 @@ class ExerTk(tk.Frame):
             if c == 0:
                 e.config(textvariable=set_no[c])
                 set_no[c].set('1')
+
+    def add_set2(self):
+        num_rows = self.grid_size()[1]
+        # 3 <= num_rows
+        mb = self.grid_slaves(row=num_rows-1)[0]  # menu button
+        last_set_row = num_rows - 1
+        self._grid_add_set_fields(last_set_row)
+        # set_no = self.set_no
+        # for c, w in enumerate(self.COL_WIDTH.values()):
+        #     set_no[c] = tk.StringVar()
+        #     e = tk.Entry(self, width=w)
+        #     e.grid(column=c, row=last_set_row)
+        #     if c == 0:
+        #         e.config(textvariable=set_no[c])
+        #         set_no[c].set('1')
         mb.grid(column=0, row=last_set_row + 1, columnspan=self.NUM_COLUMNS)
 
     def add_set0(self):
         num_rows = self.grid_size()[1]
-        print(f'add_set0 {num_rows = }')  # num_rows = 1
-        set_no = self.set_no
-        for c, w in enumerate(self.COL_WIDTH.values()):
-            set_no[c] = tk.StringVar()
-            e = tk.Entry(self, width=w)
-            e.grid(column=c, row=self.last_set)
-            if c == 0:
-                e.config(textvariable=set_no[c])
-                set_no[c].set('1')
+        # num_rows == 1
+        self._grid_add_set_fields()
+        # set_no = self.set_no
+        # for c, w in enumerate(self.COL_WIDTH.values()):
+        #     set_no[c] = tk.StringVar()
+        #     e = tk.Entry(self, width=w)
+        #     e.grid(column=c, row=self.last_set)
+        #     if c == 0:
+        #         e.config(textvariable=set_no[c])
+        #         set_no[c].set('1')
         self.last_set += 1
 
 
