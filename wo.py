@@ -28,14 +28,26 @@ class ExerTk(tk.Frame):
         mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
         mb.menu = tk.Menu(mb, tearoff=0)
         mb['menu'] = mb.menu
-        mb.menu.add_command(label='Add set', command=self.add_set0)
+        mb.menu.add_command(label='Add set', command=self.add_set2)
         mb.menu.add_command(label='Move up')
         mb.menu.add_command(label='Move down')
         mb.menu.add_command(label='Remove')
         mb.menu.add_command(label='Edit sets')
 
+    def add_set2(self):
+        num_rows = self.grid_size()[1]
+        mb = self.grid_slaves(row=num_rows-1)[0]
+        # print(f'{mb.config() = }')
+        # mb.grid_forget()        # appeared not necessary
+        row = num_rows - 1
+        for c, w in enumerate(self.COL_WIDTH.values()):
+            e = tk.Entry(self, width=w)
+            e.grid(column=c, row=row)
+        row = row + 1
+        mb.grid(column=0, row=row, columnspan=self.NUM_COLUMNS)
+
     def add_set0(self):
-        set_no = {}
+        set_no: Dict[str, tk.StringVar] = {}
         for c, w in enumerate(self.COL_WIDTH.values()):
             set_no[c] = tk.StringVar()
             e = tk.Entry(self, width=w)
