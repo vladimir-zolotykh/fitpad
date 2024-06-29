@@ -37,22 +37,22 @@ class ExerTk(tk.Frame):
 
     def add_set2(self):
         num_rows = self.grid_size()[1]
+        print(f'add_set0 {num_rows = }')         # num_rows = 3
         mb = self.grid_slaves(row=num_rows-1)[0]  # menu button
-        # print(f'{mb.config() = }')
-        # mb.grid_forget()        # appeared not necessary
-        row = num_rows - 1
+        last_set_row = num_rows - 1
         set_no = self.set_no
         for c, w in enumerate(self.COL_WIDTH.values()):
             set_no[c] = tk.StringVar()
             e = tk.Entry(self, width=w)
-            e.grid(column=c, row=row)
+            e.grid(column=c, row=last_set_row)
             if c == 0:
                 e.config(textvariable=set_no[c])
                 set_no[c].set('1')
-        # row = row + 1
-        mb.grid(column=0, row=row + 1, columnspan=self.NUM_COLUMNS)
+        mb.grid(column=0, row=last_set_row + 1, columnspan=self.NUM_COLUMNS)
 
     def add_set0(self):
+        num_rows = self.grid_size()[1]
+        print(f'add_set0 {num_rows = }')  # num_rows = 1
         set_no = self.set_no
         for c, w in enumerate(self.COL_WIDTH.values()):
             set_no[c] = tk.StringVar()
