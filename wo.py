@@ -36,6 +36,8 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Edit sets')
 
     def _grid_add_set_fields(self, last_set_row=None):
+        if last_set_row is None:
+            last_set_row = self.last_set
         set_no = self.set_no
         for c, w in enumerate(self.COL_WIDTH.values()):
             set_no[c] = tk.StringVar()
@@ -43,7 +45,7 @@ class ExerTk(tk.Frame):
             e.grid(column=c, row=last_set_row)
             if c == 0:
                 e.config(textvariable=set_no[c])
-                set_no[c].set('1')
+                set_no[c].set(str(last_set_row))
 
     def add_set2(self):
         num_rows = self.grid_size()[1]
