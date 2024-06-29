@@ -23,18 +23,18 @@ class ExerTk(tk.Frame):
             self.columnconfigure(c, weight=1)
         tk.Label(self, text=name).grid(
             column=0, row=0, columnspan=self.NUM_COLUMNS)
-        self.add_set()
+        self.add_set0()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
         mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
         mb.menu = tk.Menu(mb, tearoff=0)
         mb['menu'] = mb.menu
-        mb.menu.add_command(label='Add set', command=self.add_set)
+        mb.menu.add_command(label='Add set', command=self.add_set0)
         mb.menu.add_command(label='Move up')
         mb.menu.add_command(label='Move down')
         mb.menu.add_command(label='Remove')
         mb.menu.add_command(label='Edit sets')
 
-    def add_set(self):
+    def add_set0(self):
         set_no = {}
         for c, w in enumerate(self.COL_WIDTH.values()):
             set_no[c] = tk.StringVar()
