@@ -17,6 +17,7 @@ class ExerTk(tk.Frame):
         self.grid(column=0, row=row, sticky=tk.EW)
         self.name = name
         self.last_set: int = 1
+        self.set_no: Dict[int, tk.StringVar] = {}
         self.config(bd=2, relief=tk.RIDGE)
         self.columnconfigure(0, weight=1)
         for c in range(self.NUM_COLUMNS):
@@ -26,28 +27,33 @@ class ExerTk(tk.Frame):
         self.add_set0()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
         mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
-        mb.menu = tk.Menu(mb, tearoff=0)
-        mb['menu'] = mb.menu
-        mb.menu.add_command(label='Add set', command=self.add_set2)
-        mb.menu.add_command(label='Move up')
-        mb.menu.add_command(label='Move down')
-        mb.menu.add_command(label='Remove')
-        mb.menu.add_command(label='Edit sets')
+        mb_menu = tk.Menu(mb, tearoff=0)
+        mb['menu'] = mb_menu
+        mb_menu.add_command(label='Add set', command=self.add_set2)
+        mb_menu.add_command(label='Move up')
+        mb_menu.add_command(label='Move down')
+        mb_menu.add_command(label='Remove')
+        mb_menu.add_command(label='Edit sets')
 
     def add_set2(self):
         num_rows = self.grid_size()[1]
-        mb = self.grid_slaves(row=num_rows-1)[0]
+        mb = self.grid_slaves(row=num_rows-1)[0]  # menu button
         # print(f'{mb.config() = }')
         # mb.grid_forget()        # appeared not necessary
         row = num_rows - 1
+        set_no = self.set_no
         for c, w in enumerate(self.COL_WIDTH.values()):
+            set_no[c] = tk.StringVar()
             e = tk.Entry(self, width=w)
             e.grid(column=c, row=row)
-        row = row + 1
-        mb.grid(column=0, row=row, columnspan=self.NUM_COLUMNS)
+            if c == 0:
+                e.config(textvariable=set_no[c])
+                set_no[c].set('1')
+        # row = row + 1
+        mb.grid(column=0, row=row + 1, columnspan=self.NUM_COLUMNS)
 
     def add_set0(self):
-        set_no: Dict[str, tk.StringVar] = {}
+        set_no = self.set_no
         for c, w in enumerate(self.COL_WIDTH.values()):
             set_no[c] = tk.StringVar()
             e = tk.Entry(self, width=w)
