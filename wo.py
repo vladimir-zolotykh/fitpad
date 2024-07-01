@@ -36,24 +36,26 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
 
     def edit_sets(self):
-        def _set_no(row: List[tk.Entry]) -> int:
+        def get_column(widgets: List[tk.Widget], col: int) -> str:
+            for w in widgets:
+                if isinstance(w, tk.Entry):
+                    if w.grid_info()['column'] == 0:
+                        return w.get()
+            assert False
+
+        def get_set_no(row: List[tk.Widget]) -> str:
             for w in row:
-                if w.grid_info()['column'] == 0:  # `set_no` Entry
-                    return w.get()
+                if isinstance(w, tk.Entry):
+                    if w.grid_info()['column'] == 0:  # `set_no` Entry
+                        return w.get()
             assert False
 
         _, num_rows = self.grid_size()
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
-            key=_set_no)
+            key=get_set_no)
         for row in sets_sorted:
-            print(f'{_set_no(row) = }')
-        # print(f'{sets_sorted = }')
-
-        # num_cols, num_rows = self.grid_size()
-        # for row in range(1, num_rows - 1):
-        #     set_no_entry = self.grid_slaves(column=0, row=row)[0]
-        #     print(f'{set_no_entry.get() = }')
+            print(get_column(row, 0))
 
     def _add_set_row(self, last_set_row=None):
         """Grid a set's widgets
