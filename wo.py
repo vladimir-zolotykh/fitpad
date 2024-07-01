@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict, Any
+from typing import Dict, Any, List
 from functools import partial
 import tkinter as tk
 
@@ -36,17 +36,24 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
 
     def edit_sets(self):
-        num_cols, num_rows = self.grid_size()
-        # sets_sorted = sorted(
-        #     [self.grid_slaves(row=row) for row in range(1, num_rows)],
-        #     key=lambda r: int(r[0].get()))
+        def _set_no(row: List[tk.Entry]) -> int:
+            for w in row:
+                if w.grid_info()['column'] == 0:  # `set_no` Entry
+                    return w.get()
+            assert False
+
+        _, num_rows = self.grid_size()
+        sets_sorted = sorted(
+            [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
+            key=_set_no)
+        for row in sets_sorted:
+            print(f'{_set_no(row) = }')
         # print(f'{sets_sorted = }')
-        for row in range(1, num_rows - 1):
-            # grid_row = self.grid_slaves(row=row)
-            # w = grid_row[0]
-            print(f'{self.set_no[row].get() = }')
-            # for w in grid_row:
-            #     print(f'{w.grid_info() = }')
+
+        # num_cols, num_rows = self.grid_size()
+        # for row in range(1, num_rows - 1):
+        #     set_no_entry = self.grid_slaves(column=0, row=row)[0]
+        #     print(f'{set_no_entry.get() = }')
 
     def _add_set_row(self, last_set_row=None):
         """Grid a set's widgets
