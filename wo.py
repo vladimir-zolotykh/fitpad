@@ -56,18 +56,14 @@ class ExerTk(tk.Frame):
         """
         if last_set_row is None:
             last_set_row = self.last_set
-        # set_no = self.set_no
         var = tk.StringVar()
         var.set(str(last_set_row))
         self.set_no[last_set_row] = var
         for c, w in enumerate(self.COL_WIDTH.values()):
-            # set_no[c] = tk.StringVar()
             e = tk.Entry(self, width=w)
             e.grid(column=c, row=last_set_row)
             if c == 0:
-                # e.config(textvariable=set_no[c])
                 e.config(textvariable=var)
-                # set_no[c].set(str(last_set_row))
 
     def add_set2(self):
         num_rows = self.grid_size()[1]
