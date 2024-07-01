@@ -45,11 +45,6 @@ class ExerTk(tk.Frame):
 
         def get_set_no(row: List[tk.Widget]) -> str:
             return get_column(row, 0)
-            # for w in row:
-            #     if isinstance(w, tk.Entry):
-            #         if w.grid_info()['column'] == 0:  # `set_no` Entry
-            #             return w.get()
-            # assert False
 
         _, num_rows = self.grid_size()
         sets_sorted = sorted(
