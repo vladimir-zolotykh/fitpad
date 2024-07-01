@@ -48,7 +48,7 @@ class ExerTk(tk.Frame):
             # for w in grid_row:
             #     print(f'{w.grid_info() = }')
 
-    def _grid_add_set_fields(self, last_set_row=None):
+    def _add_set_row(self, last_set_row=None):
         if last_set_row is None:
             last_set_row = self.last_set
         set_no = self.set_no
@@ -65,12 +65,12 @@ class ExerTk(tk.Frame):
         # 3 <= num_rows
         mb = self.grid_slaves(row=num_rows-1)[0]  # menu button
         last_set_row = num_rows - 1
-        self._grid_add_set_fields(last_set_row)
+        self._add_set_row(last_set_row)
         mb.grid(column=0, row=last_set_row + 1, columnspan=self.NUM_COLUMNS)
 
     def add_set0(self):
         # self.grid_size()[1] == 1
-        self._grid_add_set_fields(self.last_set)
+        self._add_set_row(self.last_set)
         self.last_set += 1
 
 
