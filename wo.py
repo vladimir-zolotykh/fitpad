@@ -36,11 +36,11 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
 
     def edit_sets(self):
-        def get_column(widgets: List[tk.Widget], column: int = 0) -> str:
+        def get_column(widgets: List[tk.Widget], column: int = 0) -> int:
             for w in widgets:
                 if isinstance(w, tk.Entry):
                     if w.grid_info()['column'] == column:
-                        return w.get()
+                        return int(w.get())
             assert False
 
         get_set_no = partial(get_column, column=0)
