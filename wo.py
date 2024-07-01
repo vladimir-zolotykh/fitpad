@@ -42,23 +42,32 @@ class ExerTk(tk.Frame):
         #     key=lambda r: int(r[0].get()))
         # print(f'{sets_sorted = }')
         for row in range(1, num_rows - 1):
-            grid_row = self.grid_slaves(row=row)
-            w = grid_row[0]
-            print(f'{w.get() = }')
+            # grid_row = self.grid_slaves(row=row)
+            # w = grid_row[0]
+            print(f'{self.set_no[row].get() = }')
             # for w in grid_row:
             #     print(f'{w.grid_info() = }')
 
     def _add_set_row(self, last_set_row=None):
+        """Grid a set's widgets
+
+        Exercises have sets. A set has tk widgets organized in a
+        row. This method adds widgets for one set.
+        """
         if last_set_row is None:
             last_set_row = self.last_set
-        set_no = self.set_no
+        # set_no = self.set_no
+        var = tk.StringVar()
+        var.set(str(last_set_row))
+        self.set_no[last_set_row] = var
         for c, w in enumerate(self.COL_WIDTH.values()):
-            set_no[c] = tk.StringVar()
+            # set_no[c] = tk.StringVar()
             e = tk.Entry(self, width=w)
             e.grid(column=c, row=last_set_row)
             if c == 0:
-                e.config(textvariable=set_no[c])
-                set_no[c].set(str(last_set_row))
+                # e.config(textvariable=set_no[c])
+                e.config(textvariable=var)
+                # set_no[c].set(str(last_set_row))
 
     def add_set2(self):
         num_rows = self.grid_size()[1]
