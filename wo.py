@@ -33,7 +33,20 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Move up')
         mb_menu.add_command(label='Move down')
         mb_menu.add_command(label='Remove')
-        mb_menu.add_command(label='Edit sets')
+        mb_menu.add_command(label='Edit sets', command=self.edit_sets)
+
+    def edit_sets(self):
+        num_cols, num_rows = self.grid_size()
+        # sets_sorted = sorted(
+        #     [self.grid_slaves(row=row) for row in range(1, num_rows)],
+        #     key=lambda r: int(r[0].get()))
+        # print(f'{sets_sorted = }')
+        for row in range(1, num_rows - 1):
+            grid_row = self.grid_slaves(row=row)
+            w = grid_row[0]
+            print(f'{w.get() = }')
+            # for w in grid_row:
+            #     print(f'{w.grid_info() = }')
 
     def _grid_add_set_fields(self, last_set_row=None):
         if last_set_row is None:
