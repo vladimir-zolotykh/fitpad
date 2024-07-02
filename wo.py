@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from functools import partial
 import tkinter as tk
 
@@ -36,20 +36,37 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
 
     def edit_sets(self):
-        def get_column(widgets: List[tk.Widget], column: int = 0) -> int:
-            for w in widgets:
-                if isinstance(w, tk.Entry):
-                    if w.grid_info()['column'] == column:
-                        return int(w.get())
-            assert False
+        def get_column(widget: tk.Widget) -> int:
+            return int(widget.grid_info()['column'])
 
-        get_set_no = partial(get_column, column=0)
+        def get_widget(
+                widgets: List[tk.Widget], column: int = 0
+        ) -> Optional[tk.Widget]:
+            for w in widgets:
+                # if w.grid_info()['column'] == column:
+                if get_column(w) == column:
+                    return w
+            return None
+
+        def get_set_no(widgets: List[tk.Widget]) -> int:
+            w = get_widget(widgets, 0)
+            if isinstance(w, tk.Entry):
+                return int(w.get())
+            else:
+                raise TypeError('Expected Entry widget')
+
         _, num_rows = self.grid_size()
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
             key=get_set_no)
         for row in sets_sorted:
-            print(get_column(row, 0))
+            meth = 'destroy' if get_set_no(row) == 0 else 'grid_forget'
+            for w in row:
+                getattr(w, meth)()
+        for row in sets_sorted:
+            cols_sorted = sorted(row, key=get_column)
+            for col, w in enumerate(cols_sorted):
+                w.grid(column=col, row=row)
 
     def _add_set_row(self, last_set_row=None):
         """Grid a set's widgets
