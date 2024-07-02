@@ -50,6 +50,7 @@ class ExerTk(tk.Frame):
 
         def get_set_no(widgets: List[tk.Widget]) -> int:
             w = get_widget(widgets, 0)
+            print(f'{type(w) = }')
             if isinstance(w, tk.Entry):
                 return int(w.get())
             else:
@@ -59,14 +60,15 @@ class ExerTk(tk.Frame):
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
             key=get_set_no)
-        for row in sets_sorted:
+        rows_sorted: Dict[int, List[tk.Widget]] = {}
+        for num_row, row in enumerate(sets_sorted):
+            rows_sorted[num_row] = sorted(row, key=get_column)
             meth = 'destroy' if get_set_no(row) == 0 else 'grid_forget'
             for w in row:
                 getattr(w, meth)()
-        for row in sets_sorted:
-            cols_sorted = sorted(row, key=get_column)
-            for col, w in enumerate(cols_sorted):
-                w.grid(column=col, row=row)
+        for num_row, row in rows_sorted.items():
+            for col, w in enumerate(row):
+                w.grid(column=col, row=num_row)
 
     def _add_set_row(self, last_set_row=None):
         """Grid a set's widgets
