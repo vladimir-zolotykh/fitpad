@@ -73,20 +73,18 @@ class ExerTk(tk.Frame):
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row + 1)
 
-    def _add_set_row(self, last_set_row=None):
+    def _add_set_row(self, row):
         """Grid a set's widgets
 
         Exercises have sets. A set has tk widgets organized in a
         row. This method adds widgets for one set.
         """
-        if last_set_row is None:
-            last_set_row = self.last_set
         var = tk.StringVar()
-        var.set(str(last_set_row))
-        self.set_no[last_set_row] = var
+        var.set(str(row))
+        self.set_no[row] = var
         for c, w in enumerate(self.COL_WIDTH.values()):
             e = tk.Entry(self, width=w)
-            e.grid(column=c, row=last_set_row)
+            e.grid(column=c, row=row)
             if c == 0:
                 e.config(textvariable=var)
 
