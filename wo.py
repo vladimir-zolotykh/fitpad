@@ -64,7 +64,7 @@ class ExerTk(tk.Frame):
             if get_set_no(row) == 0:
                 for w in row:
                     w.destroy()
-                # self.last_set -= 1
+                self.last_set -= 1
             else:
                 rows_sorted[num_row] = sorted(row, key=get_column)
                 for w in row:
