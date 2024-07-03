@@ -50,7 +50,6 @@ class ExerTk(tk.Frame):
 
         def get_set_no(widgets: List[tk.Widget]) -> int:
             w = get_widget(widgets, 0)
-            print(f'{type(w) = }')
             if isinstance(w, tk.Entry):
                 return int(w.get())
             else:
