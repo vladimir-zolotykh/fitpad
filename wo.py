@@ -67,7 +67,7 @@ class ExerTk(tk.Frame):
                 getattr(w, meth)()
         for num_row, row in rows_sorted.items():
             for col, w in enumerate(row):
-                w.grid(column=col, row=num_row)
+                w.grid(column=col, row=num_row + 1)
 
     def _add_set_row(self, last_set_row=None):
         """Grid a set's widgets
