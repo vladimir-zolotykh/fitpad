@@ -61,7 +61,6 @@ class ExerTk(tk.Frame):
             key=get_set_no)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
         for num_row, row in enumerate(sets_sorted, 1):
-            print(f'rows_sorted: {num_row = }')
             if get_set_no(row) == 0:
                 for w in row:
                     w.destroy()
@@ -72,7 +71,6 @@ class ExerTk(tk.Frame):
                 for w in row:
                     w.grid_forget()
         for num_row, row in rows_sorted.items():
-            print(f'{num_row = }')
             var = self.set_no[num_row]
             var.set(num_row)
             for col, w in enumerate(row):
