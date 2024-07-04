@@ -60,16 +60,21 @@ class ExerTk(tk.Frame):
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
             key=get_set_no)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
-        for num_row, row in enumerate(sets_sorted):
+        for num_row, row in enumerate(sets_sorted, 1):
+            print(f'rows_sorted: {num_row = }')
             if get_set_no(row) == 0:
                 for w in row:
                     w.destroy()
                 self.last_set -= 1
+                # del self.set_no[get_set_no(row)]
             else:
                 rows_sorted[num_row] = sorted(row, key=get_column)
                 for w in row:
                     w.grid_forget()
         for num_row, row in rows_sorted.items():
+            print(f'{num_row = }')
+            var = self.set_no[num_row]
+            var.set(num_row)
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row + 1)
 
