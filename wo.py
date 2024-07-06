@@ -56,6 +56,7 @@ class ExerTk(tk.Frame):
                 raise TypeError('Expected Entry widget')
 
         _, num_rows = self.grid_size()
+        mb_row = self.grid_slaves(row=num_rows - 1)
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
             key=get_set_no)
@@ -70,11 +71,13 @@ class ExerTk(tk.Frame):
                 rows_sorted[num_row] = sorted(row, key=get_column)
                 for w in row:
                     w.grid_forget()
+        mb_row[0].grid_forget()
         for num_row, row in rows_sorted.items():
             var = self.set_no[num_row]
             var.set(num_row)
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row + 1)
+        mb_row[0].grid(column=0, row=num_row + 2, columnspan=3)
 
     def _add_set_row(self, row):
         """Grid a set's widgets
