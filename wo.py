@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+import sys
 from typing import Dict, Any, List, Optional
 from functools import partial
+from contextlib import contextmanager
 import tkinter as tk
+
+
+@contextmanager
+def num_rows_printed(self):
+    n1 = self.grid_size()[1]
+    yield
+    n2 = self.grid_size()[1]
+    print(f'num_rows = {n1}/{n2}')
+    sys.stdout.flush()
 
 
 class ExerTk(tk.Frame):
@@ -53,7 +64,7 @@ class ExerTk(tk.Frame):
             if isinstance(w, tk.Entry):
                 return int(w.get())
             else:
-                raise TypeError('Expected Entry widget')
+                raise TypeError(f'Expected Entry widget, got {type(w)}')
 
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
@@ -62,21 +73,22 @@ class ExerTk(tk.Frame):
             key=get_set_no)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
         for num_row, row in enumerate(sets_sorted, 1):
-            if get_set_no(row) == 0:
-                for w in row:
-                    w.destroy()
-                self.last_set -= 1
-                # del self.set_no[get_set_no(row)]
-            else:
-                rows_sorted[num_row] = sorted(row, key=get_column)
-                for w in row:
-                    w.grid_forget()
+            with num_rows_printed(self):
+                if get_set_no(row) == 0:
+                    for w in row:
+                        w.destroy()
+                else:
+                    rows_sorted[num_row] = sorted(row, key=get_column)
+                    for w in row:
+                        w.grid_forget()
+            self.last_set -= 1
         mb_row[0].grid_forget()
         for num_row, row in rows_sorted.items():
             var = self.set_no[num_row]
             var.set(num_row)
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row + 1)
+            self.last_set += 1
         mb_row[0].grid(column=0, row=num_row + 2, columnspan=self.NUM_COLUMNS)
 
     def _add_set_row(self, row):
@@ -97,7 +109,7 @@ class ExerTk(tk.Frame):
     def add_set2(self):
         num_rows = self.grid_size()[1]
         # 3 <= num_rows
-        mb = self.grid_slaves(row=num_rows-1)[0]  # menu button
+        mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
         last_set_row = num_rows - 1
         self._add_set_row(last_set_row)
         mb.grid(column=0, row=last_set_row + 1, columnspan=self.NUM_COLUMNS)
