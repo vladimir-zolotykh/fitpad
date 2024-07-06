@@ -77,7 +77,7 @@ class ExerTk(tk.Frame):
             var.set(num_row)
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row + 1)
-        mb_row[0].grid(column=0, row=num_row + 2, columnspan=3)
+        mb_row[0].grid(column=0, row=num_row + 2, columnspan=self.NUM_COLUMNS)
 
     def _add_set_row(self, row):
         """Grid a set's widgets
