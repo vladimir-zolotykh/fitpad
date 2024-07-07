@@ -89,6 +89,7 @@ class ExerTk(tk.Frame):
                     w.grid_forget()
             self.last_set -= 1
         mb_row[0].grid_forget()
+        self.last_set = 1
         for num_row, row in rows_sorted.items():
             var = self.set_no[num_row]
             var.set(num_row)
@@ -97,33 +98,34 @@ class ExerTk(tk.Frame):
             self.last_set += 1
         mb_row[0].grid(column=0, row=num_row + 2, columnspan=self.NUM_COLUMNS)
 
-    def _add_set_row(self, row):
+    def grid_set(self, num_row: int):
         """Grid a set's widgets
 
         Exercises have sets. A set has tk widgets organized in a
         row. This method adds widgets for one set.
         """
         var = tk.StringVar()
-        var.set(str(row))
-        self.set_no[row] = var
+        var.set(str(num_row))
+        self.set_no[num_row] = var
         for c, w in enumerate(self.COL_WIDTH.values()):
             e = tk.Entry(self, width=w)
-            e.grid(column=c, row=row)
+            e.grid(column=c, row=num_row)
             if c == 0:
                 e.config(textvariable=var)
+        self.set_no += 1
 
     def add_set2(self):
-        num_rows = self.grid_size()[1]
+        num_rows: int = self.grid_size()[1]
         # 3 <= num_rows
         mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
-        last_set_row = num_rows - 1
-        self._add_set_row(last_set_row)
-        mb.grid(column=0, row=last_set_row + 1, columnspan=self.NUM_COLUMNS)
+        last: int = num_rows - 1
+        self.grid_set(last)
+        mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
 
     def add_set0(self):
         # self.grid_size()[1] == 1
-        self._add_set_row(self.last_set)
-        self.last_set += 1
+        self.grid_set(self.last_set)
+        # self.last_set += 1
 
 
 class ExerDir(Dict[str, ExerTk]):
