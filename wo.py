@@ -55,20 +55,19 @@ class ExerTk(tk.Frame):
         sys.stdout.flush()
 
     def edit_sets(self):
-        def get_column(widget: tk.Widget) -> int:
+        def grid_column(widget: tk.Widget) -> int:
             return int(widget.grid_info()['column'])
 
-        def get_widget(
+        def row_widget(
                 widgets: List[tk.Widget], column: int = 0
         ) -> Optional[tk.Widget]:
             for w in widgets:
-                # if w.grid_info()['column'] == column:
-                if get_column(w) == column:
+                if grid_column(w) == column:
                     return w
             return None
 
-        def get_set_no(widgets: List[tk.Widget]) -> int:
-            w = get_widget(widgets, 0)
+        def row_set(row: List[tk.Widget]) -> int:
+            w = row_widget(row, 0)
             if isinstance(w, tk.Entry):
                 return int(w.get())
             else:
@@ -76,20 +75,16 @@ class ExerTk(tk.Frame):
 
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
-        # with self.num_rows_printed('sets_sorted'):
-        # for num_row in range(1, num_rows - 1):
-        #     print(f'{num_row = }, {len(self.grid_slaves(row=num_row)) = }')
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
-            key=get_set_no)
+            key=row_set)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
         for num_row, row in enumerate(sets_sorted, 1):
-            # with self.num_rows_printed('rows_sorted'):
-            if get_set_no(row) == 0:
+            if row_set(row) == 0:
                 for w in row:
                     w.destroy()
             else:
-                rows_sorted[num_row] = sorted(row, key=get_column)
+                rows_sorted[num_row] = sorted(row, key=grid_column)
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
