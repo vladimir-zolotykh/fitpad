@@ -46,6 +46,14 @@ class ExerTk(tk.Frame):
         mb_menu.add_command(label='Remove')
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
 
+    @contextmanager
+    def num_rows_printed(self, label='***'):
+        n1 = self.grid_size()[1]
+        yield
+        n2 = self.grid_size()[1]
+        print(f'{label} num_rows = {n1}/{n2}')
+        sys.stdout.flush()
+
     def edit_sets(self):
         def get_column(widget: tk.Widget) -> int:
             return int(widget.grid_info()['column'])
@@ -68,13 +76,15 @@ class ExerTk(tk.Frame):
 
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
-        with num_rows_printed(self, 'sets_sorted'):
+        # with num_rows_printed(self, 'sets_sorted'):
+        with self.num_rows_printed('sets_sorted'):
             sets_sorted = sorted(
                 [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
                 key=get_set_no)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
         for num_row, row in enumerate(sets_sorted, 1):
-            with num_rows_printed(self, 'rows_sorted'):
+            # with num_rows_printed(self, 'rows_sorted'):
+            with self.num_rows_printed('rows_sorted'):
                 if get_set_no(row) == 0:
                     for w in row:
                         w.destroy()
