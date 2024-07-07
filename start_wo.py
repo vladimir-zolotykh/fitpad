@@ -94,7 +94,7 @@ class ExerTk(tk.Frame):
         self.last_set = 1
         for num_row, row in rows_sorted.items():
             var = self.set_no[num_row]
-            var.set(num_row)
+            var.set(str(num_row))
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row + 1)
             self.last_set += 1
