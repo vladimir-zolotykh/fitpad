@@ -128,19 +128,6 @@ class ExerTk(tk.Frame):
         else:
             raise TypeError('{num_rows = }: must be 1 or >= 3')
 
-    # def _add_set2(self):
-    #     num_rows: int = self.grid_size()[1]
-    #     # 3 <= num_rows
-    #     mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
-    #     last: int = num_rows - 1
-    #     self.grid_set(last)
-    #     mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
-
-    # def _add_set0(self):
-    #     # self.grid_size()[1] == 1
-    #     self.grid_set(self.last_set)
-    #     # self.last_set += 1
-
 
 class ExerDir(Dict[str, ExerTk]):
     """A dict of Workout exercises
