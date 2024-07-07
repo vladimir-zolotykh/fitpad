@@ -76,22 +76,22 @@ class ExerTk(tk.Frame):
 
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
-        # with num_rows_printed(self, 'sets_sorted'):
-        with self.num_rows_printed('sets_sorted'):
-            sets_sorted = sorted(
-                [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
-                key=get_set_no)
+        # with self.num_rows_printed('sets_sorted'):
+        # for num_row in range(1, num_rows - 1):
+        #     print(f'{num_row = }, {len(self.grid_slaves(row=num_row)) = }')
+        sets_sorted = sorted(
+            [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
+            key=get_set_no)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
         for num_row, row in enumerate(sets_sorted, 1):
-            # with num_rows_printed(self, 'rows_sorted'):
-            with self.num_rows_printed('rows_sorted'):
-                if get_set_no(row) == 0:
-                    for w in row:
-                        w.destroy()
-                else:
-                    rows_sorted[num_row] = sorted(row, key=get_column)
-                    for w in row:
-                        w.grid_forget()
+            # with self.num_rows_printed('rows_sorted'):
+            if get_set_no(row) == 0:
+                for w in row:
+                    w.destroy()
+            else:
+                rows_sorted[num_row] = sorted(row, key=get_column)
+                for w in row:
+                    w.grid_forget()
             self.last_set -= 1
         mb_row[0].grid_forget()
         for num_row, row in rows_sorted.items():
