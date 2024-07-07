@@ -9,11 +9,11 @@ import tkinter as tk
 
 
 @contextmanager
-def num_rows_printed(self):
+def num_rows_printed(self, label='***'):
     n1 = self.grid_size()[1]
     yield
     n2 = self.grid_size()[1]
-    print(f'num_rows = {n1}/{n2}')
+    print(f'{label} num_rows = {n1}/{n2}')
     sys.stdout.flush()
 
 
@@ -68,12 +68,13 @@ class ExerTk(tk.Frame):
 
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
-        sets_sorted = sorted(
-            [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
-            key=get_set_no)
+        with num_rows_printed(self, 'sets_sorted'):
+            sets_sorted = sorted(
+                [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
+                key=get_set_no)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
         for num_row, row in enumerate(sets_sorted, 1):
-            with num_rows_printed(self):
+            with num_rows_printed(self, 'rows_sorted'):
                 if get_set_no(row) == 0:
                     for w in row:
                         w.destroy()
