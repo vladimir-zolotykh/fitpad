@@ -35,12 +35,14 @@ class ExerTk(tk.Frame):
             self.columnconfigure(c, weight=1)
         tk.Label(self, text=name).grid(
             column=0, row=0, columnspan=self.NUM_COLUMNS)
-        self.add_set0()
+        # self.add_set0()
+        self.add_set()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
         mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
         mb_menu = tk.Menu(mb, tearoff=0)
         mb['menu'] = mb_menu
-        mb_menu.add_command(label='Add set', command=self.add_set2)
+        # mb_menu.add_command(label='Add set', command=self.add_set2)
+        mb_menu.add_command(label='Add set', command=self.add_set)
         mb_menu.add_command(label='Move up')
         mb_menu.add_command(label='Move down')
         mb_menu.add_command(label='Remove')
@@ -114,18 +116,30 @@ class ExerTk(tk.Frame):
                 e.config(textvariable=var)
         self.last_set += 1
 
-    def add_set2(self):
+    def add_set(self):
         num_rows: int = self.grid_size()[1]
-        # 3 <= num_rows
-        mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
-        last: int = num_rows - 1
-        self.grid_set(last)
-        mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
+        if 3 <= num_rows:
+            mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
+            last: int = num_rows - 1
+            self.grid_set(last)
+            mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
+        elif num_rows == 1:
+            self.grid_set(self.last_set)
+        else:
+            raise TypeError('{num_rows = }: must be 1 or >= 3')
 
-    def add_set0(self):
-        # self.grid_size()[1] == 1
-        self.grid_set(self.last_set)
-        # self.last_set += 1
+    # def _add_set2(self):
+    #     num_rows: int = self.grid_size()[1]
+    #     # 3 <= num_rows
+    #     mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
+    #     last: int = num_rows - 1
+    #     self.grid_set(last)
+    #     mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
+
+    # def _add_set0(self):
+    #     # self.grid_size()[1] == 1
+    #     self.grid_set(self.last_set)
+    #     # self.last_set += 1
 
 
 class ExerDir(Dict[str, ExerTk]):
