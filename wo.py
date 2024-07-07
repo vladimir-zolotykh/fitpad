@@ -112,7 +112,7 @@ class ExerTk(tk.Frame):
             e.grid(column=c, row=num_row)
             if c == 0:
                 e.config(textvariable=var)
-        self.set_no += 1
+        self.last_set += 1
 
     def add_set2(self):
         num_rows: int = self.grid_size()[1]
