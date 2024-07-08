@@ -88,7 +88,7 @@ class ExerTk(tk.Frame):
                 table.add_row([num_row, len(self.grid_slaves(row=num_row))])
             return str(table)
 
-        print(grid_info())
+        # print(grid_info())
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
             key=row_set)
@@ -105,12 +105,13 @@ class ExerTk(tk.Frame):
         mb_row[0].grid_forget()
         self.last_set = 1
         for num_row, row in rows_sorted.items():
+            print(f'{num_row = }')
             var = self.set_no[num_row]
             var.set(str(num_row))
             for col, w in enumerate(row):
-                w.grid(column=col, row=num_row + 1)
+                w.grid(column=col, row=num_row)
             self.last_set += 1
-        mb_row[0].grid(column=0, row=num_row + 2, columnspan=self.NUM_COLUMNS)
+        mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
     def grid_set(self, num_row: int):
         """Grid a set's widgets
