@@ -105,7 +105,6 @@ class ExerTk(tk.Frame):
         mb_row[0].grid_forget()
         self.last_set = 1
         for num_row, row in rows_sorted.items():
-            print(f'{num_row = }')
             var = self.set_no[num_row]
             var.set(str(num_row))
             for col, w in enumerate(row):
