@@ -84,7 +84,7 @@ class ExerTk(tk.Frame):
             table = PrettyTable()
             # table.align = 'l'
             table.field_names = ['row', 'num columns']
-            for num_row in range(1, num_rows - 1):
+            for num_row in range(num_rows):
                 table.add_row([num_row, len(self.grid_slaves(row=num_row))])
             return str(table)
 
