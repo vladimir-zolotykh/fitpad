@@ -6,7 +6,7 @@ from typing import Dict, Any, List, Optional
 from functools import partial
 from contextlib import contextmanager
 import tkinter as tk
-from prettytable import PrettyTable
+from wo_tools import grid_info, rows_info
 
 
 @contextmanager
@@ -79,20 +79,12 @@ class ExerTk(tk.Frame):
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
 
-        def grid_info():
-            num_cols, num_rows = self.grid_size()
-            table = PrettyTable()
-            # table.align = 'l'
-            table.field_names = ['row', 'num columns']
-            for num_row in range(num_rows):
-                table.add_row([num_row, len(self.grid_slaves(row=num_row))])
-            return str(table)
-
-        # print(grid_info())
+        print(grid_info(self))
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
             key=row_set)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
+
         for num_row, row in enumerate(sets_sorted, 1):
             if row_set(row) == 0:
                 for w in row:
@@ -102,6 +94,7 @@ class ExerTk(tk.Frame):
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
+        print(rows_info(rows_sorted))
         mb_row[0].grid_forget()
         self.last_set = 1
         num_row: int = 0
