@@ -19,6 +19,6 @@ def grid_info(container: tk.Frame) -> str:
 def rows_info(rows: Dict[int, List[tk.Widget]]) -> str:
     table = PrettyTable()
     table.field_names = ['row', 'num columns']
-    for row in range(len(rows), 1):
-        table.add_row([row, len(rows[row])])
+    for row in range(len(rows)):
+        table.add_row([row, len(rows[row + 1])])
     return str(table)

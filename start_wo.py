@@ -94,8 +94,7 @@ class ExerTk(tk.Frame):
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
-        # print(rows_sorted)
-        # print(rows_info(rows_sorted))
+        print(rows_info(rows_sorted))
         mb_row[0].grid_forget()
         self.last_set = 1
         num_row: int = 0
