@@ -79,7 +79,7 @@ class ExerTk(tk.Frame):
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
 
-        print(grid_info(self))
+        # print(grid_info(self))
         sets_sorted = sorted(
             [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
             key=row_set)
@@ -94,7 +94,8 @@ class ExerTk(tk.Frame):
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
-        print(rows_info(rows_sorted))
+        # print(rows_sorted)
+        # print(rows_info(rows_sorted))
         mb_row[0].grid_forget()
         self.last_set = 1
         num_row: int = 0
@@ -122,7 +123,7 @@ class ExerTk(tk.Frame):
 
     def add_set(self):
         num_rows: int = self.grid_size()[1]
-        if 3 <= num_rows:
+        if 2 <= num_rows:
             mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
             last: int = num_rows - 1
             self.grid_set(last)
@@ -130,7 +131,7 @@ class ExerTk(tk.Frame):
         elif num_rows == 1:
             self.grid_set(self.last_set)
         else:
-            raise TypeError('{num_rows = }: must be 1 or >= 3')
+            raise TypeError(f'{num_rows = }: must be 1 or >= 2')
 
 
 class ExerDir(Dict[str, ExerTk]):
