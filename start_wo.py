@@ -94,7 +94,6 @@ class ExerTk(tk.Frame):
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
-        print(rows_info(rows_sorted))
         mb_row[0].grid_forget()
         self.last_set = 1
         num_row: int = 0
@@ -102,6 +101,7 @@ class ExerTk(tk.Frame):
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row)
             self.last_set += 1
+        print(rows_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
     def grid_set(self, num_row: int):

@@ -20,5 +20,8 @@ def rows_info(rows: Dict[int, List[tk.Widget]]) -> str:
     table = PrettyTable()
     table.field_names = ['row', 'num columns']
     for row in range(len(rows)):
-        table.add_row([row, len(rows[row + 1])])
+        try:
+            table.add_row([row, len(rows[row + 1])])
+        except KeyError:
+            pass
     return str(table)
