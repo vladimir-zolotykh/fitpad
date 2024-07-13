@@ -68,12 +68,14 @@ class ExerTk(tk.Frame):
             key=row_set)
         rows_sorted: Dict[int, List[tk.Widget]] = {}
 
-        for num_row, row in enumerate(sets_sorted, 1):
+        num_row: int = 1
+        for row in sets_sorted:
             if row_set(row) == 0:
                 for w in row:
                     w.destroy()
             else:
                 rows_sorted[num_row] = sorted(row, key=grid_column)
+                num_row += 1
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
