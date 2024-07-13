@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import sys
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from functools import partial
 from contextlib import contextmanager
 import tkinter as tk
-from wo_tools import grid_info, rows_info
+from wo_tools import grid_column, row_set
+from wo_tools import rows_info
 
 
 @contextmanager
@@ -58,24 +59,6 @@ class ExerTk(tk.Frame):
         sys.stdout.flush()
 
     def edit_sets(self):
-        def grid_column(widget: tk.Widget) -> int:
-            return int(widget.grid_info()['column'])
-
-        def row_widget(
-                widgets: List[tk.Widget], column: int = 0
-        ) -> Optional[tk.Widget]:
-            for w in widgets:
-                if grid_column(w) == column:
-                    return w
-            return None
-
-        def row_set(row: List[tk.Widget]) -> int:
-            w = row_widget(row, 0)
-            if isinstance(w, tk.Entry):
-                return int(w.get())
-            else:
-                raise TypeError(f'Expected Entry widget, got {type(w)}')
-
         _, num_rows = self.grid_size()
         mb_row = self.grid_slaves(row=num_rows - 1)
 
