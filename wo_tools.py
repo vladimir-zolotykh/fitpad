@@ -12,22 +12,17 @@ def grid_column(widget: tk.Widget) -> int:
     return int(widget.grid_info()['column'])
 
 
-def row_widget(
-        widgets: List[tk.Widget], column: int = 0
-) -> Optional[tk.Widget]:
-    for w in widgets:
-        if grid_column(w) == column:
-            return w
-    return None
-
-
 def row_set(row: List[tk.Widget]) -> int:
     """Return the set number
 
     Each set [of exercise] has a set number, the 1st Entry widget of a
     grid row"""
 
-    w = row_widget(row, 0)
+    w: Optional[tk.Widget] = None
+    for w in row:
+        if grid_column(w) == 0:
+            break
+    # w = _row_widget(row, 0)
     if isinstance(w, tk.Entry):
         return int(w.get())
     else:
