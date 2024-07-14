@@ -7,6 +7,8 @@ from prettytable import PrettyTable
 
 
 def grid_column(widget: tk.Widget) -> int:
+    """Return the column of widget"""
+
     return int(widget.grid_info()['column'])
 
 
@@ -20,6 +22,11 @@ def row_widget(
 
 
 def row_set(row: List[tk.Widget]) -> int:
+    """Return the set number
+
+    Each set [of exercise] has a set number, the 1st Entry widget of a
+    grid row"""
+
     w = row_widget(row, 0)
     if isinstance(w, tk.Entry):
         return int(w.get())
