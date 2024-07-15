@@ -89,7 +89,7 @@ class ExerTk(tk.Frame):
         print(rows_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
-    def grid_set(self, num_row: int):
+    def grid_the_set(self, num_row: int):
         """Grid a set's widgets
 
         Exercises have sets. A set has tk widgets organized in a
@@ -110,10 +110,10 @@ class ExerTk(tk.Frame):
         if 2 <= num_rows:
             mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
             last: int = num_rows - 1
-            self.grid_set(last)
+            self.grid_the_set(last)
             mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
         elif num_rows == 1:
-            self.grid_set(self.last_set)
+            self.grid_the_set(self.last_set)
         else:
             raise TypeError(f'{num_rows = }: must be 1 or >= 2')
 
