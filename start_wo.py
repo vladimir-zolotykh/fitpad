@@ -113,7 +113,15 @@ class ExerTk(tk.Frame):
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
     def renumber_existing_sets(self):
-        pass
+        num_rows: int = self.grid_size()[1]
+        set_no: int = 1
+        i: int = 0              # row index
+        for i in range(num_rows):
+            if 0 < i < num_rows - 1:
+                e = self.grid_slaves(row=i, column=0)
+                v = e.config('textvariable')
+                v.set(set_no)
+                set_no += 1
 
     def grid_the_set(self, num_row: int):
         """Grid a set's widgets
