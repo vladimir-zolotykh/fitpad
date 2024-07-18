@@ -30,6 +30,8 @@ class EntryVar(tk.Entry):
             kw.update(cnf)
             return self._set_config(kw)
 
+    config = configure
+
     def _get_config(self, option=None):
         if option:
             return super().configure(option)
@@ -115,7 +117,6 @@ class ExerTk(tk.Frame):
 
     def renumber_existing_sets(self):
         num_rows: int = self.grid_size()[1]
-        print(f'{num_rows = }')
         set_no: int = 1
         i: int = 0              # row index
         for i in range(num_rows):
