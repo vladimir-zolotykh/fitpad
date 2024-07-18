@@ -6,7 +6,7 @@ from typing import Dict, Any, List
 from functools import partial
 from contextlib import contextmanager
 import tkinter as tk
-from wo_tools import grid_column, row_set
+from wo_tools import grid_column, row_column, row_set
 from wo_tools import rows_info
 
 
@@ -102,7 +102,6 @@ class ExerTk(tk.Frame):
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
-            self.renumber_existing_sets()
         mb_row[0].grid_forget()
         self.last_set = 1
         num_row = 0
@@ -110,16 +109,18 @@ class ExerTk(tk.Frame):
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row)
             self.last_set += 1
+        self.renumber_existing_sets()
         print(rows_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
     def renumber_existing_sets(self):
         num_rows: int = self.grid_size()[1]
+        print(f'{num_rows = }')
         set_no: int = 1
         i: int = 0              # row index
         for i in range(num_rows):
             if 0 < i < num_rows - 1:
-                e = self.grid_slaves(row=i, column=0)
+                e = row_column(self.grid_slaves(row=i), column=0)
                 v = e.config('textvariable')
                 v.set(set_no)
                 set_no += 1
