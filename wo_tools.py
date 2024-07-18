@@ -28,7 +28,8 @@ def row_set(row: List[tk.Widget]) -> int:
 
     w: Optional[tk.Widget] = row_column(row, 0)
     if isinstance(w, tk.Entry):
-        return w.config('textvariable')
+        var = w.config('textvariable')
+        return int(var.get())
     else:
         raise TypeError(f'Expected Entry widget, got {type(w)}')
 

@@ -28,7 +28,7 @@ class EntryVar(tk.Entry):
                 return self._get_config(cnf)
         elif isinstance(cnf, dict):
             kw.update(cnf)
-            return self._set_config(kw)
+        return self._set_config(**kw)
 
     config = configure
 
