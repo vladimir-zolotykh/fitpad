@@ -10,13 +10,36 @@ from wo_tools import grid_column, row_set
 from wo_tools import rows_info
 
 
-@contextmanager
-def num_rows_printed(self, label='***'):
-    n1 = self.grid_size()[1]
-    yield
-    n2 = self.grid_size()[1]
-    print(f'{label} num_rows = {n1}/{n2}')
-    sys.stdout.flush()
+class EntryVar(tk.Entry):
+    def __init__(self, parent, cnf, **kw):
+        super(EntryVar, self).__init__(parent, cnf, **kw)
+        if isinstance(cnf, dict):
+            kw.update(cnf)
+        if 'textvariable' in kw:
+            self._var = kw.get('textvariable')
+
+    def configure(self, cnf=None, **kw):
+        if cnf is None and not kw:
+            return super().configure()
+        elif isinstance(cnf, str):
+            if cnf == 'textvariable':
+                return self._var
+            else:
+                return self._get_config(cnf)
+        elif isinstance(cnf, dict):
+            kw.update(cnf)
+            return self._set_config(kw)
+
+    def _get_config(self, option=None):
+        if option:
+            return super().configure(option)
+        else:
+            return super().configure()
+
+    def _set_config(self, **options):
+        if 'textvariable' in options:
+            self._var = options.get('textvariable')
+        return super().configure(**options)
 
 
 class ExerTk(tk.Frame):
@@ -89,6 +112,9 @@ class ExerTk(tk.Frame):
         print(rows_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
+    def renumber_existing_sets(self):
+        pass
+
     def grid_the_set(self, num_row: int):
         """Grid a set's widgets
 
@@ -99,7 +125,7 @@ class ExerTk(tk.Frame):
         var.set(str(num_row))
         self.set_no[num_row] = var
         for c, w in enumerate(self.COL_WIDTH.values()):
-            e = tk.Entry(self, width=w)
+            e = EntryVar(self, width=w)
             e.grid(column=c, row=num_row)
             if c == 0:
                 e.config(textvariable=var)
