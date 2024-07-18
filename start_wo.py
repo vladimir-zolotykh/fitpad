@@ -102,6 +102,7 @@ class ExerTk(tk.Frame):
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
+            self.renumber_existing_sets()
         mb_row[0].grid_forget()
         self.last_set = 1
         num_row = 0
