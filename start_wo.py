@@ -6,7 +6,7 @@ from typing import Dict, Any, List
 from functools import partial
 from contextlib import contextmanager
 import tkinter as tk
-from wo_tools import grid_column, row_column, row_set
+from wo_tools import grid_column, row_set
 from wo_tools import rows_info
 
 
@@ -123,17 +123,6 @@ class ExerTk(tk.Frame):
             v = e.config('textvariable')
             v.set(set_no)
             set_no += 1
-
-    def renumber_existing_sets(self):
-        num_rows: int = self.grid_size()[1]
-        set_no: int = 1
-        i: int = 0              # row index
-        for i in range(num_rows):
-            if 0 < i < num_rows - 1:
-                e = row_column(self.grid_slaves(row=i), column=0)
-                v = e.config('textvariable')
-                v.set(set_no)
-                set_no += 1
 
     def grid_the_set(self, num_row: int):
         """Grid a set's widgets
