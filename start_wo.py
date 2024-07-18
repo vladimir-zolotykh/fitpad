@@ -107,18 +107,19 @@ class ExerTk(tk.Frame):
         mb_row[0].grid_forget()
         self.last_set = 1
         num_row = 0
+        self.renumber_existing_rows(rows_sorted)
         for num_row, row in rows_sorted.items():
             for col, w in enumerate(row):
                 w.grid(column=col, row=num_row)
             self.last_set += 1
-        self.renumber_existing_sets()
+        # self.renumber_existing_sets()
         print(rows_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
     def renumber_existing_rows(self, rows: Dict[int, List[tk.Widget]]):
         set_no: int = 1
         for row in rows.values():
-            e = row_column(row, column=0)
+            e = row[0]
             v = e.config('textvariable')
             v.set(set_no)
             set_no += 1
