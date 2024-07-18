@@ -4,6 +4,7 @@
 import tkinter as tk
 from typing import Dict, List, Optional
 from prettytable import PrettyTable
+from entry_var import EntryVar
 
 
 def grid_column(widget: tk.Widget) -> int:
@@ -27,8 +28,8 @@ def row_set(row: List[tk.Widget]) -> int:
     grid row"""
 
     w: Optional[tk.Widget] = row_column(row, 0)
-    if isinstance(w, tk.Entry):
-        var = w.config('textvariable')
+    if isinstance(w, EntryVar):
+        var: tk.StringVar = w.configure('textvariable')
         return int(var.get())
     else:
         raise TypeError(f'Expected Entry widget, got {type(w)}')
