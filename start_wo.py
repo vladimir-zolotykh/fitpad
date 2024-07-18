@@ -11,7 +11,7 @@ from wo_tools import rows_info
 
 
 class EntryVar(tk.Entry):
-    def __init__(self, parent, cnf, **kw):
+    def __init__(self, parent, cnf=None, **kw):
         super(EntryVar, self).__init__(parent, cnf, **kw)
         if isinstance(cnf, dict):
             kw.update(cnf)
