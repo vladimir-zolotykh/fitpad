@@ -115,6 +115,14 @@ class ExerTk(tk.Frame):
         print(rows_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
+    def renumber_existing_rows(self, rows: Dict[int, List[tk.Widget]]):
+        set_no: int = 1
+        for row in rows.values():
+            e = row_column(row, column=0)
+            v = e.config('textvariable')
+            v.set(set_no)
+            set_no += 1
+
     def renumber_existing_sets(self):
         num_rows: int = self.grid_size()[1]
         set_no: int = 1
