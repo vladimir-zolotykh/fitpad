@@ -7,32 +7,39 @@ from prettytable import PrettyTable
 from entry_var import EntryVar
 
 
-def grid_column(widget: tk.Widget) -> int:
-    """Return the column of widget"""
+class Row(list):
+    def __init__(self, widgets: List[tk.Widget]):
+        super().__init__(widgets)
 
-    return int(widget.grid_info()['column'])
+    @staticmethod
+    def grid_column(widget: tk.Widget) -> int:
+        """Return the column of widget"""
 
+        return int(widget.grid_info()['column'])
 
-def row_column(row: List[tk.Widget], column: int = 0) -> Optional[tk.Widget]:
-    w: Optional[tk.Widget] = None
-    for w in row:
-        if grid_column(w) == column:
-            return w
-    return None
+    @classmethod
+    def from_grid(cls, box: tk.Frame, row: int) -> 'Row':
+        return cls(box.grid_slaves(row=row))
 
+    def column(self, column: int = 0) -> Optional[tk.Widget]:
+        for w in self:
+            if Row.grid_column(w) == column:
+                return w
+        return None
 
-def row_set(row: List[tk.Widget]) -> int:
-    """Return the set number
+    def set_no(self) -> int:
+        """Return the set number
 
-    Each set [of exercise] has a set number, the 1st Entry widget of a
-    grid row"""
+        Each set [of exercise] has a set number, the 1st Entry widget
+        of a grid row"""
 
-    w: Optional[tk.Widget] = row_column(row, 0)
-    if isinstance(w, EntryVar):
-        var: tk.StringVar = w.configure('textvariable')
-        return int(var.get())
-    else:
-        raise TypeError(f'Expected Entry widget, got {type(w)}')
+        w: Optional[tk.Widget] = self.column(0)
+        if isinstance(w, EntryVar):
+            var: tk.StringVar = w.configure('textvariable')
+            return int(var.get())
+        else:
+            raise TypeError(f'Expected Entry widget, got {type(w)}')
+            pass
 
 
 def grid_info(container: tk.Frame) -> str:

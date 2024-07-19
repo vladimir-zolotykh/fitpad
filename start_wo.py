@@ -6,7 +6,8 @@ from typing import Dict, Any, List
 from functools import partial
 from contextlib import contextmanager
 import tkinter as tk
-from wo_tools import grid_column, row_set
+# from wo_tools import grid_column, row_set
+from wo_tools import grid_column, Row
 from wo_tools import rows_info
 from entry_var import EntryVar
 
