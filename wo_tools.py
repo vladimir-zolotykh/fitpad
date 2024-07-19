@@ -19,7 +19,12 @@ class Row(list):
 
     @classmethod
     def from_grid(cls, box: tk.Frame, row: int) -> 'Row':
-        return cls(box.grid_slaves(row=row))
+        slaves = sorted(box.grid_slaves(row=row), key=Row.grid_column)
+        return cls(slaves)
+
+    @classmethod
+    def from_list(cls, row: List[tk.Widget]) -> 'Row':
+        return cls(sorted(row, key=Row.grid_column))
 
     def column(self, column: int = 0) -> Optional[tk.Widget]:
         for w in self:
@@ -52,7 +57,7 @@ def grid_info(container: tk.Frame) -> str:
     return str(table)
 
 
-def rows_info(rows: Dict[int, List[tk.Widget]]) -> str:
+def rows_info(rows: Dict[int, Row]) -> str:
     table = PrettyTable()
     table.field_names = ['row', 'num columns']
     for row in range(len(rows)):

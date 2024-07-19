@@ -7,7 +7,7 @@ from functools import partial
 from contextlib import contextmanager
 import tkinter as tk
 # from wo_tools import grid_column, row_set
-from wo_tools import grid_column, Row
+from wo_tools import Row
 from wo_tools import rows_info
 from entry_var import EntryVar
 
@@ -57,17 +57,19 @@ class ExerTk(tk.Frame):
 
         # print(grid_info(self))
         sets_sorted = sorted(
-            [self.grid_slaves(row=row) for row in range(1, num_rows - 1)],
-            key=row_set)
-        rows_sorted: Dict[int, List[tk.Widget]] = {}
+            [Row.from_grid(self, row=row) for row in range(1, num_rows - 1)],
+            key=Row.set_no)
+        # rows_sorted: Dict[int, List[tk.Widget]] = {}
+        rows_sorted: Dict[int, Row] = {}
 
         num_row: int = 1
         for row in sets_sorted:
-            if row_set(row) == 0:
+            if row.set_no() == 0:
                 for w in row:
                     w.destroy()
             else:
-                rows_sorted[num_row] = sorted(row, key=grid_column)
+                # rows_sorted[num_row] = sorted(row, key=Row.grid_column)
+                rows_sorted[num_row] = Row.from_list(row)
                 num_row += 1
                 for w in row:
                     w.grid_forget()
@@ -84,11 +86,11 @@ class ExerTk(tk.Frame):
         print(rows_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
-    def renumber_existing_rows(self, rows: Dict[int, List[tk.Widget]]):
+    def renumber_existing_rows(self, rows: Dict[int, Row]):
         set_no: int = 1
         for row in rows.values():
             e = row[0]
-            v = e.config('textvariable')
+            v = e.configure('textvariable')
             v.set(set_no)
             set_no += 1
 
@@ -105,7 +107,7 @@ class ExerTk(tk.Frame):
             e = EntryVar(self, width=w)
             e.grid(column=c, row=num_row)
             if c == 0:
-                e.config(textvariable=var)
+                e.configure(textvariable=var)
         self.last_set += 1
 
     def add_set(self):
