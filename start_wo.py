@@ -2,11 +2,15 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import sys
-from typing import Dict, Any, List
+from typing import Dict, Any
 from functools import partial
 from contextlib import contextmanager
+import argparse
+import argcomplete
+from sqlalchemy import create_engine
 import tkinter as tk
 # from wo_tools import grid_column, row_set
+import database as db
 from wo_tools import Row
 from wo_tools import rows_info
 from entry_var import EntryVar
@@ -169,5 +173,18 @@ class Workout(tk.Tk):
             add_exer_menu.add_command(label=name, command=_add_exer)
 
 
+parser = argparse.ArgumentParser(
+    prog='start_wo.py',
+    description='Start workout',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument(
+    '--echo', action='store_true', help='Print emitted SQL commands')
+parser.add_argument('--db', default='fitpad.db', help='Database file (.db)')
+
+
 if __name__ == '__main__':
+    argcomplete.autocomplete(parser)
+    args = parser.parse_args()
+    engine = create_engine(f'sqlite:///{args.db}', echo=args.echo)
+    db.initialize(engine)
     Workout().mainloop()
