@@ -10,18 +10,21 @@ class Base(DeclarativeBase):
     pass
 
 
-class Workout(Base):
-    __tablename__ = 'workout'
+class Workout(Base):            # parent
+    __tablename__ = "workouts"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    exercise_id: Mapped[int] = mapped_column(ForeignKey('exercise.id'))
-    exercise: Mapped['Exercise'] = relationship(back_populates='workouts')
+    exercises: Mapped[List["Exercise"]] = relationship(
+        back_populates="workout")
     reps: Mapped[int]
     weight: Mapped[float]
     date: Mapped[str]
 
 
-class Exercise(Base):
-    __tablename__ = 'exercise'
+class Exercise(Base):           # child
+    __tablename__ = "exercises"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    workouts: Mapped[List['Workout']] = relationship(back_populates='exercise')
+    workout_id: Mapped[int] = mapped_column(ForeignKey("workouts.id"))
+    workout: Mapped["Workout"] = relationship(back_populates="exercises")
     name: Mapped[str]
