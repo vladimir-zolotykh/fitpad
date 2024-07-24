@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Optional
 from datetime import datetime
 from models import Exercise, Workout
 from sqlalchemy import create_engine, select
@@ -20,7 +21,7 @@ if __name__ == '__main__':
     engine = create_engine('sqlite:///fitpad.db', echo=True)
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     with Session(engine) as session:
-        def get_exer(name: str) -> Exercise:
+        def get_exer(name: str) -> Optional[Exercise]:
             return session.scalar(
                 select(Exercise).where(Exercise.name == name))
 
