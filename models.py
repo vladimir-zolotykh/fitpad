@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import List
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Column, Table, Integer
 from sqlalchemy.orm import mapped_column, Mapped, DeclarativeBase, relationship
 
 
@@ -10,21 +10,30 @@ class Base(DeclarativeBase):
     pass
 
 
-class Workout(Base):            # parent
-    __tablename__ = "workouts"
+workout_exercise = Table(
+    'workout_exercise',
+    Base.metadata,
+    Column('workout_id', Integer,
+           ForeignKey('workout.id', ondelete='CASCADE')),
+    Column('exercise_id', Integer,
+           ForeignKey('exercise.id', ondelete='CASCADE')))
 
+
+class Workout(Base):
+    __tablename__ = 'workout'
     id: Mapped[int] = mapped_column(primary_key=True)
-    exercises: Mapped[List["Exercise"]] = relationship(
-        back_populates="workout")
+    when: Mapped[str]
     reps: Mapped[int]
     weight: Mapped[float]
-    date: Mapped[str]
+    exercise: Mapped['Exercise'] = relationship(
+        'Exercise', secondary='workout_exercise', back_populates='workouts',
+        cascade='all, delete')
 
 
-class Exercise(Base):           # child
-    __tablename__ = "exercises"
-
+class Exercise(Base):
+    __tablename__ = 'exercise'
     id: Mapped[int] = mapped_column(primary_key=True)
-    workout_id: Mapped[int] = mapped_column(ForeignKey("workouts.id"))
-    workout: Mapped["Workout"] = relationship(back_populates="exercises")
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(nullable=False)
+    workouts: Mapped[List['Workout']] = relationship(
+        'Workout', secondary='workout_exercise',
+        back_populates='exercise', passive_deletes=True)
