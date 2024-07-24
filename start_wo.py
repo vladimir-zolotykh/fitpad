@@ -49,5 +49,5 @@ if __name__ == '__main__':
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
     engine = create_engine(f'sqlite:///{args.db}', echo=args.echo)
-    # db.initialize(engine)
+    db.initialize(engine)
     Workout().mainloop()
