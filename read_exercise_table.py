@@ -12,4 +12,4 @@ if __name__ == '__main__':
     session = Session(engine)
     stmt = select(Exercise).where(True)
     for exercise in session.scalars(stmt):
-        print(exercise.name)
+        print(exercise)
