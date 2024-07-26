@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+import argparse
+import argcomplete
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
+from sqlalchemy.engine.base import Engine
 from models import Base, Exercise, Workout
+_functions = []
 
 
-# make_exercise_table
-if __name__ == '__main__':
+def register(func):
+    _functions.append(func)
+    return func
+
+
+@register
+def make_exercise_table(engine: Engine, verbose: bool = False) -> None:
+    if 0 < verbose:
+        print('make_exercise_table is called')
     engine = create_engine('sqlite:///fitpad.db', echo=True)
     Base.metadata.create_all(engine)
     front_squat = Exercise(name='front squat')
@@ -21,16 +32,21 @@ if __name__ == '__main__':
         session.commit()
 
 
-# read_exercise_table
-if __name__ == '__main__':
+@register
+def read_exercise_table(engine: Engine, verbose: bool = False) -> None:
+    if 0 < verbose:
+        print('read_exercise_table is called')
     engine = create_engine('sqlite:///fitpad.db', echo=True)
     session = Session(engine)
     stmt = select(Exercise).where(True)
     for exercise in session.scalars(stmt):
         print(exercise)
 
-# make_workout
-if __name__ == '__main__':
+
+@register
+def make_workout_table(engine: Engine, verbose: bool = False) -> None:
+    if 0 < verbose:
+        print('make_workout_table is called')
     engine = create_engine('sqlite:///fitpad.db', echo=True)
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     with Session(engine) as session:
@@ -45,10 +61,32 @@ if __name__ == '__main__':
         session.commit()
 
 
-# read_workout_table
-if __name__ == '__main__':
+@register
+def read_workout_table(engine: Engine, verbose: bool = False) -> None:
+    if 0 < verbose:
+        print('read_workout_table is called')
     engine = create_engine('sqlite:///fitpad.db', echo=True)
     session = Session(engine)
     stmt = select(Workout).where(True)
     for workout in session.scalars(stmt):
         print(workout)
+
+
+parser = argparse.ArgumentParser(
+    prog='sqltools.py',
+    description='Make/read fitpad.db table',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('function_name', nargs='+',
+                    choices=[f.__name__ for f in _functions])
+parser.add_argument(
+    '--echo', action='store_true', help='Print emitted SQL commands')
+parser.add_argument('--db', default='fitpad.db', help='Database file (.db)')
+parser.add_argument(
+    '--verbose', '-v', action='count', default=0, help='Provide some feedback')
+
+if __name__ == '__main__':
+    argcomplete.autocomplete(parser)
+    args = parser.parse_args()
+    engine = create_engine(f'sqlite:///{args.db}', echo=args.echo)
+    func = globals()[args.function_name]
+    func(engine, verbose=args.verbose)
