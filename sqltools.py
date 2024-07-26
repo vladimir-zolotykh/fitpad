@@ -88,5 +88,6 @@ if __name__ == '__main__':
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
     engine = create_engine(f'sqlite:///{args.db}', echo=args.echo)
-    func = globals()[args.function_name]
-    func(engine, verbose=args.verbose)
+    for fn in args.function_name:
+        func = globals()[fn]
+        func(engine, verbose=args.verbose)
