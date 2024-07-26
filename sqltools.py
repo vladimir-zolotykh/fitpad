@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+"""
+Usage:
+$ rm fitpad.db
+$ python sqltools.py make_exercise_table make_workout_table \
+         read_exercise_table read_workout_table
+"""
 import argparse
 import argcomplete
 from typing import Optional
