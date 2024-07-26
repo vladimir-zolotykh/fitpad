@@ -44,7 +44,7 @@ def read_exercise_table(engine: Engine, verbose: bool = False) -> None:
         print('read_exercise_table is called')
     engine = create_engine('sqlite:///fitpad.db', echo=True)
     session = Session(engine)
-    stmt = select(Exercise).where(True)
+    stmt = select(Exercise)
     for exercise in session.scalars(stmt):
         print(exercise)
 
@@ -73,7 +73,7 @@ def read_workout_table(engine: Engine, verbose: bool = False) -> None:
         print('read_workout_table is called')
     engine = create_engine('sqlite:///fitpad.db', echo=True)
     session = Session(engine)
-    stmt = select(Workout).where(True)
+    stmt = select(Workout)
     for workout in session.scalars(stmt):
         print(workout)
 
