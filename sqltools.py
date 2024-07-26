@@ -27,7 +27,6 @@ def register(func):
 def make_exercise_table(engine: Engine, verbose: bool = False) -> None:
     if 0 < verbose:
         print('make_exercise_table is called')
-    engine = create_engine('sqlite:///fitpad.db', echo=True)
     Base.metadata.create_all(engine)
     front_squat = Exercise(name='front squat')
     squat = Exercise(name='squat')
@@ -42,7 +41,6 @@ def make_exercise_table(engine: Engine, verbose: bool = False) -> None:
 def read_exercise_table(engine: Engine, verbose: bool = False) -> None:
     if 0 < verbose:
         print('read_exercise_table is called')
-    engine = create_engine('sqlite:///fitpad.db', echo=True)
     session = Session(engine)
     stmt = select(Exercise)
     for exercise in session.scalars(stmt):
@@ -53,7 +51,6 @@ def read_exercise_table(engine: Engine, verbose: bool = False) -> None:
 def make_workout_table(engine: Engine, verbose: bool = False) -> None:
     if 0 < verbose:
         print('make_workout_table is called')
-    engine = create_engine('sqlite:///fitpad.db', echo=True)
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     with Session(engine) as session:
         def get_exer(name: str) -> Optional[Exercise]:
@@ -71,7 +68,6 @@ def make_workout_table(engine: Engine, verbose: bool = False) -> None:
 def read_workout_table(engine: Engine, verbose: bool = False) -> None:
     if 0 < verbose:
         print('read_workout_table is called')
-    engine = create_engine('sqlite:///fitpad.db', echo=True)
     session = Session(engine)
     stmt = select(Workout)
     for workout in session.scalars(stmt):
