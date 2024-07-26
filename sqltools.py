@@ -57,9 +57,11 @@ def make_workout_table(engine: Engine, verbose: bool = False) -> None:
             return session.scalar(
                 select(Exercise).where(Exercise.name == name))
 
-        session.add_all([Workout(exercise=get_exer('front squat'),
+        front_squat = get_exer('front_squat')
+        squat = get_exer('squat')
+        session.add_all([Workout(exercise=front_squat,
                                  when=now, reps=5, weight=50.0),
-                         Workout(exercise=get_exer('squat'),
+                         Workout(exercise=squat,
                                  when=now, reps=5, weight=60.0)])
         session.commit()
 
