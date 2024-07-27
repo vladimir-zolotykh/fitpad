@@ -8,6 +8,7 @@ $ python sqltools.py make_exercise_table make_workout_table \
          read_exercise_table read_workout_table
 """
 from typing import Callable
+from functools import wraps
 import argparse
 import argcomplete
 from typing import Optional
@@ -22,7 +23,12 @@ _functions = []
 
 def register(func):
     _functions.append(func)
-    return func
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print_func_is_called(func)
+        return func(*args, **kwargs)
+    return wrapper
 
 
 def print_func_is_called(func: Callable[[], None]) -> None:
@@ -32,7 +38,6 @@ def print_func_is_called(func: Callable[[], None]) -> None:
 
 @register
 def make_exercise_table(engine: Engine) -> None:
-    print_func_is_called(make_exercise_table)
     Base.metadata.create_all(engine)
     front_squat = Exercise(name='front squat')
     squat = Exercise(name='squat')
@@ -45,7 +50,6 @@ def make_exercise_table(engine: Engine) -> None:
 
 @register
 def read_exercise_table(engine: Engine) -> None:
-    print_func_is_called(read_exercise_table)
     session = Session(engine)
     stmt = select(Exercise)
     for exercise in session.scalars(stmt):
@@ -54,7 +58,6 @@ def read_exercise_table(engine: Engine) -> None:
 
 @register
 def make_workout_table(engine: Engine) -> None:
-    print_func_is_called(make_workout_table)
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     with Session(engine) as session:
         def get_exer(name: str) -> Optional[Exercise]:
@@ -72,7 +75,6 @@ def make_workout_table(engine: Engine) -> None:
 
 @register
 def read_workout_table(engine: Engine) -> None:
-    print_func_is_called(read_workout_table)
     session = Session(engine)
     stmt = select(Workout)
     for workout in session.scalars(stmt):
