@@ -49,7 +49,7 @@ class ExerTk(tk.Frame):
         print(f'{label} num_rows = {n1}/{n2}')
         sys.stdout.flush()
 
-    def yield_sets(self) -> Generator[[str, str, str], None, None]:
+    def yield_sets(self) -> Generator[Tuple[str, str, str], None, None]:
         pass
 
     def edit_sets(self):
