@@ -26,12 +26,12 @@ def register(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        print_func_is_called(func)
+        print_func_name(func)
         return func(*args, **kwargs)
     return wrapper
 
 
-def print_func_is_called(func: Callable[[], None]) -> None:
+def print_func_name(func: Callable[[], None]) -> None:
     if 0 < args.verbose:
         print(Fore.RED + f'`{func.__name__}` is called' + Style.RESET_ALL)
 
