@@ -4,8 +4,9 @@
 """
 Usage:
 $ rm fitpad.db
-$ python sqltools.py make_exercise_table make_workout_table \
-         read_exercise_table read_workout_table
+$ python sqltools.py make_exercise_table make_workout_table --echo -v
+$ python sqltools.py read_exercise_table read_workout_table -v --echo
+
 """
 from typing import Callable
 from functools import wraps
