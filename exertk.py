@@ -4,9 +4,10 @@
 import sys
 from contextlib import contextmanager
 from typing import Dict
+from typing import Generator, Tuple
 import tkinter as tk
 from entry_var import EntryVar
-from wo_tools import Row
+from wo_tools import Row, rows_info
 
 
 class ExerTk(tk.Frame):
@@ -47,6 +48,9 @@ class ExerTk(tk.Frame):
         n2 = self.grid_size()[1]
         print(f'{label} num_rows = {n1}/{n2}')
         sys.stdout.flush()
+
+    def yield_sets(self) -> Generator[[str, str, str], None, None]:
+        pass
 
     def edit_sets(self):
         _, num_rows = self.grid_size()
