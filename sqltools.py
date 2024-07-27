@@ -7,6 +7,7 @@ $ rm fitpad.db
 $ python sqltools.py make_exercise_table make_workout_table \
          read_exercise_table read_workout_table
 """
+from typing import Callable
 import argparse
 import argcomplete
 from typing import Optional
@@ -15,6 +16,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 from sqlalchemy.engine.base import Engine
 from models import Base, Exercise, Workout
+from colorama import Fore, Style
 _functions = []
 
 
@@ -23,10 +25,14 @@ def register(func):
     return func
 
 
+def print_func_is_called(func: Callable[[], None]) -> None:
+    if 0 < args.verbose:
+        print(Fore.RED + f'`{func.__name__}` is called' + Style.RESET_ALL)
+
+
 @register
-def make_exercise_table(engine: Engine, verbose: bool = False) -> None:
-    if 0 < verbose:
-        print('make_exercise_table is called')
+def make_exercise_table(engine: Engine) -> None:
+    print_func_is_called(make_exercise_table)
     Base.metadata.create_all(engine)
     front_squat = Exercise(name='front squat')
     squat = Exercise(name='squat')
@@ -38,9 +44,8 @@ def make_exercise_table(engine: Engine, verbose: bool = False) -> None:
 
 
 @register
-def read_exercise_table(engine: Engine, verbose: bool = False) -> None:
-    if 0 < verbose:
-        print('read_exercise_table is called')
+def read_exercise_table(engine: Engine) -> None:
+    print_func_is_called(read_exercise_table)
     session = Session(engine)
     stmt = select(Exercise)
     for exercise in session.scalars(stmt):
@@ -48,9 +53,8 @@ def read_exercise_table(engine: Engine, verbose: bool = False) -> None:
 
 
 @register
-def make_workout_table(engine: Engine, verbose: bool = False) -> None:
-    if 0 < verbose:
-        print('make_workout_table is called')
+def make_workout_table(engine: Engine) -> None:
+    print_func_is_called(make_workout_table)
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     with Session(engine) as session:
         def get_exer(name: str) -> Optional[Exercise]:
@@ -67,9 +71,8 @@ def make_workout_table(engine: Engine, verbose: bool = False) -> None:
 
 
 @register
-def read_workout_table(engine: Engine, verbose: bool = False) -> None:
-    if 0 < verbose:
-        print('read_workout_table is called')
+def read_workout_table(engine: Engine) -> None:
+    print_func_is_called(read_workout_table)
     session = Session(engine)
     stmt = select(Workout)
     for workout in session.scalars(stmt):
@@ -94,4 +97,4 @@ if __name__ == '__main__':
     engine = create_engine(f'sqlite:///{args.db}', echo=args.echo)
     for fn in args.function_name:
         func = globals()[fn]
-        func(engine, verbose=args.verbose)
+        func(engine)
