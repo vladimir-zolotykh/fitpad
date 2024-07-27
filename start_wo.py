@@ -38,6 +38,10 @@ class Workout(tk.Tk):
         for name in self.exer_dir:
             _add_exer = partial(dir.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
+        menubar.add_command(label='Save workout', command=self.save_workout)
+
+    def save_workout(self):
+        pass
 
 
 parser = argparse.ArgumentParser(
