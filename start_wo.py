@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from functools import partial
+from datetime import datetime
 import argparse
 import argcomplete
 import tkinter as tk
@@ -41,13 +42,19 @@ class Workout(tk.Tk):
         menubar.add_command(label='Save workout', command=self.save_workout)
 
     def save_workout(self):
-        # for exer_name in self.dir.yield_exer_names():
-        #     print(f'{exer_name = }')
-        for name in self.dir:
-            print(f'{name = }')
-            exertk = self.dir[name]
-            for set_no, weight, reps in exertk.yield_sets():
-                print(f'{set_no = }, {weight = }, {reps = }')
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        with Session(self.engine) as session:
+            for exer_name in self.dir:
+                def get_exer(name: str) -> Optional[Exercise]:
+                    return session.scalar(
+                        select(Exercise).where(Exercise.name == name))
+
+                exer = get_exer(exer_name)
+                exertk = self.dir[exer_name]
+                for _, weight, reps in exertk.yield_sets():
+                    session.add(Workout(exercise=exer, when=now,
+                                        weight=weight, reps=reps))
+            session.commit()
 
 
 parser = argparse.ArgumentParser(
