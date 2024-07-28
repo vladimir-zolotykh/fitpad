@@ -9,7 +9,7 @@ import argcomplete
 import tkinter as tk
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-from models import Exercise
+import models as md
 import database as db
 from exertk import ExerDir
 
@@ -29,7 +29,7 @@ class Workout(tk.Tk):
         menubar.add_cascade(label='Add exercise', menu=add_exer_menu)
         self.exer_dir: Dict[str, Any] = {}
         with Session(engine) as session:
-            for exer in session.scalars(select(Exercise)):
+            for exer in session.scalars(select(md.Exercise)):
                 self.exer_dir[exer.name] = None
         frame = tk.Frame(self)
         frame.grid(column=0, row=0, sticky=tk.NSEW)
@@ -45,15 +45,15 @@ class Workout(tk.Tk):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with Session(self.engine) as session:
             for exer_name in self.dir:
-                def get_exer(name: str) -> Optional[Exercise]:
+                def get_exer(name: str) -> Optional[md.Exercise]:
                     return session.scalar(
-                        select(Exercise).where(Exercise.name == name))
+                        select(md.Exercise).where(md.Exercise.name == name))
 
                 exer = get_exer(exer_name)
                 exertk = self.dir[exer_name]
                 for _, weight, reps in exertk.yield_sets():
-                    session.add(Workout(exercise=exer, when=now,
-                                        weight=weight, reps=reps))
+                    session.add(md.Workout(exercise=exer, when=now,
+                                           weight=weight, reps=reps))
             session.commit()
 
 
