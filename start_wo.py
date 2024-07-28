@@ -43,13 +43,10 @@ class Workout(tk.Tk):
 
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        with Session(self.engine) as session:
+        # with Session(self.engine) as session:
+        with db.session_scope(self.engine) as session:
             for exer_name in self.dir:
-                def get_exer(name: str) -> Optional[md.Exercise]:
-                    return session.scalar(
-                        select(md.Exercise).where(md.Exercise.name == name))
-
-                exer = get_exer(exer_name)
+                exer = session.get_exer(exer_name)
                 exertk = self.dir[exer_name]
                 for _, weight, reps in exertk.yield_sets():
                     session.add(md.Workout(exercise=exer, when=now,

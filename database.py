@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Optional
 from contextlib import contextmanager
+from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.exc import SQLAlchemyError
 import models as md
@@ -24,7 +26,9 @@ def session_scope(engine):
 
 
 class Transaction(Session):
-    pass
+    def get_exer(self, name: str) -> Optional[md.Exercise]:
+        return self.scalar(
+            select(md.Exercise).where(md.Exercise.name == name))
 
 
 def initialize(engine):
