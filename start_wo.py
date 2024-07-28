@@ -34,14 +34,20 @@ class Workout(tk.Tk):
         frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)
-        dir = ExerDir(frame)
+        self.dir = dir = ExerDir(frame)
         for name in self.exer_dir:
             _add_exer = partial(dir.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
         menubar.add_command(label='Save workout', command=self.save_workout)
 
     def save_workout(self):
-        pass
+        # for exer_name in self.dir.yield_exer_names():
+        #     print(f'{exer_name = }')
+        for name in self.dir:
+            print(f'{name = }')
+            exertk = self.dir[name]
+            for set_no, weight, reps in exertk.yield_sets():
+                print(f'{set_no = }, {weight = }, {reps = }')
 
 
 parser = argparse.ArgumentParser(

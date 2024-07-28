@@ -44,7 +44,6 @@ class Row(list):
             return int(var.get())
         else:
             raise TypeError(f'Expected Entry widget, got {type(w)}')
-            pass
 
 
 def grid_info(container: tk.Frame) -> str:

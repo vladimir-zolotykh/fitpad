@@ -50,7 +50,18 @@ class ExerTk(tk.Frame):
         sys.stdout.flush()
 
     def yield_sets(self) -> Generator[Tuple[str, str, str], None, None]:
-        pass
+        num_columns, num_rows = self.grid_size()
+        sets_sorted = sorted(
+            [Row.from_grid(self, row=row) for row in range(1, num_rows - 1)],
+            key=Row.set_no)
+        for row in sets_sorted:
+            values = []
+            for w in row:
+                if isinstance(w, EntryVar):
+                    values.append(w.get())
+                else:
+                    raise TypeError(f'Expected EntryVar widget, got {type(w)}')
+            yield values
 
     def edit_sets(self):
         _, num_rows = self.grid_size()
