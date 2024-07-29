@@ -36,9 +36,6 @@ class ExerTk(tk.Frame):
         mb['menu'] = mb_menu
         # mb_menu.add_command(label='Add set', command=self.add_set2)
         mb_menu.add_command(label='Add set', command=self.add_set)
-        mb_menu.add_command(label='Move up')
-        mb_menu.add_command(label='Move down')
-        mb_menu.add_command(label='Remove')
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
 
     @contextmanager
