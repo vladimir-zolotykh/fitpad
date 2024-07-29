@@ -144,7 +144,18 @@ class ExerDir(Dict[str, ExerTk]):
         self.row: int = 0
 
     def add_exer(self, name: str):
-        self[name] = ExerTk(self.frame, name, self.row)
+        exer_wrap = tk.Frame(self.frame)
+        # exer_wrap.columnconfigure(1, weight=1)
+        exer_wrap.grid(column=0, row=self.row, sticky=tk.EW)
+        exer_no = EntryVar(exer_wrap, width=2)
+        exer_no.grid(column=0, row=0)
+        exer_wrap.columnconfigure(1, weight=1)
+        exer_box = tk.Frame(exer_wrap)
+        exer_box.columnconfigure(0, weight=1)
+        exer_box.grid(column=1, row=0, sticky=tk.EW)
+        # exer_box.columnconfigure(1, weight=1)
+        # self[name] = ExerTk(self.frame, name, self.row)
+        self[name] = ExerTk(exer_box, name, self.row)
         self.row += 1
 
     def del_exer(self, name: str):
