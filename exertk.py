@@ -143,6 +143,9 @@ class ExerDir(Dict[str, ExerTk]):
         self.frame: tk.Frame = frame
         self.row: int = 0
 
+    def edit_exer(self):
+        print('*** edit_exer')
+
     def add_exer(self, name: str):
         exer_wrap = tk.Frame(self.frame)
         # exer_wrap.columnconfigure(1, weight=1)

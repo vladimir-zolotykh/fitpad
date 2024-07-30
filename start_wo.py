@@ -40,11 +40,8 @@ class Workout(tk.Tk):
             _add_exer = partial(dir.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
         add_exer_menu.add_separator()
-        add_exer_menu.add_command(label='Edit', command=self.edit_exer)
+        add_exer_menu.add_command(label='Edit', command=dir.edit_exer)
         menubar.add_command(label='Save workout', command=self.save_workout)
-
-    def edit_exer(self):
-        pass
 
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
