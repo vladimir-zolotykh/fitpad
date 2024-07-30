@@ -150,7 +150,14 @@ class ExerDir(Dict[str, ExerTk]):
         for row_index in range(num_rows):
             row = self.frame.grid_slaves(row=row_index)
             exer_wrap = row[0]
-            print(f'{exer_wrap = }')
+            # row = exer_wrap.grid_slaves(row=0)
+            row = sorted(exer_wrap.grid_slaves(row=0),
+                         key=lambda w: w.grid_info()['column'])
+            w0 = row[0]
+            w1 = row[1]
+            print(f'{w0.grid_info()["column"] = }')
+            print(f'{type(w0) = }, {type(w1) = }')
+            # print(f'{exer_wrap = }')
 
     def add_exer(self, name: str):
         exer_wrap = tk.Frame(self.frame)
