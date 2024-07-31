@@ -163,7 +163,10 @@ class ExerDir(Dict[str, ExerTk]):
         exer_wrap = tk.Frame(self.frame)
         # exer_wrap.columnconfigure(1, weight=1)
         exer_wrap.grid(column=0, row=self.row, sticky=tk.EW)
+        var = tk.StringVar()
+        var.set(str(self.row + 1))
         exer_no = EntryVar(exer_wrap, width=2)
+        exer_no.configure(textvariable=var)
         exer_no.grid(column=0, row=0)
         exer_wrap.columnconfigure(1, weight=1)
         exer_box = tk.Frame(exer_wrap)  # `exer_box` is redundant
