@@ -22,12 +22,13 @@ class ExerTk(tk.Frame):
         self.name = name
         self.last_set: int = 1
         self.set_no: Dict[int, tk.StringVar] = {}
-        self.config(bd=2, relief=tk.RIDGE)
+        pady: int = 2
+        self.config(bd=pady, relief=tk.RIDGE)
         self.columnconfigure(0, weight=1)
         for c in range(self.NUM_COLUMNS):
             self.columnconfigure(c, weight=1)
-        tk.Label(self, text=name).grid(
-            column=0, row=0, columnspan=self.NUM_COLUMNS)
+        label = tk.Label(self, text=name)
+        label.grid(column=0, row=0, columnspan=self.NUM_COLUMNS)
         # self.add_set0()
         self.add_set()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
@@ -37,6 +38,10 @@ class ExerTk(tk.Frame):
         # mb_menu.add_command(label='Add set', command=self.add_set2)
         mb_menu.add_command(label='Add set', command=self.add_set)
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
+        # print(f'{label.winfo_reqheight() = }')
+        # print(f'{mb.winfo_reqheight() = }')
+        label.configure(pady=pady + (mb.winfo_reqheight() -
+                                     label.winfo_reqheight()) // 2)
 
     @contextmanager
     def num_rows_printed(self, label='***'):
