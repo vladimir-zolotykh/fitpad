@@ -29,17 +29,13 @@ class ExerTk(tk.Frame):
             self.columnconfigure(c, weight=1)
         label = tk.Label(self, text=name)
         label.grid(column=0, row=0, columnspan=self.NUM_COLUMNS)
-        # self.add_set0()
         self.add_set()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
         mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
         mb_menu = tk.Menu(mb, tearoff=0)
         mb['menu'] = mb_menu
-        # mb_menu.add_command(label='Add set', command=self.add_set2)
         mb_menu.add_command(label='Add set', command=self.add_set)
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
-        # print(f'{label.winfo_reqheight() = }')
-        # print(f'{mb.winfo_reqheight() = }')
         label.configure(pady=pady + (mb.winfo_reqheight() -
                                      label.winfo_reqheight()) // 2)
 
