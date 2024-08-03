@@ -4,7 +4,7 @@
 import sys
 from contextlib import contextmanager
 from typing import Dict
-from typing import Generator, Tuple
+from typing import Generator, Tuple, List
 import tkinter as tk
 from entry_var import EntryVar
 from wo_tools import Row, rows_info
@@ -47,7 +47,8 @@ class ExerTk(tk.Frame):
         print(f'{label} num_rows = {n1}/{n2}')
         sys.stdout.flush()
 
-    def yield_sets(self) -> Generator[Tuple[str, str, str], None, None]:
+    # def yield_sets(self) -> Generator[Tuple[str, str, str], None, None]:
+    def yield_sets(self) -> Generator[List[str], None, None]:
         num_columns, num_rows = self.grid_size()
         sets_sorted = sorted(
             [Row.from_grid(self, row=row) for row in range(1, num_rows - 1)],
@@ -150,15 +151,14 @@ class ExerDir(Dict[str, ExerTk]):
         print(f'ExerDir.edit_exer ({num_cols}, {num_rows})')
         for row_index in range(num_rows):
             row = self.frame.grid_slaves(row=row_index)
-            exer_wrap = row[0]
-            # row = exer_wrap.grid_slaves(row=0)
+            exer_wrap: tk.Widget = row[0]
             row = sorted(exer_wrap.grid_slaves(row=0),
                          key=lambda w: w.grid_info()['column'])
-            w0 = row[0]
-            w1 = row[1]
-            print(f'{w0.grid_info()["column"] = }')
-            print(f'{type(w0) = }, {type(w1) = }')
-            # print(f'{exer_wrap = }')
+            exer_no: tk.Widget = row[0]
+            exertk_wrap: tk.Widget = row[1]
+            if isinstance(exer_no, EntryVar):
+                print(exer_no.get())
+            print(f'{type(exer_no) = }, {type(exertk_wrap) = }')
 
     def add_exer(self, name: str):
         exer_wrap = tk.Frame(self.frame)
