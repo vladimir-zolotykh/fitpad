@@ -4,10 +4,10 @@
 import sys
 from contextlib import contextmanager
 from typing import Dict
-from typing import Generator, Tuple, List
+from typing import Generator, List
 import tkinter as tk
 from entry_var import EntryVar
-from wo_tools import Row, rows_info
+from wo_tools import Row, rows_info, NumberedExer, Wo
 
 
 class ExerTk(tk.Frame):
@@ -146,19 +146,17 @@ class ExerDir(Dict[str, ExerTk]):
         self.row: int = 0
 
     def edit_exer(self):
-        num_cols, num_rows = self.frame.grid_size()
-        # ExerDir.edit_exer (1, 2)
-        print(f'ExerDir.edit_exer ({num_cols}, {num_rows})')
-        for row_index in range(num_rows):
-            row = self.frame.grid_slaves(row=row_index)
-            exer_wrap: tk.Widget = row[0]
-            row = sorted(exer_wrap.grid_slaves(row=0),
-                         key=lambda w: w.grid_info()['column'])
-            exer_no: tk.Widget = row[0]
-            exertk_wrap: tk.Widget = row[1]
-            if isinstance(exer_no, EntryVar):
-                print(exer_no.get())
-            print(f'{type(exer_no) = }, {type(exertk_wrap) = }')
+        wo = Wo(self.frame)
+        for exer in wo:
+            if exer.exer_no == 0:
+                exer.destroy()
+            else:
+                exer.grid_forget()
+        for row, exer in enumerate(wo):
+            if exer.exer_no() == 0:
+                exer[0].grid(column=0, row=row)
+                exer[1].grid(column=1, row=row)
+                self.del_exer(exer.name())
 
     def add_exer(self, name: str):
         exer_wrap = tk.Frame(self.frame)
@@ -179,6 +177,5 @@ class ExerDir(Dict[str, ExerTk]):
         self.row += 1
 
     def del_exer(self, name: str):
-        exertk = self[name]
-        exertk.destroy()
+        del self[name]
         self.row -= 1

@@ -7,6 +7,27 @@ from prettytable import PrettyTable
 from entry_var import EntryVar
 
 
+class NumberedExer(list):
+    def __init__(self, frame: tk.Frame):
+        row = frame.grid_slaves(row=0)
+        super().__init__(row[0].grid_slaves(row=0))
+        self.soft(key=lambda w: w.grid_info()['column'])
+
+    def exer_no(self) -> int:
+        if isinstance(self[0], EntryVar):
+            self[0].get()
+        else:
+            raise TypeError(f'Expected EntryVar, got {type(self[0])}')
+
+
+class Wo(list):
+    def __init__(self, frame: tk.Frame):
+        _, num_rows = frame.grid_size()
+        super().__init__([NumberedExer(frame.grid_slaves(row=row))
+                          for row in range(num_rows)])
+        self.sort(key=NumberedExer.exer_no)
+
+
 class Row(list):
     def __init__(self, widgets: List[tk.Widget]):
         super().__init__(widgets)
