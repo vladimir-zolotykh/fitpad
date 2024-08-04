@@ -10,8 +10,13 @@ from entry_var import EntryVar
 class NumberedExer(list):
     def __init__(self, frame: tk.Frame):
         row = frame.grid_slaves(row=0)
+        self.box = row[0].grid_slaves(row=0)
         super().__init__(row[0].grid_slaves(row=0))
         self.soft(key=lambda w: w.grid_info()['column'])
+
+    def exer_name(self) -> str:
+        label = self.box.grid_slaves(row=0)[0]
+        return label.cget('text')
 
     def exer_no(self) -> int:
         if isinstance(self[0], EntryVar):
