@@ -11,8 +11,8 @@ class NumberedExer(list):
     def __init__(self, frame: tk.Frame):
         row = frame.grid_slaves(row=0)
         self.box = row[0].grid_slaves(row=0)
-        super().__init__(row[0].grid_slaves(row=0))
-        self.soft(key=lambda w: w.grid_info()['column'])
+        super().__init__(frame.grid_slaves(row=0))
+        self.sort(key=lambda w: w.grid_info()['column'])
 
     def exer_name(self) -> str:
         label = self.box.grid_slaves(row=0)[0]
@@ -20,7 +20,7 @@ class NumberedExer(list):
 
     def exer_no(self) -> int:
         if isinstance(self[0], EntryVar):
-            self[0].get()
+            int(self[0].get())
         else:
             raise TypeError(f'Expected EntryVar, got {type(self[0])}')
 
@@ -28,9 +28,9 @@ class NumberedExer(list):
 class Wo(list):
     def __init__(self, frame: tk.Frame):
         _, num_rows = frame.grid_size()
-        super().__init__([NumberedExer(frame.grid_slaves(row=row))
+        super().__init__([NumberedExer(frame.grid_slaves(row=row)[0])
                           for row in range(num_rows)])
-        self.sort(key=NumberedExer.exer_no)
+        self.sort(key=lambda e: e.exer_no())
 
 
 class Row(list):
