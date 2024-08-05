@@ -9,13 +9,20 @@ from entry_var import EntryVar
 
 class NumberedExer(list):
     def __init__(self, frame: tk.Frame):
+        num_cols, num_rows = frame.grid_size()  # NumberedExer size(2, 1)
+        self.frame = frame
         row = frame.grid_slaves(row=0)
-        self.box = row[0].grid_slaves(row=0)
-        super().__init__(frame.grid_slaves(row=0))
+        super().__init__(row)
         self.sort(key=lambda w: w.grid_info()['column'])
+        print(self.exer_name())
+
+    def grid_forget(self):
+        self.frame.grid_forget()
 
     def exer_name(self) -> str:
-        label = self.box.grid_slaves(row=0)[0]
+        exertk_frame = self[1]
+        exertk_frame = exertk_frame.grid_slaves(row=0)[0]
+        label = exertk_frame.grid_slaves(row=0)[0]
         return label.cget('text')
 
     def exer_no(self) -> int:

@@ -147,6 +147,7 @@ class ExerDir(Dict[str, ExerTk]):
 
     def edit_exer(self):
         wo = Wo(self.frame)
+        return
         for exer in wo:
             if exer.exer_no == 0:
                 exer.destroy()
