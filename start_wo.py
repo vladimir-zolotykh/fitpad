@@ -31,7 +31,7 @@ class Workout(tk.Tk):
         with Session(engine) as session:
             for exer in session.scalars(select(md.Exercise)):
                 self.exer_dir[exer.name] = None
-        frame = tk.Frame(self)
+        frame = tk.Frame(self, name='workout_frame')
         frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)

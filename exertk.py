@@ -146,6 +146,7 @@ class ExerDir(Dict[str, ExerTk]):
         self.row: int = 0
 
     def edit_exer(self):
+        print(f'ExerDir.edit_exer {self.frame.winfo_name() = }')
         wo = Wo(self.frame)
         return
         for exer in wo:

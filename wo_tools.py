@@ -21,6 +21,7 @@ class NumberedExer(list):
 
     def exer_name(self) -> str:
         exertk_frame = self[1]
+        print(f'exer_name {exertk_frame.grid_size() = }')
         exertk_frame = exertk_frame.grid_slaves(row=0)[0]
         label = exertk_frame.grid_slaves(row=0)[0]
         return label.cget('text')
