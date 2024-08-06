@@ -157,12 +157,14 @@ class ExerDir(Dict[str, ExerTk]):
             else:
                 exer.grid_forget()
         for row, exer in enumerate(wo):
-            if exer.exer_no() == 0:
-                self.del_exer(exer.name())
-            else:
-                exer[0].grid(column=0, row=row)
-                exer[1].grid(column=1, row=row)
-                self.del_exer(exer.name())
+            print(f'{exer.exer_name() = }')
+            # if exer.exer_no() == 0:
+            #     self.del_exer(exer.exer_ame())
+            # else:
+            #     exer[0].grid(column=0, row=row)
+            #     exer[1].grid(column=1, row=row)
+            #     print(f'{exer.exer_name() = }')
+            #     # self.del_exer(exer.exer_name())
 
     def add_exer(self, name: str):
         exer_wrap = tk.Frame(self.frame, name=f'exer_wrap_frame{self.row:02d}')
@@ -176,5 +178,5 @@ class ExerDir(Dict[str, ExerTk]):
         exer_box = tk.Frame(exer_wrap, name=f'exer_box_frame{self.row:02d}')
         exer_box.columnconfigure(0, weight=1)
         exer_box.grid(column=1, row=0, sticky=tk.EW)
-        self[name] = ExerTk(exer_box, name, self.row)
+        self[name] = ExerTk(exer_box, name, 0)
         self.row += 1
