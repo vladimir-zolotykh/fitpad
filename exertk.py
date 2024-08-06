@@ -145,15 +145,21 @@ class ExerDir(Dict[str, ExerTk]):
         self.frame: tk.Frame = frame
         self.row: int = 0
 
+    def del_exer(self, name: str):
+        del self[name]
+        self.row -= 1
+
     def edit_exer(self):
         wo = Wo(self.frame)
         for exer in wo:
-            if exer.exer_no == 0:
+            if exer.exer_no() == 0:
                 exer.destroy()
             else:
                 exer.grid_forget()
         for row, exer in enumerate(wo):
             if exer.exer_no() == 0:
+                self.del_exer(exer.name())
+            else:
                 exer[0].grid(column=0, row=row)
                 exer[1].grid(column=1, row=row)
                 self.del_exer(exer.name())
@@ -172,7 +178,3 @@ class ExerDir(Dict[str, ExerTk]):
         exer_box.grid(column=1, row=0, sticky=tk.EW)
         self[name] = ExerTk(exer_box, name, self.row)
         self.row += 1
-
-    def del_exer(self, name: str):
-        del self[name]
-        self.row -= 1

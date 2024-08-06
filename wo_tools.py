@@ -18,6 +18,9 @@ class NumberedExer(list):
     def grid_forget(self):
         self.frame.grid_forget()
 
+    def destroy(self):
+        self.frame.destroy()
+
     def exer_name(self) -> str:
         exertk_frame = self[1]
         exertk_frame = exertk_frame.grid_slaves(row=0)[0]
