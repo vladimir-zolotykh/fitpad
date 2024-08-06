@@ -9,33 +9,32 @@ from entry_var import EntryVar
 
 class NumberedExer(list):
     def __init__(self, frame: tk.Frame):
-        num_cols, num_rows = frame.grid_size()  # NumberedExer size(2, 1)
-        self.frame = frame
+        num_cols, num_rows = frame.grid_size()
+        self.frame = frame      # '.workout_frame.exer_wrap_frame00'
         row = frame.grid_slaves(row=0)
         super().__init__(row)
         self.sort(key=lambda w: w.grid_info()['column'])
-        print(self.exer_name())
 
     def grid_forget(self):
         self.frame.grid_forget()
 
     def exer_name(self) -> str:
         exertk_frame = self[1]
-        print(f'exer_name {exertk_frame.grid_size() = }')
         exertk_frame = exertk_frame.grid_slaves(row=0)[0]
         label = exertk_frame.grid_slaves(row=0)[0]
         return label.cget('text')
 
     def exer_no(self) -> int:
         if isinstance(self[0], EntryVar):
-            int(self[0].get())
+            return int(self[0].get())
         else:
             raise TypeError(f'Expected EntryVar, got {type(self[0])}')
 
 
 class Wo(list):
     def __init__(self, frame: tk.Frame):
-        _, num_rows = frame.grid_size()
+        # frame: '.workout_frame'
+        num_cols, num_rows = frame.grid_size()  # 1, 2
         super().__init__([NumberedExer(frame.grid_slaves(row=row)[0])
                           for row in range(num_rows)])
         self.sort(key=lambda e: e.exer_no())
