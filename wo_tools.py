@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import tkinter as tk
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, cast
 from prettytable import PrettyTable
 from entry_var import EntryVar
 
@@ -15,21 +15,8 @@ class NumberedExer(list):
         super().__init__(row)
         self.sort(key=lambda w: w.grid_info()['column'])
 
-    def which_parent(self) -> tk.Frame:
-        return self.frame
-
-    def grid(self, *args, **kwargs):
-        self.frame.grid(*args, **kwargs)
-
-    def grid_forget(self):
-        self.frame.grid_forget()
-        # self[0].grid_forget()
-        # self[1].grid_forget()
-
-    def destroy(self):
-        self.frame.destroy()
-        # self[0].destroy()
-        # self[0].destroy()
+    def __getattr__(self, name):
+        return getattr(self.frame, name)
 
     def exer_name(self) -> str:
         exertk_frame = self[1]
@@ -48,12 +35,9 @@ class Wo(list):
     def __init__(self, frame: tk.Frame):
         # frame: '.workout_frame'
         num_cols, num_rows = frame.grid_size()  # 1, 2
-        super().__init__([NumberedExer(frame.grid_slaves(row=row)[0])
-                          for row in range(num_rows)])
-        # self.sort(key=lambda e: e.exer_no())
-        self.do_sort()
-
-    def do_sort(self):
+        super().__init__(
+            [NumberedExer(cast(tk.Frame, frame.grid_slaves(row=row)[0]))
+             for row in range(num_rows)])
         self.sort(key=lambda e: e.exer_no())
 
 

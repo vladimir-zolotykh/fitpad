@@ -153,8 +153,6 @@ class ExerDir(Dict[str, ExerTk]):
         wo = Wo(self.frame)
         for exer in wo:
             exer: NumberedExer = exer
-            # print(exer.which_parent())
-            exer: NumberedExer = exer
             if exer.exer_no() == 0:
                 # exer.destroy()
                 pass
