@@ -156,13 +156,15 @@ class ExerDir(Dict[str, ExerTk]):
             # print(exer.which_parent())
             exer: NumberedExer = exer
             if exer.exer_no() == 0:
-                exer.destroy()
+                # exer.destroy()
+                pass
             else:
                 exer.grid_forget()
         row: int = 0
         for exer in wo:
             if exer.exer_no() == 0:
                 self.del_exer(exer.exer_name())
+                exer.destroy()
             else:
                 exer.grid(column=0, row=row, sticky=tk.EW)
                 # exer[0].grid(column=0, row=row)
