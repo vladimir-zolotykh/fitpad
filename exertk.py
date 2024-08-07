@@ -164,7 +164,7 @@ class ExerDir(Dict[str, ExerTk]):
             if exer.exer_no() == 0:
                 self.del_exer(exer.exer_name())
             else:
-                exer.grid(column=0, row=row)
+                exer.grid(column=0, row=row, sticky=tk.EW)
                 # exer[0].grid(column=0, row=row)
                 # exer[1].grid(column=1, row=row)
                 row += 1
