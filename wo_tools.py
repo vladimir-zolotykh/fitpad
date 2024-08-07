@@ -18,13 +18,18 @@ class NumberedExer(list):
     def which_parent(self) -> tk.Frame:
         return self.frame
 
+    def grid(self, *args, **kwargs):
+        self.frame.grid(*args, **kwargs)
+
     def grid_forget(self):
-        self[0].grid_forget()
-        self[1].grid_forget()
+        self.frame.grid_forget()
+        # self[0].grid_forget()
+        # self[1].grid_forget()
 
     def destroy(self):
-        self[0].destroy()
-        self[0].destroy()
+        self.frame.destroy()
+        # self[0].destroy()
+        # self[0].destroy()
 
     def exer_name(self) -> str:
         exertk_frame = self[1]
