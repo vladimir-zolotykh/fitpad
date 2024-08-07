@@ -16,10 +16,12 @@ class NumberedExer(list):
         self.sort(key=lambda w: w.grid_info()['column'])
 
     def grid_forget(self):
-        self.frame.grid_forget()
+        self[0].grid_forget()
+        self[1].grid_forget()
 
     def destroy(self):
-        self.frame.destroy()
+        self[0].destroy()
+        self[0].destroy()
 
     def exer_name(self) -> str:
         exertk_frame = self[1]
@@ -40,6 +42,10 @@ class Wo(list):
         num_cols, num_rows = frame.grid_size()  # 1, 2
         super().__init__([NumberedExer(frame.grid_slaves(row=row)[0])
                           for row in range(num_rows)])
+        # self.sort(key=lambda e: e.exer_no())
+        self.do_sort()
+
+    def do_sort(self):
         self.sort(key=lambda e: e.exer_no())
 
 

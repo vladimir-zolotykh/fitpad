@@ -151,17 +151,21 @@ class ExerDir(Dict[str, ExerTk]):
 
     def edit_exer(self):
         wo = Wo(self.frame)
+        # print(parent_of(wo))
         for exer in wo:
+            exer: NumberedExer = exer
             if exer.exer_no() == 0:
                 exer.destroy()
             else:
                 exer.grid_forget()
-        for row, exer in enumerate(wo):
+        row: int = 0
+        for exer in wo:
             if exer.exer_no() == 0:
                 self.del_exer(exer.exer_name())
             else:
                 exer[0].grid(column=0, row=row)
                 exer[1].grid(column=1, row=row)
+                row += 1
 
     def add_exer(self, name: str):
         exer_wrap = tk.Frame(self.frame, name=f'exer_wrap_frame{self.row:02d}')
