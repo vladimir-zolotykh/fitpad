@@ -152,11 +152,7 @@ class ExerDir(Dict[str, ExerTk]):
     def edit_exer(self):
         wo = Wo(self.frame)
         for exer in wo:
-            exer: NumberedExer = exer
-            if exer.exer_no() == 0:
-                # exer.destroy()
-                pass
-            else:
+            if 0 < exer.exer_no():
                 exer.grid_forget()
         row: int = 0
         for exer in wo:
@@ -165,8 +161,6 @@ class ExerDir(Dict[str, ExerTk]):
                 exer.destroy()
             else:
                 exer.grid(column=0, row=row, sticky=tk.EW)
-                # exer[0].grid(column=0, row=row)
-                # exer[1].grid(column=1, row=row)
                 row += 1
 
     def add_exer(self, name: str):
