@@ -15,6 +15,9 @@ class NumberedExer(list):
         super().__init__(row)
         self.sort(key=lambda w: w.grid_info()['column'])
 
+    def which_parent(self) -> tk.Frame:
+        return self.frame
+
     def grid_forget(self):
         self[0].grid_forget()
         self[1].grid_forget()
