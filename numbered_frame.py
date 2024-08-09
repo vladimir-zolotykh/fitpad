@@ -12,7 +12,7 @@ class NumberedFrame(tk.Frame):
         assert not (hasattr(self, 'parent') or hasattr(self, 'row'))
         self.parent = parent
         self.row = row
-        self.grid(column=0, row=0, sticky=tk.NSEW)
+        self.grid(column=0, row=row, sticky=tk.NSEW)
         self.columnconfigure(1, weight=1)
         # exer_no
         var = tk.StringVar()
