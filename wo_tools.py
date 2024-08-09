@@ -8,6 +8,14 @@ from entry_var import EntryVar
 
 
 class NumberedExer(list):
+    """class to `unpack' the grid structure
+
+    The grid structure represents has two widgets: tk.Entry
+    (`exer_no') and Frame(ExerTk) and is made in
+    NumberedFrame. NumberedExer.__getattr__ is used to
+    grid_forget/[re-]grid_pack
+    """
+
     def __init__(self, frame: tk.Frame):
         num_cols, num_rows = frame.grid_size()
         self.frame = frame      # '.workout_frame.exer_wrap_frame00'

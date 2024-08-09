@@ -7,6 +7,16 @@ from entry_var import EntryVar
 
 
 class NumberedFrame(tk.Frame):
+    """Makes `NumberedFrame' grid structure
+
+    of one or more rows of two columns: `exer_no' (tk.Entry),
+    `exer_box' Frame[ExerTk] where Frame is additional wrapper frame.
+
+    Usage:
+    numbered_frame = NumberedFrame(self.frame, self.row)
+    self[name] = ExerTk(numbered_frame.exer_box, name, 0)
+    """
+
     def __init__(self, parent: tk.Frame, row: int):
         super().__init__(parent, name=f'exer_wrap_frame{row:02d}')
         assert not (hasattr(self, 'parent') or hasattr(self, 'row'))
