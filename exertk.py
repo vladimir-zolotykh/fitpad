@@ -7,7 +7,8 @@ from typing import Dict
 from typing import Generator, List
 import tkinter as tk
 from entry_var import EntryVar
-from wo_tools import Row, rows_info, NumberedExer, Wo
+from wo_tools import Row, rows_info, Wo
+from numbered_frame import NumberedFrame
 
 
 class ExerTk(tk.Frame):
@@ -164,16 +165,21 @@ class ExerDir(Dict[str, ExerTk]):
                 row += 1
 
     def add_exer(self, name: str):
-        exer_wrap = tk.Frame(self.frame, name=f'exer_wrap_frame{self.row:02d}')
-        exer_wrap.grid(column=0, row=self.row, sticky=tk.EW)
-        var = tk.StringVar()
-        var.set(str(self.row + 1))
-        exer_no = EntryVar(exer_wrap, width=2)
-        exer_no.configure(textvariable=var)
-        exer_no.grid(column=0, row=0)
-        exer_wrap.columnconfigure(1, weight=1)
-        exer_box = tk.Frame(exer_wrap, name=f'exer_box_frame{self.row:02d}')
-        exer_box.columnconfigure(0, weight=1)
-        exer_box.grid(column=1, row=0, sticky=tk.EW)
-        self[name] = ExerTk(exer_box, name, 0)
+        numbered_frame = NumberedFrame(self.frame, self.row)
+
+        # exer_wrap = tk.Frame(
+        #     self.frame, name=f'exer_wrap_frame{self.row:02d}')
+        # exer_wrap.grid(column=0, row=self.row, sticky=tk.EW)
+        # var = tk.StringVar()
+        # var.set(str(self.row + 1))
+        # exer_no = EntryVar(exer_wrap, width=2)
+        # exer_no.configure(textvariable=var)
+        # exer_no.grid(column=0, row=0)
+        # exer_wrap.columnconfigure(1, weight=1)
+        # exer_box = tk.Frame(exer_wrap, name=f'exer_box_frame{self.row:02d}')
+        # exer_box.columnconfigure(0, weight=1)
+        # exer_box.grid(column=1, row=0, sticky=tk.EW)
+
+        # self[name] = ExerTk(exer_box, name, 0)
+        self[name] = ExerTk(numbered_frame.exer_box, name, 0)
         self.row += 1
