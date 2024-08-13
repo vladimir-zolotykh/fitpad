@@ -42,7 +42,7 @@ class NumberedExer(list):
 class Wo(list):
     def __init__(self, frame: tk.Frame):
         # frame: '.workout_frame'
-        num_cols, num_rows = frame.grid_size()  # 1, 2
+        num_cols, num_rows = frame.grid_size()  # 1, 1
         super().__init__(
             [NumberedExer(cast(tk.Frame, frame.grid_slaves(row=row)[0]))
              for row in range(num_rows)])
