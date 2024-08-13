@@ -31,7 +31,8 @@ class Frame2D(tk.Frame):
                 if widget.grid_info()['column'] == col:
                     return widget
         else:
-            raise IndexError()
+            raise IndexError(f'Invalid index {rowcol}. '
+                             f'Expected ({row_max = }, {col_max = })')
 
 
 # if __name__ == '__main__':
