@@ -20,18 +20,28 @@ class Frame2D(tk.Frame):
             raise IndexError()
 
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    frame = Frame2D(root, name='workout')
-    frame.grid(column=0, row=0, sticky=tk.NSEW)
-    label = tk.Label(frame, text='Deadlift', name='exercise_name')
-    label.grid(column=0, row=0, columnspan=3)
-    set_no = tk.Entry(frame, width=2, name='set_no')
-    set_no.grid(column=0, row=1)
-    weight = tk.Entry(frame, width=8, name='weight')
-    weight.grid(column=1, row=1)
-    reps = tk.Entry(frame, width=4, name='reps')
-    reps.grid(column=2, row=1)
-    btn = tk.Button(frame, text='Edit', name='edit')
-    btn.grid(column=0, row=2, columnspan=3)
-    root.mainloop()
+# if __name__ == '__main__':
+root = tk.Tk()
+frame = Frame2D(root, name='workout')
+frame.grid(column=0, row=0, sticky=tk.NSEW)
+label = tk.Label(frame, text='Deadlift', name='exercise_name')
+label.grid(column=0, row=0, columnspan=3)
+set_no = tk.Entry(frame, width=2, name='set_no')
+set_no.grid(column=0, row=1)
+weight = tk.Entry(frame, width=8, name='weight')
+weight.grid(column=1, row=1)
+reps = tk.Entry(frame, width=4, name='reps')
+reps.grid(column=2, row=1)
+btn = tk.Button(frame, text='Edit', name='edit')
+btn.grid(column=0, row=2, columnspan=3)
+# root.mainloop()
+# >>> frame[0, 0]
+# <tkinter.Label object .workout.exercise_name>
+# >>> frame[1, 0]
+# <tkinter.Entry object .workout.set_no>
+# >>> frame[1, 1]
+# <tkinter.Entry object .workout.weight>
+# >>> frame[1, 2]
+# <tkinter.Entry object .workout.reps>
+# >>> frame[2, 0]
+# <tkinter.Button object .workout.edit>
