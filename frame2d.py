@@ -35,18 +35,17 @@ class Frame2D(tk.Frame):
                              f'Expected ({row_max = }, {col_max = })')
 
 
-# if __name__ == '__main__':
-root = tk.Tk()
-frame = Frame2D(root, name='workout')
-frame.grid(column=0, row=0, sticky=tk.NSEW)
-label = tk.Label(frame, text='Deadlift', name='exercise_name')
-label.grid(column=0, row=0, columnspan=3)
-for col, (width, name) in enumerate(((2, 'set_no'), (8, 'weight'),
-                                     (4, 'reps'))):
-    _ = tk.Entry(frame, width=width, name=name)
-    _.grid(column=col, row=1)
-btn = tk.Button(frame, text='Edit', name='edit')
-btn.grid(column=0, row=2, columnspan=3)
-# root.mainloop()
 if __name__ == '__main__':
+    root = tk.Tk()
+    frame = Frame2D(root, name='workout')
+    frame.grid(column=0, row=0, sticky=tk.NSEW)
+    label = tk.Label(frame, text='Deadlift', name='exercise_name')
+    label.grid(column=0, row=0, columnspan=3)
+    for col, (width, name) in enumerate(((2, 'set_no'), (8, 'weight'),
+                                         (4, 'reps'))):
+        _ = tk.Entry(frame, width=width, name=name)
+        _.grid(column=col, row=1)
+    btn = tk.Button(frame, text='Edit', name='edit')
+    btn.grid(column=0, row=2, columnspan=3)
+    # root.mainloop()
     doctest.testmod()
