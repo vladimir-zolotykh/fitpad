@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from functools import partial
 from datetime import datetime
 import argparse
@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 import models as md
 import database as db
 from exertk import ExerDir
+from frame2d import Frame2D
 
 
 class Workout(tk.Tk):
@@ -31,7 +32,7 @@ class Workout(tk.Tk):
         with Session(engine) as session:
             for exer in session.scalars(select(md.Exercise)):
                 self.exer_dir[exer.name] = None
-        frame = tk.Frame(self, name='workout_frame')
+        frame = Frame2D(self, name='workout_frame')
         frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)

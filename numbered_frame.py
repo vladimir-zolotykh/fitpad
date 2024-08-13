@@ -4,9 +4,10 @@
 import tkinter as tk
 # from typing import Dict, List, Optional, cast
 from entry_var import EntryVar
+from frame2d import Frame2D
 
 
-class NumberedFrame(tk.Frame):
+class NumberedFrame(Frame2D):
     """Makes `NumberedFrame' grid structure
 
     of one or more rows of two columns: `exer_no' (tk.Entry),
@@ -31,7 +32,7 @@ class NumberedFrame(tk.Frame):
         exer_no.configure(textvariable=var)
         exer_no.grid(column=0, row=0)
         # self._exer_box
-        self._exer_box = tk.Frame(self, name=f'exer_box_frame{row:02d}')
+        self._exer_box = Frame2D(self, name=f'exer_box_frame{row:02d}')
         self._exer_box.columnconfigure(0, weight=1)
         self._exer_box.grid(column=1, row=0, sticky=tk.EW)
 

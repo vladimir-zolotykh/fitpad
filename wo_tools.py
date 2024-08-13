@@ -5,18 +5,19 @@ import tkinter as tk
 from typing import Dict, List, Optional, cast
 from prettytable import PrettyTable
 from entry_var import EntryVar
+from frame2d import Frame2D
 
 
 class NumberedExer(list):
     """class to `unpack' the grid structure
 
     The grid structure represents has two widgets: tk.Entry
-    (`exer_no') and Frame(ExerTk) and is made in
+    (`exer_no') and Frame2D(ExerTk) and is made in
     NumberedFrame. NumberedExer.__getattr__ is used to
     grid_forget/[re-]grid_pack
     """
 
-    def __init__(self, frame: tk.Frame):
+    def __init__(self, frame: Frame2D):
         num_cols, num_rows = frame.grid_size()
         self.frame = frame      # '.workout_frame.exer_wrap_frame00'
         row = frame.grid_slaves(row=0)
@@ -40,11 +41,11 @@ class NumberedExer(list):
 
 
 class Wo(list):
-    def __init__(self, frame: tk.Frame):
+    def __init__(self, frame: Frame2D):
         # frame: '.workout_frame'
         num_cols, num_rows = frame.grid_size()  # 1, 1
         super().__init__(
-            [NumberedExer(cast(tk.Frame, frame.grid_slaves(row=row)[0]))
+            [NumberedExer(cast(Frame2D, frame.grid_slaves(row=row)[0]))
              for row in range(num_rows)])
         self.sort(key=lambda e: e.exer_no())
 
