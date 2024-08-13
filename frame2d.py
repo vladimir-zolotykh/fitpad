@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+"""
+>>> frame[0, 0]
+<tkinter.Label object .workout.exercise_name>
+>>> frame[1, 0]
+<tkinter.Entry object .workout.set_no>
+>>> frame[1, 1]
+<tkinter.Entry object .workout.weight>
+>>> frame[1, 2]
+<tkinter.Entry object .workout.reps>
+>>> frame[2, 0]
+<tkinter.Button object .workout.edit>
+"""
+
+import doctest
 import tkinter as tk
 
 
@@ -35,13 +49,5 @@ reps.grid(column=2, row=1)
 btn = tk.Button(frame, text='Edit', name='edit')
 btn.grid(column=0, row=2, columnspan=3)
 # root.mainloop()
-# >>> frame[0, 0]
-# <tkinter.Label object .workout.exercise_name>
-# >>> frame[1, 0]
-# <tkinter.Entry object .workout.set_no>
-# >>> frame[1, 1]
-# <tkinter.Entry object .workout.weight>
-# >>> frame[1, 2]
-# <tkinter.Entry object .workout.reps>
-# >>> frame[2, 0]
-# <tkinter.Button object .workout.edit>
+if __name__ == '__main__':
+    doctest.testmod()
