@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, cast
 from prettytable import PrettyTable
 from entry_var import EntryVar
 from frame2d import Frame2D
+import exertk
 
 
 class NumberedExer(list):
@@ -29,7 +30,7 @@ class NumberedExer(list):
     def exer_name(self) -> str:
         frame2d: Frame2D = self[1]
         # exertk_frame: ExerTk = frame2d[0, 0]
-        exertk_frame = frame2d[0, 0]
+        exertk_frame: exertk.ExerTk = frame2d[0, 0]
         label: tk.Label = cast(tk.Label, exertk_frame.grid_slaves(row=0)[0])
         return label.cget('text')
 
