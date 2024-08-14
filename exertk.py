@@ -9,9 +9,10 @@ import tkinter as tk
 from entry_var import EntryVar
 from wo_tools import Row, rows_info, Wo
 from numbered_frame import NumberedFrame
+from frame2d import Frame2D
 
 
-class ExerTk(tk.Frame):
+class ExerTk(Frame2D):
     """Make tk widgets representing an exercise"""
 
     NUM_COLUMNS = 3
@@ -141,9 +142,9 @@ class ExerDir(Dict[str, ExerTk]):
     Dict[str, ExerTk]
     """
 
-    def __init__(self, frame: tk.Frame):
+    def __init__(self, frame: Frame2D):
         super().__init__()
-        self.frame: tk.Frame = frame
+        self.frame: Frame2D = frame
         self.row: int = 0
 
     def del_exer(self, name: str):
