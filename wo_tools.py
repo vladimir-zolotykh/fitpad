@@ -19,10 +19,9 @@ class NumberedExer(list):
 
     def __init__(self, frame: Frame2D):
         num_cols, num_rows = frame.grid_size()
+        assert num_rows == 1
         self.frame = frame      # '.workout_frame.exer_wrap_frame00'
-        row = frame.grid_slaves(row=0)
-        super().__init__(row)
-        self.sort(key=lambda w: w.grid_info()['column'])
+        super().__init__(frame[0, col] for col in range(num_cols))
 
     def __getattr__(self, name):
         return getattr(self.frame, name)
