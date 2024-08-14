@@ -8,7 +8,7 @@ from typing import Generator, List
 import tkinter as tk
 from entry_var import EntryVar
 from frame2d import Frame2D
-from wo_tools import NumberedSet, rows_info
+from wo_tools import NumberedSet, sets_info
 
 
 class ExerTk(Frame2D):
@@ -96,7 +96,7 @@ class ExerTk(Frame2D):
                 w.grid(column=col, row=num_row)
             self.last_set += 1
         # self.renumber_existing_sets()
-        print(rows_info(rows_sorted))
+        print(sets_info(rows_sorted))
         mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
 
     def renumber_existing_rows(self, rows: Dict[int, NumberedSet]):

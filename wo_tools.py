@@ -99,7 +99,7 @@ def grid_info(container: tk.Frame) -> str:
     return str(table)
 
 
-def rows_info(rows: Dict[int, NumberedSet]) -> str:
+def sets_info(rows: Dict[int, NumberedSet]) -> str:
     table = PrettyTable()
     table.field_names = ['row', 'num columns']
     for row in range(len(rows)):
