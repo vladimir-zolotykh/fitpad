@@ -29,9 +29,7 @@ class NumberedExer(list):
 
     def exer_name(self) -> str:
         frame2d: Frame2D = self[1]
-        # exertk_frame: ExerTk = frame2d[0, 0]
         exertk_frame: exertk.ExerTk = frame2d[0, 0]
-        # label: tk.Label = cast(tk.Label, exertk_frame.grid_slaves(row=0)[0])
         label: tk.Label = exertk_frame[0, 0]
         return label.cget('text')
 
