@@ -52,7 +52,8 @@ class ExerTk(Frame2D):
     def yield_sets(self) -> Generator[List[str], None, None]:
         num_columns, num_rows = self.grid_size()
         sets_sorted = sorted(
-            [NumberedSet.from_grid(self, row=row) for row in range(1, num_rows - 1)],
+            [NumberedSet.from_grid(self, row=row)
+             for row in range(1, num_rows - 1)],
             key=NumberedSet.set_no)
         for row in sets_sorted:
             values = []
