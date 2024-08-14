@@ -7,9 +7,8 @@ from typing import Dict
 from typing import Generator, List
 import tkinter as tk
 from entry_var import EntryVar
-from wo_tools import Row, rows_info, Wo
-from numbered_frame import NumberedFrame
 from frame2d import Frame2D
+from wo_tools import Row, rows_info
 
 
 class ExerTk(Frame2D):
@@ -134,38 +133,3 @@ class ExerTk(Frame2D):
             self.grid_the_set(self.last_set)
         else:
             raise TypeError(f'{num_rows = }: must be 1 or >= 2')
-
-
-class ExerDir(Dict[str, ExerTk]):
-    """A dict of Workout exercises
-
-    Dict[str, ExerTk]
-    """
-
-    def __init__(self, frame: Frame2D):
-        super().__init__()
-        self.frame: Frame2D = frame
-        self.row: int = 0
-
-    def del_exer(self, name: str):
-        del self[name]
-        self.row -= 1
-
-    def edit_exer(self):
-        wo = Wo(self.frame)
-        for exer in wo:
-            if 0 < exer.exer_no():
-                exer.grid_forget()
-        row: int = 0
-        for exer in wo:
-            if exer.exer_no() == 0:
-                self.del_exer(exer.exer_name())
-                exer.destroy()
-            else:
-                exer.grid(column=0, row=row, sticky=tk.EW)
-                row += 1
-
-    def add_exer(self, name: str):
-        numbered_frame = NumberedFrame(self.frame, self.row)
-        self[name] = ExerTk(numbered_frame.exer_box, name, 0)
-        self.row += 1

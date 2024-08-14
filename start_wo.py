@@ -11,7 +11,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 import models as md
 import database as db
-from exertk import ExerDir
+from exer_dir import ExerDir
 from frame2d import Frame2D
 
 
