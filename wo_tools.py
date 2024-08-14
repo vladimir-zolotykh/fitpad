@@ -50,7 +50,7 @@ class Wo(list):
         self.sort(key=lambda e: e.exer_no())
 
 
-class Row(list):
+class NumberedSet(list):
     def __init__(self, widgets: List[tk.Widget]):
         super().__init__(widgets)
 
@@ -61,17 +61,17 @@ class Row(list):
         return int(widget.grid_info()['column'])
 
     @classmethod
-    def from_grid(cls, box: tk.Frame, row: int) -> 'Row':
-        slaves = sorted(box.grid_slaves(row=row), key=Row.grid_column)
+    def from_grid(cls, box: tk.Frame, row: int) -> 'NumberedSet':
+        slaves = sorted(box.grid_slaves(row=row), key=NumberedSet.grid_column)
         return cls(slaves)
 
     @classmethod
-    def from_list(cls, row: List[tk.Widget]) -> 'Row':
-        return cls(sorted(row, key=Row.grid_column))
+    def from_list(cls, row: List[tk.Widget]) -> 'NumberedSet':
+        return cls(sorted(row, key=NumberedSet.grid_column))
 
     def column(self, column: int = 0) -> Optional[tk.Widget]:
         for w in self:
-            if Row.grid_column(w) == column:
+            if self.grid_column(w) == column:
                 return w
         return None
 
@@ -99,7 +99,7 @@ def grid_info(container: tk.Frame) -> str:
     return str(table)
 
 
-def rows_info(rows: Dict[int, Row]) -> str:
+def rows_info(rows: Dict[int, NumberedSet]) -> str:
     table = PrettyTable()
     table.field_names = ['row', 'num columns']
     for row in range(len(rows)):
