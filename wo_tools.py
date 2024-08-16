@@ -7,7 +7,7 @@ from prettytable import PrettyTable
 from entry_var import EntryVar
 from frame2d import Frame2D
 import exertk
-from numbered_set import NumberedSet
+from numbered_set import NumberedSets
 
 
 class NumberedExer(list):
@@ -61,7 +61,7 @@ def grid_info(container: tk.Frame) -> str:
     return str(table)
 
 
-def sets_info(rows: Dict[int, NumberedSet]) -> str:
+def sets_info(rows: Dict[int, NumberedSets]) -> str:
     table = PrettyTable()
     table.field_names = ['row', 'num columns']
     for row in range(len(rows)):
