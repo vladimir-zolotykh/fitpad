@@ -51,12 +51,16 @@ class Wo(list):
 
 
 class NumberedSet(list):
+    """Represents one set of an exercise
+
+    """
+
     def __init__(self, widgets: List[tk.Widget]):
         super().__init__(widgets)
 
     @staticmethod
     def grid_column(widget: tk.Widget) -> int:
-        """Return the column of widget"""
+        """Return the column number of a widget"""
 
         return int(widget.grid_info()['column'])
 
@@ -76,7 +80,7 @@ class NumberedSet(list):
         return None
 
     def set_no(self) -> int:
-        """Return the set number
+        """Return the set number (integer)
 
         Each set [of exercise] has a set number, the 1st Entry widget
         of a grid row"""
