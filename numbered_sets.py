@@ -7,7 +7,7 @@ from entry_var import EntryVar
 
 
 class NumberedSets(list):
-    """Represents one set of an exercise
+    """Represents all sets of an exercise
 
     """
 

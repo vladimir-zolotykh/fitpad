@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import tkinter as tk
-from typing import Dict, List, Optional, cast
+from typing import Dict, cast
 from prettytable import PrettyTable
 from entry_var import EntryVar
 from frame2d import Frame2D
 import exertk
-from numbered_set import NumberedSets
+from numbered_sets import NumberedSets
 
 
 class NumberedExer(list):
