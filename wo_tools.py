@@ -7,6 +7,7 @@ from prettytable import PrettyTable
 from entry_var import EntryVar
 from frame2d import Frame2D
 import exertk
+from numbered_set import NumberedSet
 
 
 class NumberedExer(list):
@@ -48,49 +49,6 @@ class Wo(list):
             [NumberedExer(cast(Frame2D, frame.grid_slaves(row=row)[0]))
              for row in range(num_rows)])
         self.sort(key=lambda e: e.exer_no())
-
-
-class NumberedSet(list):
-    """Represents one set of an exercise
-
-    """
-
-    def __init__(self, widgets: List[tk.Widget]):
-        super().__init__(widgets)
-
-    @staticmethod
-    def grid_column(widget: tk.Widget) -> int:
-        """Return the column number of a widget"""
-
-        return int(widget.grid_info()['column'])
-
-    @classmethod
-    def from_grid(cls, box: tk.Frame, row: int) -> 'NumberedSet':
-        slaves = sorted(box.grid_slaves(row=row), key=NumberedSet.grid_column)
-        return cls(slaves)
-
-    @classmethod
-    def from_list(cls, row: List[tk.Widget]) -> 'NumberedSet':
-        return cls(sorted(row, key=NumberedSet.grid_column))
-
-    def column(self, column: int = 0) -> Optional[tk.Widget]:
-        for w in self:
-            if self.grid_column(w) == column:
-                return w
-        return None
-
-    def set_no(self) -> int:
-        """Return the set number (integer)
-
-        Each set [of exercise] has a set number, the 1st Entry widget
-        of a grid row"""
-
-        w: Optional[tk.Widget] = self.column(0)
-        if isinstance(w, EntryVar):
-            var: tk.StringVar = w.configure('textvariable')
-            return int(var.get())
-        else:
-            raise TypeError(f'Expected Entry widget, got {type(w)}')
 
 
 def grid_info(container: tk.Frame) -> str:
