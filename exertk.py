@@ -66,7 +66,7 @@ class ExerTk(Frame2D):
 
     def edit_sets(self):
         _, num_rows = self.grid_size()
-        mb_row = self.grid_slaves(row=num_rows - 1)
+        mb_edit_sets = self.grid_slaves(row=num_rows - 1)
 
         # print(grid_info(self))
         sets_sorted = sorted(
@@ -87,7 +87,7 @@ class ExerTk(Frame2D):
                 for w in row:
                     w.grid_forget()
             self.last_set -= 1
-        mb_row[0].grid_forget()
+        mb_edit_sets[0].grid_forget()
         self.last_set = 1
         num_row = 0
         self.renumber_existing_rows(rows_sorted)
@@ -97,7 +97,8 @@ class ExerTk(Frame2D):
             self.last_set += 1
         # self.renumber_existing_sets()
         print(sets_info(rows_sorted))
-        mb_row[0].grid(column=0, row=num_row + 1, columnspan=self.NUM_COLUMNS)
+        mb_edit_sets[0].grid(column=0, row=num_row + 1,
+                             columnspan=self.NUM_COLUMNS)
 
     def renumber_existing_rows(self, rows: Dict[int, NumberedSet]):
         set_no: int = 1
