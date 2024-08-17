@@ -8,7 +8,7 @@ from typing import Generator, List
 import tkinter as tk
 from entry_var import EntryVar
 from frame2d import Frame2D
-from wo_tools import NumberedSets, sets_info
+from wo_tools import NumberedSet, sets_info
 
 
 class ExerTk(Frame2D):
@@ -52,9 +52,9 @@ class ExerTk(Frame2D):
     def yield_sets(self) -> Generator[List[str], None, None]:
         num_columns, num_rows = self.grid_size()
         sets_sorted = sorted(
-            [NumberedSets.from_grid(self, row=row)
+            [NumberedSet.from_grid(self, row=row)
              for row in range(1, num_rows - 1)],
-            key=NumberedSets.set_no)
+            key=NumberedSet.set_no)
         for row in sets_sorted:
             values = []
             for w in row:
@@ -70,11 +70,11 @@ class ExerTk(Frame2D):
 
         # print(grid_info(self))
         sets_sorted = sorted(
-            [NumberedSets.from_grid(self, row=row)
+            [NumberedSet.from_grid(self, row=row)
              for row in range(1, num_rows - 1)],
-            key=NumberedSets.set_no)
+            key=NumberedSet.set_no)
         # rows_sorted: Dict[int, List[tk.Widget]] = {}
-        rows_sorted: Dict[int, NumberedSets] = {}
+        rows_sorted: Dict[int, NumberedSet] = {}
 
         num_row: int = 1
         for row in sets_sorted:
@@ -82,7 +82,7 @@ class ExerTk(Frame2D):
                 for w in row:
                     w.destroy()
             else:
-                rows_sorted[num_row] = NumberedSets.from_list(row)
+                rows_sorted[num_row] = NumberedSet.from_list(row)
                 num_row += 1
                 for w in row:
                     w.grid_forget()
@@ -100,7 +100,7 @@ class ExerTk(Frame2D):
         mb_edit_sets[0].grid(column=0, row=num_row + 1,
                              columnspan=self.NUM_COLUMNS)
 
-    def renumber_existing_rows(self, rows: Dict[int, NumberedSets]):
+    def renumber_existing_rows(self, rows: Dict[int, NumberedSet]):
         set_no: int = 1
         for row in rows.values():
             e = row[0]

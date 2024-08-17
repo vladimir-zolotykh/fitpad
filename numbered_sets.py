@@ -6,7 +6,7 @@ from typing import List, Optional
 from entry_var import EntryVar
 
 
-class NumberedSets(list):
+class NumberedSet(list):
     """Represents all sets of an exercise
 
     """
@@ -21,13 +21,13 @@ class NumberedSets(list):
         return int(widget.grid_info()['column'])
 
     @classmethod
-    def from_grid(cls, box: tk.Frame, row: int) -> 'NumberedSets':
-        slaves = sorted(box.grid_slaves(row=row), key=NumberedSets.grid_column)
+    def from_grid(cls, box: tk.Frame, row: int) -> 'NumberedSet':
+        slaves = sorted(box.grid_slaves(row=row), key=NumberedSet.grid_column)
         return cls(slaves)
 
     @classmethod
-    def from_list(cls, row: List[tk.Widget]) -> 'NumberedSets':
-        return cls(sorted(row, key=NumberedSets.grid_column))
+    def from_list(cls, row: List[tk.Widget]) -> 'NumberedSet':
+        return cls(sorted(row, key=NumberedSet.grid_column))
 
     def column(self, column: int = 0) -> Optional[tk.Widget]:
         for w in self:

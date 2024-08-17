@@ -35,7 +35,7 @@ class Frame2D(tk.Frame):
                              f'Expected ({row_max = }, {col_max = })')
 
     def sort(self, key=None, from_=None, to=None):
-        """Sort rows from `from_' to `to' inclusive
+        """Sort rows from `from_' to `to' (from, to(
 
         Rows are .grid_forget (-ed), sorted, then .grid (-ed) again in
         the new order. Before forgetting the widget, save its options
@@ -46,7 +46,17 @@ class Frame2D(tk.Frame):
         row has the EntryVar widget. The function returns the
         EntryVar's associated variable value converted to an integer
         """
-        pass
+        num_cols, num_rows = self.grid_size()
+        from_ = from_ if from_ is None else 0
+        to = num_rows if to is None else to
+        sets_sorted = sorted(
+            [self.grid_slaves(row=row) for row in range(from_, to)], key=key)
+        for numbered_set in sets_sorted:
+            if numbered_set.set_no == 0:
+                for w in numbered_set:
+                    w.destroy()
+            else:
+                
 
 
 if __name__ == '__main__':
