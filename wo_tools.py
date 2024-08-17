@@ -7,7 +7,7 @@ from prettytable import PrettyTable
 from entry_var import EntryVar
 from frame2d import Frame2D
 import exertk
-from numbered_sets import NumberedSet
+from numbered_set import NumberedSet
 
 
 class NumberedExer(list):
