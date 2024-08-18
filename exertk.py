@@ -64,8 +64,10 @@ class ExerTk(Frame2D):
                     raise TypeError(f'Expected EntryVar widget, got {type(w)}')
             yield values
 
+    @Frame2D.print_size
     def edit_sets(self):
-        _, num_rows = self.grid_size()
+        num_cols, num_rows = self.grid_size()
+        # print(f'ExerTk.edit_sets {num_cols = }, {num_rows = }')
         mb_edit_sets = self.grid_slaves(row=num_rows - 1)
 
         # print(grid_info(self))
