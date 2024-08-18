@@ -6,7 +6,7 @@ import tkinter as tk
 from exertk import ExerTk
 from frame2d import Frame2D
 from numbered_frame import NumberedFrame
-from wo_tools import Wo
+from wo_tools import Wo, NumberedExer
 
 
 class ExerDir(Dict[str, ExerTk]):
@@ -25,8 +25,10 @@ class ExerDir(Dict[str, ExerTk]):
         self.row -= 1
 
     def edit_exer(self):
-        wo = Wo(self.frame)
+        wo: Wo = Wo(self.frame)
+        exer: NumberedExer
         for exer in wo:
+            # exer.print_size()
             if 0 < exer.exer_no():
                 exer.grid_forget()
         row: int = 0
