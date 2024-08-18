@@ -40,6 +40,11 @@ class NumberedExer(list):
         else:
             raise TypeError(f'Expected EntryVar, got {type(self[0])}')
 
+    def print_size(self):
+        # num_cols = 2, num_rows = 1
+        num_cols, num_rows = self.grid_size()
+        print(f'NumberedExer.print_size {num_cols = }, {num_rows = }')
+
 
 class Wo(list):
     def __init__(self, frame: Frame2D):
