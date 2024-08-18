@@ -46,17 +46,22 @@ class Frame2D(tk.Frame):
         row has the EntryVar widget. The function returns the
         EntryVar's associated variable value converted to an integer
         """
-        num_cols, num_rows = self.grid_size()
-        from_ = from_ if from_ is None else 0
-        to = num_rows if to is None else to
-        sets_sorted = sorted(
-            [self.grid_slaves(row=row) for row in range(from_, to)], key=key)
-        for numbered_set in sets_sorted:
-            if numbered_set.set_no == 0:
-                for w in numbered_set:
-                    w.destroy()
-            else:
-                
+        pass
+
+    def print_size(meth):
+        """A decorator to print called method's name
+
+        and the Frame's size
+        in the form
+        NumberedFrame.edit_sets: num_cols = 2, num_rows = 2
+        """
+
+        def wrapper(self, *args, **kwargs):
+            num_cols, num_rows = self.grid_size()
+            cls_name = self.__class__.__name__
+            print(f'{cls_name}.{meth.__name__}: {num_cols = }, {num_rows = }')
+            return meth(self, *args, **kwargs)
+        return wrapper
 
 
 if __name__ == '__main__':
