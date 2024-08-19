@@ -4,7 +4,7 @@
 from typing import Dict
 import tkinter as tk
 from exertk import ExerTk
-from frame2d import Frame2D
+from frame2d import Frame2DExer
 from numbered_frame import NumberedFrame
 from wo_tools import Wo, NumberedExer
 
@@ -15,9 +15,9 @@ class ExerDir(Dict[str, ExerTk]):
     Dict[str, ExerTk]
     """
 
-    def __init__(self, frame: Frame2D):
+    def __init__(self, frame: Frame2DExer):
         super().__init__()
-        self.frame: Frame2D = frame
+        self.frame: Frame2DExer = frame
         self.row: int = 0
 
     def del_exer(self, name: str):
