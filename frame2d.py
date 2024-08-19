@@ -14,11 +14,12 @@
 <tkinter.Button object .workout.edit>
 """
 
+from abc import ABC, abstractclassmethod
 import doctest
 import tkinter as tk
 
 
-class Frame2D(tk.Frame):
+class Frame2D(tk.Frame, ABC):
     def __init__(self, parent, **kwargs):
         super(Frame2D, self).__init__(parent, **kwargs)
 
@@ -34,8 +35,9 @@ class Frame2D(tk.Frame):
             raise IndexError(f'Invalid index {rowcol}. '
                              f'Expected ({row_max = }, {col_max = })')
 
-    def sort(self, key=None, from_=None, to=None):
-        """Sort rows from `from_' to `to' (from, to(
+    @abstractclassmethod
+    def sort(self, key=None):
+        """Sort rows from `from_' to `to' [from, to(
 
         Rows are .grid_forget (-ed), sorted, then .grid (-ed) again in
         the new order. Before forgetting the widget, save its options
@@ -46,6 +48,7 @@ class Frame2D(tk.Frame):
         row has the EntryVar widget. The function returns the
         EntryVar's associated variable value converted to an integer
         """
+
         pass
 
     def print_size(meth):
@@ -62,6 +65,16 @@ class Frame2D(tk.Frame):
             print(f'{cls_name}.{meth.__name__}: {num_cols = }, {num_rows = }')
             return meth(self, *args, **kwargs)
         return wrapper
+
+
+class Frame2DExer(Frame2D):
+    def sort(self, key=None):
+        pass
+
+
+class Frame2DSet(Frame2D):
+    def sort(self, key=None):
+        pass
 
 
 if __name__ == '__main__':
