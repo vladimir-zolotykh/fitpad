@@ -7,18 +7,18 @@ from typing import Dict
 from typing import Generator, List
 import tkinter as tk
 from entry_var import EntryVar
-from frame2d import Frame2D
+from frame2d import Frame2D, Frame2DSet
 from wo_tools import NumberedSet, sets_info
 
 
-class ExerTk(Frame2D):
+class ExerTk(Frame2DSet):
     """Make tk widgets representing an exercise"""
 
     NUM_COLUMNS = 3
     COL_WIDTH = {'set_no': 2, 'weight': 10, 'reps': 3}
 
     def __init__(self, parent, name: str, row: int):
-        super(ExerTk, self).__init__(parent)
+        super().__init__(parent)
         self.grid(column=0, row=row, sticky=tk.EW)
         self.name = name
         self.last_set: int = 1
