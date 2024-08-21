@@ -5,7 +5,7 @@ import tkinter as tk
 from typing import Dict, cast
 from prettytable import PrettyTable
 from entry_var import EntryVar
-from frame2d import Frame2D
+from frame2d import Frame2D, Frame2DExer
 import exertk
 from numbered_set import NumberedSet
 
@@ -19,7 +19,7 @@ class NumberedExer(list):
     grid_forget/[re-]grid_pack
     """
 
-    def __init__(self, frame: Frame2D):
+    def __init__(self, frame: Frame2DExer):
         num_cols, num_rows = frame.grid_size()
         assert num_rows == 1
         self.frame = frame      # '.workout_frame.exer_wrap_frame00'
@@ -29,7 +29,7 @@ class NumberedExer(list):
         return getattr(self.frame, name)
 
     def exer_name(self) -> str:
-        frame2d: Frame2D = self[1]
+        frame2d: Frame2DExer = self[1]
         exertk_frame: exertk.ExerTk = frame2d[0, 0]
         label: tk.Label = exertk_frame[0, 0]
         return label.cget('text')
@@ -47,11 +47,11 @@ class NumberedExer(list):
 
 
 class Wo(list):
-    def __init__(self, frame: Frame2D):
+    def __init__(self, frame: Frame2DExer):
         # frame: '.workout_frame'
         num_cols, num_rows = frame.grid_size()  # 1, 1
         super().__init__(
-            [NumberedExer(cast(Frame2D, frame.grid_slaves(row=row)[0]))
+            [NumberedExer(cast(Frame2DExer, frame.grid_slaves(row=row)[0]))
              for row in range(num_rows)])
         self.sort(key=lambda e: e.exer_no())
 
