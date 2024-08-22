@@ -15,9 +15,10 @@
 """
 
 from abc import ABC, abstractclassmethod
-from typing import List, Tuple
+from typing import Dict, List, Tuple, Any
 import doctest
 import tkinter as tk
+# from wo_tools import NumberedExer
 
 
 class Frame2D(tk.Frame, ABC):
@@ -55,7 +56,7 @@ class Frame2D(tk.Frame, ABC):
             w.grid_forget()
 
     @abstractclassmethod
-    def sort(self, key=None):
+    def arrange(self, key=None):
         """Sort rows from `from_' to `to' [from, to(
 
         Rows are .grid_forget (-ed), sorted, then .grid (-ed) again in
@@ -91,8 +92,31 @@ class Frame2DExer(Frame2D):
         _, num_rows = self.grid_size()
         return (0, num_rows)
 
-    def sort(self, key=None):
-        pass
+    def arrange(self, key=None) -> List[str]:
+        """Arrange exercises in exer_name order.
+
+        Return the deleletd exer names list"""
+
+        cols, rows = self.grid_size()
+        sorted = [[None for _ in range(cols)] for _ in range(rows)]
+        for i in range(rows):
+            for j in range(cols):
+                w = self.grid_slaves(column=j, row=i)[0]
+                sorted[j][i] = (w, w.grid_info())
+        sorted.sort(key=lambda row: int(row[0][0].get()))
+        for row in sorted:
+            w: tk.Widget
+            o: Dict[str, Any]   # grid_info()
+            deleted_exer: List[str] = []
+            if int(row[0][0].get()) == 0:
+                for w in row:
+                    # deleted_exer.append(NumberedExer(row[0][1]).exer_name)
+                    w.destroy()
+            else:
+                for w, o in row:
+                    w.grid(column=o['column'], row=o['row'],
+                           sticky=o['sticky'])
+        return deleted_exer
 
 
 class Frame2DSet(Frame2D):
@@ -100,7 +124,7 @@ class Frame2DSet(Frame2D):
         _, num_rows = self.grid_size()
         return (1, num_rows - 1)
 
-    def sort(self, key=None):
+    def arrange(self, key=None):
         pass
 
 
