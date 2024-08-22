@@ -15,6 +15,7 @@
 """
 
 from abc import ABC, abstractclassmethod
+from typing import List, Tuple
 import doctest
 import tkinter as tk
 
@@ -34,6 +35,24 @@ class Frame2D(tk.Frame, ABC):
         else:
             raise IndexError(f'Invalid index {rowcol}. '
                              f'Expected ({row_max = }, {col_max = })')
+
+    @abstractclassmethod
+    def row_range(self) -> Tuple[int, int]:
+        """Return the number of rows in the frame"""
+
+        return (0, 0)
+
+    def row_sorted(self, row: int) -> List[tk.Widget]:
+        """Return the row ROW sorted by column number"""
+
+        return sorted(self.grid_slaves(row=row),
+                      key=lambda w: w.grid_info()['column'])
+
+    def row_forget(self, row: int) -> None:
+        """.grid_forget all widgets in the row ROW"""
+
+        for w in self.grid_slaves(row=row):
+            w.grid_forget()
 
     @abstractclassmethod
     def sort(self, key=None):
@@ -68,11 +87,19 @@ class Frame2D(tk.Frame, ABC):
 
 
 class Frame2DExer(Frame2D):
+    def row_range(self) -> Tuple[int, int]:
+        _, num_rows = self.grid_size()
+        return (0, num_rows)
+
     def sort(self, key=None):
         pass
 
 
 class Frame2DSet(Frame2D):
+    def row_range(self) -> Tuple[int, int]:
+        _, num_rows = self.grid_size()
+        return (1, num_rows - 1)
+
     def sort(self, key=None):
         pass
 
