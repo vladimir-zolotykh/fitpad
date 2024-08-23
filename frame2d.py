@@ -14,14 +14,16 @@
 <tkinter.Button object .workout.edit>
 """
 
-from abc import ABC, abstractclassmethod
-from typing import Dict, List, Tuple, Any
+# from abc import ABC, abstractclassmethod
+from typing import Dict, List, Tuple, Any, cast
 import doctest
 import tkinter as tk
+import exertk
+from entry_var import EntryVar
 # from wo_tools import NumberedExer
 
 
-class Frame2D(tk.Frame, ABC):
+class Frame2D(tk.Frame):  # , ABC):
     def __init__(self, parent, **kwargs):
         super(Frame2D, self).__init__(parent, **kwargs)
 
@@ -37,26 +39,25 @@ class Frame2D(tk.Frame, ABC):
             raise IndexError(f'Invalid index {rowcol}. '
                              f'Expected ({row_max = }, {col_max = })')
 
-    @abstractclassmethod
-    def row_range(self) -> Tuple[int, int]:
-        """Return the number of rows in the frame"""
+    # @abstractclassmethod
+    # def row_range(self) -> Tuple[int, int]:
+    #     """Return the number of rows in the frame"""
+    #     return (0, 0)
 
-        return (0, 0)
+    # def row_sorted(self, row: int) -> List[tk.Widget]:
+    #     """Return the row ROW sorted by column number"""
 
-    def row_sorted(self, row: int) -> List[tk.Widget]:
-        """Return the row ROW sorted by column number"""
+    #     return sorted(self.grid_slaves(row=row),
+    #                   key=lambda w: w.grid_info()['column'])
 
-        return sorted(self.grid_slaves(row=row),
-                      key=lambda w: w.grid_info()['column'])
+    # def row_forget(self, row: int) -> None:
+    #     """.grid_forget all widgets in the row ROW"""
 
-    def row_forget(self, row: int) -> None:
-        """.grid_forget all widgets in the row ROW"""
+    #     for w in self.grid_slaves(row=row):
+    #         w.grid_forget()
 
-        for w in self.grid_slaves(row=row):
-            w.grid_forget()
-
-    @abstractclassmethod
-    def arrange(self, key=None):
+    # @abstractclassmethod
+    def arrange(self):
         """Sort rows from `from_' to `to' [from, to(
 
         Rows are .grid_forget (-ed), sorted, then .grid (-ed) again in
@@ -69,8 +70,9 @@ class Frame2D(tk.Frame, ABC):
         EntryVar's associated variable value converted to an integer
         """
 
-        pass
+        raise NotImplementedError()
 
+    @staticmethod
     def print_size(meth):
         """A decorator to print called method's name
 
@@ -92,7 +94,7 @@ class Frame2DExer(Frame2D):
         _, num_rows = self.grid_size()
         return (0, num_rows)
 
-    def arrange(self, key=None) -> List[str]:
+    def arrange(self):
         """Arrange exercises in exer_name order.
 
         Return the deleletd exer names list"""
@@ -101,14 +103,16 @@ class Frame2DExer(Frame2D):
         print(f'{cols = }, {rows = }')
         # cols = 1, rows = 2
         Options = Dict[str, Any]    # .grid_info() dict
-        SavedWidget = Tuple[tk.Widget, Options]
+        # SavedWidget = Tuple[tk.Widget, Options]
+        SavedWidget = Tuple[Frame2D, Options]
         sorted: List[SavedWidget] = []
         row_index: int
         for row_index in range(rows):
-            w = self.grid_slaves(column=0, row=row_index)[0]
-            sorted[row_index] = (w, w.grid_info())
-        sorted.sort(key=lambda row: int(row[0, 0].get()))
-        w: tk.Widget
+            w: Frame2D
+            w = cast(Frame2D, self.grid_slaves(column=0, row=row_index)[0])
+            sorted[row_index] = (w, cast(Options, w.grid_info()))
+        sorted.sort(key=lambda w: int(cast(EntryVar, w[0]).get()))
+        # w: tk.Widget
         o: Options
         deleted_exer: List[str] = []  # deleted exercises (names)
         saved_widget: SavedWidget
@@ -116,12 +120,12 @@ class Frame2DExer(Frame2D):
         for saved_widget in sorted:
             w, o = saved_widget
             # w[tk.Frame]: EntryVar | ExerTk
-            entry: tk.EntryVar = w[0, 0]
+            entry: EntryVar = w[0, 0]
             if int(entry.get()) == 0:
-                exertk: exertk.ExerTk = w[0, 1]
-                label: tk.Label = exertk[0, 0]
+                exer: exertk.ExerTk = w[0, 1]
+                label: tk.Label = exer[0, 0]
                 exer_name: str = label.cget('text')
-                deleted_exer.apply(exer_name)
+                deleted_exer.append(exer_name)
                 w.destroy()
             else:
                 w.grid(column=o['column'], row=row_index, sticky=o['sticky'])
@@ -134,7 +138,7 @@ class Frame2DSet(Frame2D):
         _, num_rows = self.grid_size()
         return (1, num_rows - 1)
 
-    def arrange(self, key=None):
+    def arrange(self):
         pass
 
 
