@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import Tuple
+from abc import ABC, abstractmethod
 
 
-class Frame2D():
+class Frame2D(ABC):
+    @abstractmethod
     def arrange(self) -> Tuple[int, int]:
-        raise NotImplementedError
+        return (0, 0)
 
 
 class Frame2DExer(Frame2D):
