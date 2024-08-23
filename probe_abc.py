@@ -7,6 +7,10 @@ import tkinter as tk
 
 
 class Frame2D(tk.Frame, ABC):
+    def __init__(self, _parent):
+        super(Frame2D, self).__init__(_parent)
+        super(Frame2D, self).grid()
+
     @abstractmethod
     def arrange(self) -> Tuple[int, int]:
         return (0, 0)
@@ -23,7 +27,8 @@ class Frame2DSet(Frame2D):
 
 
 if __name__ == '__main__':
-    exer = Frame2DExer()
-    _set = Frame2DSet()
+    root = tk.Tk()
+    exer = Frame2DExer(root)
+    _set = Frame2DSet(root)
     print(exer.arrange())
     print(_set.arrange())
