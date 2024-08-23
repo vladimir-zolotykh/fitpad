@@ -14,7 +14,7 @@
 <tkinter.Button object .workout.edit>
 """
 
-# from abc import ABC, abstractclassmethod
+from abc import ABC, abstractclassmethod
 from typing import Dict, List, Tuple, Any, cast
 import doctest
 import tkinter as tk
@@ -23,7 +23,7 @@ from entry_var import EntryVar
 # from wo_tools import NumberedExer
 
 
-class Frame2D(tk.Frame):  # , ABC):
+class Frame2D(tk.Frame, ABC):
     def __init__(self, parent, **kwargs):
         super(Frame2D, self).__init__(parent, **kwargs)
 
@@ -56,7 +56,7 @@ class Frame2D(tk.Frame):  # , ABC):
     #     for w in self.grid_slaves(row=row):
     #         w.grid_forget()
 
-    # @abstractclassmethod
+    @abstractclassmethod
     def arrange(self):
         """Sort rows from `from_' to `to' [from, to(
 
@@ -69,8 +69,8 @@ class Frame2D(tk.Frame):  # , ABC):
         row has the EntryVar widget. The function returns the
         EntryVar's associated variable value converted to an integer
         """
-
-        raise NotImplementedError()
+        # raise NotImplementedError()
+        return
 
     @staticmethod
     def print_size(meth):

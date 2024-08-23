@@ -3,9 +3,10 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import Tuple
 from abc import ABC, abstractmethod
+import tkinter as tk
 
 
-class Frame2D(ABC):
+class Frame2D(tk.Frame, ABC):
     @abstractmethod
     def arrange(self) -> Tuple[int, int]:
         return (0, 0)
