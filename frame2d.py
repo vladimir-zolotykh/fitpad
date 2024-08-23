@@ -14,7 +14,7 @@
 <tkinter.Button object .workout.edit>
 """
 
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 from typing import Dict, List, Tuple, Any, cast
 import doctest
 import tkinter as tk
@@ -56,7 +56,7 @@ class Frame2D(tk.Frame, ABC):
     #     for w in self.grid_slaves(row=row):
     #         w.grid_forget()
 
-    @abstractclassmethod
+    @abstractmethod
     def arrange(self):
         """Sort rows from `from_' to `to' [from, to(
 
@@ -144,7 +144,7 @@ class Frame2DSet(Frame2D):
 
 if __name__ == '__main__':
     root = tk.Tk()
-    frame = Frame2D(root, name='workout')
+    frame = Frame2DExer(root, name='workout')
     frame.grid(column=0, row=0, sticky=tk.NSEW)
     label = tk.Label(frame, text='Deadlift', name='exercise_name')
     label.grid(column=0, row=0, columnspan=3)
