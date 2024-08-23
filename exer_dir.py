@@ -25,8 +25,17 @@ class ExerDir(Dict[str, ExerTk]):
         self.row -= 1
 
     def edit_exer(self):
+        self.frame.arrange()
+        return
         wo: Wo = Wo(self.frame)
         exer: NumberedExer
+        num_cols, num_rows = self.frame.grid_size()
+        print(self.frame.row_range())
+        # for row_index in range(*self.frame.row_range()):
+        #     row = self.frame.row_sorted(row_index)
+        #     entry_widget = row[0]
+        #     if entry_widget.get() == 0:
+        #         self.frame.row_forget(row_index)
         for exer in wo:
             # exer.print_size()
             if 0 < exer.exer_no():

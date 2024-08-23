@@ -98,24 +98,34 @@ class Frame2DExer(Frame2D):
         Return the deleletd exer names list"""
 
         cols, rows = self.grid_size()
-        sorted = [[None for _ in range(cols)] for _ in range(rows)]
-        for i in range(rows):
-            for j in range(cols):
-                w = self.grid_slaves(column=j, row=i)[0]
-                sorted[j][i] = (w, w.grid_info())
-        sorted.sort(key=lambda row: int(row[0][0].get()))
-        for row in sorted:
-            w: tk.Widget
-            o: Dict[str, Any]   # grid_info()
-            deleted_exer: List[str] = []
-            if int(row[0][0].get()) == 0:
-                for w in row:
-                    # deleted_exer.append(NumberedExer(row[0][1]).exer_name)
-                    w.destroy()
+        print(f'{cols = }, {rows = }')
+        # cols = 1, rows = 2
+        Options = Dict[str, Any]    # .grid_info() dict
+        SavedWidget = Tuple[tk.Widget, Options]
+        sorted: List[SavedWidget] = []
+        row_index: int
+        for row_index in range(rows):
+            w = self.grid_slaves(column=0, row=row_index)[0]
+            sorted[row_index] = (w, w.grid_info())
+        sorted.sort(key=lambda row: int(row[0, 0].get()))
+        w: tk.Widget
+        o: Options
+        deleted_exer: List[str] = []  # deleted exercises (names)
+        saved_widget: SavedWidget
+        row_index = 0
+        for saved_widget in sorted:
+            w, o = saved_widget
+            # w[tk.Frame]: EntryVar | ExerTk
+            entry: tk.EntryVar = w[0, 0]
+            if int(entry.get()) == 0:
+                exertk: exertk.ExerTk = w[0, 1]
+                label: tk.Label = exertk[0, 0]
+                exer_name: str = label.cget('text')
+                deleted_exer.apply(exer_name)
+                w.destroy()
             else:
-                for w, o in row:
-                    w.grid(column=o['column'], row=o['row'],
-                           sticky=o['sticky'])
+                w.grid(column=o['column'], row=row_index, sticky=o['sticky'])
+                row_index += 1
         return deleted_exer
 
 
