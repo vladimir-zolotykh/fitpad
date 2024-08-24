@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict
+from typing import Dict, List
 import tkinter as tk
 from exertk import ExerTk
 from frame2d import Frame2DExer
@@ -25,29 +25,10 @@ class ExerDir(Dict[str, ExerTk]):
         self.row -= 1
 
     def edit_exer(self):
-        self.frame.arrange()
-        return
-        wo: Wo = Wo(self.frame)
-        exer: NumberedExer
-        num_cols, num_rows = self.frame.grid_size()
-        print(self.frame.row_range())
-        # for row_index in range(*self.frame.row_range()):
-        #     row = self.frame.row_sorted(row_index)
-        #     entry_widget = row[0]
-        #     if entry_widget.get() == 0:
-        #         self.frame.row_forget(row_index)
-        for exer in wo:
-            # exer.print_size()
-            if 0 < exer.exer_no():
-                exer.grid_forget()
-        row: int = 0
-        for exer in wo:
-            if exer.exer_no() == 0:
-                self.del_exer(exer.exer_name())
-                exer.destroy()
-            else:
-                exer.grid(column=0, row=row, sticky=tk.EW)
-                row += 1
+        deleted_exer: List[str] = self.frame.arrange()
+        exer_name: str
+        for exer_name in deleted_exer:
+            self.del_exer(exer_name)
 
     def add_exer(self, name: str):
         numbered_frame = NumberedFrame(self.frame, self.row)
