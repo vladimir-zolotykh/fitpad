@@ -124,8 +124,8 @@ class Frame2DExer(Frame2D):
             # w[tk.Frame]: EntryVar | ExerTk
             entry: EntryVar = w[0, 0]
             if int(entry.get()) == 0:
-                exer: exertk.ExerTk = w[0, 1]
-                label: tk.Label = exer[0, 0]
+                frame_set: Frame2DSet = w[0, 1]
+                label: tk.Label = frame_set[0, 0][0, 0]
                 exer_name: str = label.cget('text')
                 deleted_exer.append(exer_name)
                 w.destroy()
