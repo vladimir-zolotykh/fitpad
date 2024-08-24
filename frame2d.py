@@ -95,7 +95,7 @@ class Frame2DExer(Frame2D):
         return (0, num_rows)
 
     def arrange(self):
-        """Arrange exercises in exer_name order.
+        """Arrange exercises in exercise number order.
 
         Return the deleletd exer names list"""
 
@@ -142,7 +142,18 @@ class Frame2DSet(Frame2D):
         return (1, num_rows - 1)
 
     def arrange(self):
-        pass
+        cols, rows = self.grid_size()
+        for i in range(1, rows - 1):
+            slaves = self.grid_slaves(row=i)
+            saved.append(slaves)
+            set_no: EntryVar = self[i, 0]
+            if int(set_no.get()) == 0:
+                pass
+            else:
+                pass
+
+            print(numbered_set)
+        # print(f'Frame2DSet.arrange {cols = }, {rows = }')
 
 
 if __name__ == '__main__':
