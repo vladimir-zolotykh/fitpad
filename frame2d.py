@@ -100,19 +100,21 @@ class Frame2DExer(Frame2D):
         Return the deleletd exer names list"""
 
         cols, rows = self.grid_size()
-        print(f'{cols = }, {rows = }')
         # cols = 1, rows = 2
         Options = Dict[str, Any]    # .grid_info() dict
-        # SavedWidget = Tuple[tk.Widget, Options]
         SavedWidget = Tuple[Frame2D, Options]
         sorted: List[SavedWidget] = []
         row_index: int
         for row_index in range(rows):
             w: Frame2D
             w = cast(Frame2D, self.grid_slaves(column=0, row=row_index)[0])
-            sorted[row_index] = (w, cast(Options, w.grid_info()))
-        sorted.sort(key=lambda w: int(cast(EntryVar, w[0]).get()))
-        # w: tk.Widget
+            sorted.append((w, cast(Options, w.grid_info())))
+
+        def _key(saved_widget: SavedWidget) -> int:
+            var: EntryVar = saved_widget[0][0, 0]
+            return int(var.get())
+
+        sorted.sort(key=_key)
         o: Options
         deleted_exer: List[str] = []  # deleted exercises (names)
         saved_widget: SavedWidget
@@ -130,6 +132,7 @@ class Frame2DExer(Frame2D):
             else:
                 w.grid(column=o['column'], row=row_index, sticky=o['sticky'])
                 row_index += 1
+        print(f'{deleted_exer = }')
         return deleted_exer
 
 
