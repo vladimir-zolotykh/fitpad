@@ -4,7 +4,7 @@
 import tkinter as tk
 from typing import Dict, cast
 from prettytable import PrettyTable
-from frame2d import Frame2DExer
+from frame2d_exer import Frame2DExer
 from numbered_set import NumberedSet
 from numbered_exer import NumberedExer
 

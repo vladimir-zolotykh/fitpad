@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 import models as md
 import database as db
 from exer_dir import ExerDir
-from frame2d import Frame2DExer
+from frame2d_exer import Frame2DExer
 
 
 class Workout(tk.Tk):

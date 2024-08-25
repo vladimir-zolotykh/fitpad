@@ -4,7 +4,8 @@
 import tkinter as tk
 # from typing import Dict, List, Optional, cast
 from entry_var import EntryVar
-from frame2d import Frame2DExer, Frame2DSet
+from frame2d import Frame2DSet
+from frame2d_exer import Frame2DExer
 
 
 class NumberedFrame(Frame2DExer):

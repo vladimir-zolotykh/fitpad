@@ -2,11 +2,9 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import Dict, List
-import tkinter as tk
 from exertk import ExerTk
-from frame2d import Frame2DExer
+from frame2d_exer import Frame2DExer
 from numbered_frame import NumberedFrame
-from wo_tools import Wo, NumberedExer
 
 
 class ExerDir(Dict[str, ExerTk]):

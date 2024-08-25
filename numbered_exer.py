@@ -3,7 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 import tkinter as tk
 from entry_var import EntryVar
-from frame2d import Frame2DExer
+from frame2d_exer import Frame2DExer
 import exertk
 
 
