@@ -7,11 +7,11 @@ from typing import Dict
 from typing import Generator, List
 import tkinter as tk
 from entry_var import EntryVar
-from frame2d import Frame2D, Frame2DSet
+import frame2d_set as f2s
 from wo_tools import NumberedSet, sets_info
 
 
-class ExerTk(Frame2DSet):
+class ExerTk(f2s.Frame2DSet):
     """Make tk widgets representing an exercise"""
 
     NUM_COLUMNS = 3

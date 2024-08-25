@@ -4,6 +4,7 @@
 from typing import cast, Dict, Any, List, Tuple
 import tkinter as tk
 import frame2d as f2
+import frame2d_set as f2s
 from entry_var import EntryVar
 
 
@@ -42,7 +43,7 @@ class Frame2DExer(f2.Frame2D):
             # w[tk.Frame]: EntryVar | ExerTk
             entry: EntryVar = w[0, 0]
             if int(entry.get()) == 0:
-                frame_set: f2.Frame2DSet = w[0, 1]
+                frame_set: f2s.Frame2DSet = w[0, 1]
                 label: tk.Label = frame_set[0, 0][0, 0]
                 exer_name: str = label.cget('text')
                 deleted_exer.append(exer_name)

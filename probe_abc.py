@@ -4,6 +4,8 @@
 from typing import Tuple
 from abc import ABC, abstractmethod
 import tkinter as tk
+from frame2d_exer import Frame2DExer
+from frame2d_set import Frame2DSet
 
 
 class Frame2D(tk.Frame, ABC):
@@ -14,16 +16,6 @@ class Frame2D(tk.Frame, ABC):
     @abstractmethod
     def arrange(self) -> Tuple[int, int]:
         return (0, 0)
-
-
-class Frame2DExer(Frame2D):
-    def arrange(self) -> Tuple[int, int]:
-        return (1, 2)
-
-
-class Frame2DSet(Frame2D):
-    def arrange(self) -> Tuple[int, int]:
-        return (3, 4)
 
 
 if __name__ == '__main__':

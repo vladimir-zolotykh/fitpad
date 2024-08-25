@@ -15,11 +15,9 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import Tuple
 import doctest
 import tkinter as tk
-from entry_var import EntryVar
-# from wo_tools import NumberedExer
+# import frame2d_exer as f2e
 
 
 class Frame2D(tk.Frame, ABC):
@@ -88,37 +86,17 @@ class Frame2D(tk.Frame, ABC):
         return wrapper
 
 
-class Frame2DSet(Frame2D):
-    def row_range(self) -> Tuple[int, int]:
-        _, num_rows = self.grid_size()
-        return (1, num_rows - 1)
-
-    def arrange(self):
-        cols, rows = self.grid_size()
-        for i in range(1, rows - 1):
-            slaves = self.grid_slaves(row=i)
-            saved.append(slaves)
-            set_no: EntryVar = self[i, 0]
-            if int(set_no.get()) == 0:
-                pass
-            else:
-                pass
-
-            print(numbered_set)
-        # print(f'Frame2DSet.arrange {cols = }, {rows = }')
-
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    frame = Frame2DExer(root, name='workout')
-    frame.grid(column=0, row=0, sticky=tk.NSEW)
-    label = tk.Label(frame, text='Deadlift', name='exercise_name')
-    label.grid(column=0, row=0, columnspan=3)
-    for col, (width, name) in enumerate(((2, 'set_no'), (8, 'weight'),
-                                         (4, 'reps'))):
-        _ = tk.Entry(frame, width=width, name=name)
-        _.grid(column=col, row=1)
-    btn = tk.Button(frame, text='Edit', name='edit')
-    btn.grid(column=0, row=2, columnspan=3)
-    # root.mainloop()
-    doctest.testmod()
+# if __name__ == '__main__':
+#     root = tk.Tk()
+#     frame = f2e.Frame2DExer(root, name='workout')
+#     frame.grid(column=0, row=0, sticky=tk.NSEW)
+#     label = tk.Label(frame, text='Deadlift', name='exercise_name')
+#     label.grid(column=0, row=0, columnspan=3)
+#     for col, (width, name) in enumerate(((2, 'set_no'), (8, 'weight'),
+#                                          (4, 'reps'))):
+#         _ = tk.Entry(frame, width=width, name=name)
+#         _.grid(column=col, row=1)
+#     btn = tk.Button(frame, text='Edit', name='edit')
+#     btn.grid(column=0, row=2, columnspan=3)
+#     # root.mainloop()
+#     doctest.testmod()
