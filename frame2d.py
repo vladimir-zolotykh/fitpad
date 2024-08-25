@@ -1,23 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-"""
->>> frame[0, 0]
-<tkinter.Label object .workout.exercise_name>
->>> frame[1, 0]
-<tkinter.Entry object .workout.set_no>
->>> frame[1, 1]
-<tkinter.Entry object .workout.weight>
->>> frame[1, 2]
-<tkinter.Entry object .workout.reps>
->>> frame[2, 0]
-<tkinter.Button object .workout.edit>
-"""
-
 from abc import ABC, abstractmethod
-import doctest
 import tkinter as tk
-# import frame2d_exer as f2e
 
 
 class Frame2D(tk.Frame, ABC):
@@ -35,23 +20,6 @@ class Frame2D(tk.Frame, ABC):
         else:
             raise IndexError(f'Invalid index {rowcol}. '
                              f'Expected ({row_max = }, {col_max = })')
-
-    # @abstractclassmethod
-    # def row_range(self) -> Tuple[int, int]:
-    #     """Return the number of rows in the frame"""
-    #     return (0, 0)
-
-    # def row_sorted(self, row: int) -> List[tk.Widget]:
-    #     """Return the row ROW sorted by column number"""
-
-    #     return sorted(self.grid_slaves(row=row),
-    #                   key=lambda w: w.grid_info()['column'])
-
-    # def row_forget(self, row: int) -> None:
-    #     """.grid_forget all widgets in the row ROW"""
-
-    #     for w in self.grid_slaves(row=row):
-    #         w.grid_forget()
 
     @abstractmethod
     def arrange(self):
@@ -84,19 +52,3 @@ class Frame2D(tk.Frame, ABC):
             print(f'{cls_name}.{meth.__name__}: {num_cols = }, {num_rows = }')
             return meth(self, *args, **kwargs)
         return wrapper
-
-
-# if __name__ == '__main__':
-#     root = tk.Tk()
-#     frame = f2e.Frame2DExer(root, name='workout')
-#     frame.grid(column=0, row=0, sticky=tk.NSEW)
-#     label = tk.Label(frame, text='Deadlift', name='exercise_name')
-#     label.grid(column=0, row=0, columnspan=3)
-#     for col, (width, name) in enumerate(((2, 'set_no'), (8, 'weight'),
-#                                          (4, 'reps'))):
-#         _ = tk.Entry(frame, width=width, name=name)
-#         _.grid(column=col, row=1)
-#     btn = tk.Button(frame, text='Edit', name='edit')
-#     btn.grid(column=0, row=2, columnspan=3)
-#     # root.mainloop()
-#     doctest.testmod()
