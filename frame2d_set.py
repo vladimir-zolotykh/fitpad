@@ -1,28 +1,43 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Tuple
+import tkinter as tk
+from typing import List, Tuple, Any, Dict, cast
 import frame2d as f2
 from entry_var import EntryVar
 
 
 class Frame2DSet(f2.Frame2D):
-    def row_range(self) -> Tuple[int, int]:
-        _, num_rows = self.grid_size()
-        return (1, num_rows - 1)
-
     def arrange(self):
         cols, rows = self.grid_size()
+        entries: List[tk.Widget] = []
+        Info = Dict[str, Any]
+        SavedEntry = Tuple[EntryVar, Info]
+        saved: List[List[SavedEntry]] = []
         for i in range(1, rows - 1):
-            slaves = self.grid_slaves(row=i)
-            saved.append(slaves)
-            set_no: EntryVar = self[i, 0]
+            entries = [self[i, col] for col in range(cols)]
+            item: List[SavedEntry] = []
+            item = cast(List[SavedEntry],
+                        [(e, e.grid_info()) for e in entries])
+            saved.append(item)
+
+        def get_set_no(row):
+            e0: EntryVar = row[0][0]
+            return int(e0.get())
+
+        saved.sort(key=get_set_no)
+        row: List[SavedEntry]
+        for row in saved:
+            set_no: EntryVar = row[0][0]
+            saved_entry: SavedEntry
+            e: EntryVar
             if int(set_no.get()) == 0:
-                pass
+                for saved_entry in row:
+                    e = saved_entry[0]
+                    e.destroy()
             else:
-                pass
-
-            print(numbered_set)
-        # print(f'Frame2DSet.arrange {cols = }, {rows = }')
-
-
+                for saved_entry in row:
+                    e = saved_entry[0]
+                    o: Info = saved_entry[1]
+                    e.grid(column=o['column'], row=o['row'],
+                           sticky=o['sticky'])
