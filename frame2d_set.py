@@ -42,6 +42,8 @@ class Frame2DSet(f2.Frame2D):
                 for col, saved_entry in enumerate(row):
                     e = saved_entry[0]
                     if col == 0:
+                        # Renumber the set. The first (index = 0)
+                        # EntryVar widget holds the set number.
                         var: tk.StringVar = e.configure('textvariable')
                         var.set(str(new_set_no))
                         new_set_no += 1
