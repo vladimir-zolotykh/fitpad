@@ -33,22 +33,19 @@ class Frame2DSet(f2.Frame2D):
             set_no: EntryVar = row[0][0]
             saved_entry: SavedEntry
             e: EntryVar
-            new_set_no: int = 1
             if int(set_no.get()) == 0:
                 for saved_entry in row:
                     e = saved_entry[0]
                     e.destroy()
             else:
-                for col, saved_entry in enumerate(row):
+                # Renumber the set. The first (index = 0)
+                # EntryVar widget holds the set number.
+                var: tk.StringVar = set_no.configure('textvariable')
+                var.set(str(row_index))
+                for saved_entry in row:
                     e = saved_entry[0]
-                    if col == 0:
-                        # Renumber the set. The first (index = 0)
-                        # EntryVar widget holds the set number.
-                        var: tk.StringVar = e.configure('textvariable')
-                        var.set(str(new_set_no))
-                        new_set_no += 1
                     o: Info = saved_entry[1]
                     e.grid(column=o['column'], row=row_index,
                            sticky=o['sticky'])
                 row_index += 1
-        mb.grid(column=0, row=row_index + 1, columnspan=cols)
+        mb.grid(column=0, row=row_index, columnspan=cols)
