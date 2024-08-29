@@ -5,7 +5,7 @@ import tkinter as tk
 from typing import Dict, cast
 from prettytable import PrettyTable
 from frame2d_exer import Frame2DExer
-from numbered_set import NumberedSet
+# from numbered_set import NumberedSet
 from numbered_exer import NumberedExer
 
 
@@ -19,22 +19,22 @@ class Wo(list):
         self.sort(key=lambda e: e.exer_no())
 
 
-def grid_info(container: tk.Frame) -> str:
-    num_cols, num_rows = container.grid_size()
-    table = PrettyTable()
-    # table.align = 'l'
-    table.field_names = ['row', 'num columns']
-    for num_row in range(num_rows):
-        table.add_row([num_row, len(container.grid_slaves(row=num_row))])
-    return str(table)
+# def grid_info(container: tk.Frame) -> str:
+#     num_cols, num_rows = container.grid_size()
+#     table = PrettyTable()
+#     # table.align = 'l'
+#     table.field_names = ['row', 'num columns']
+#     for num_row in range(num_rows):
+#         table.add_row([num_row, len(container.grid_slaves(row=num_row))])
+#     return str(table)
 
 
-def sets_info(rows: Dict[int, NumberedSet]) -> str:
-    table = PrettyTable()
-    table.field_names = ['row', 'num columns']
-    for row in range(len(rows)):
-        try:
-            table.add_row([row, len(rows[row + 1])])
-        except KeyError:
-            pass
-    return str(table)
+# def sets_info(rows: Dict[int, NumberedSet]) -> str:
+#     table = PrettyTable()
+#     table.field_names = ['row', 'num columns']
+#     for row in range(len(rows)):
+#         try:
+#             table.add_row([row, len(rows[row + 1])])
+#         except KeyError:
+#             pass
+#     return str(table)

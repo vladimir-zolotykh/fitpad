@@ -4,11 +4,11 @@
 import sys
 from contextlib import contextmanager
 from typing import Dict
-from typing import Generator, List
+from typing import Generator, List, cast
 import tkinter as tk
 from entry_var import EntryVar
 import frame2d_set as f2s
-from wo_tools import NumberedSet, sets_info
+# from wo_tools import NumberedSet, sets_info
 
 
 class ExerTk(f2s.Frame2DSet):
@@ -51,15 +51,13 @@ class ExerTk(f2s.Frame2DSet):
     # def yield_sets(self) -> Generator[Tuple[str, str, str], None, None]:
     def yield_sets(self) -> Generator[List[str], None, None]:
         num_columns, num_rows = self.grid_size()
-        sets_sorted = sorted(
-            [NumberedSet.from_grid(self, row=row)
-             for row in range(1, num_rows - 1)],
-            key=NumberedSet.set_no)
-        for row in sets_sorted:
+        for i in range(1, num_rows - 1):
             values = []
-            for w in row:
+            for j in range(num_columns):
+                w: tk.Widget = self[i, j]
                 if isinstance(w, EntryVar):
-                    values.append(w.get())
+                    e: EntryVar = cast(EntryVar, w)
+                    values.append(e.get())
                 else:
                     raise TypeError(f'Expected EntryVar widget, got {type(w)}')
             yield values
@@ -109,13 +107,13 @@ class ExerTk(f2s.Frame2DSet):
     #     mb_edit_sets[0].grid(column=0, row=num_row + 1,
     #                          columnspan=self.NUM_COLUMNS)
 
-    def renumber_existing_rows(self, rows: Dict[int, NumberedSet]):
-        set_no: int = 1
-        for row in rows.values():
-            e = row[0]
-            v = e.configure('textvariable')
-            v.set(set_no)
-            set_no += 1
+    # def renumber_existing_rows(self, rows: Dict[int, NumberedSet]):
+    #     set_no: int = 1
+    #     for row in rows.values():
+    #         e = row[0]
+    #         v = e.configure('textvariable')
+    #         v.set(set_no)
+    #         set_no += 1
 
     def grid_the_set(self, num_row: int):
         """Grid a set's widgets
