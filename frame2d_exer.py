@@ -51,5 +51,4 @@ class Frame2DExer(f2.Frame2D):
             else:
                 w.grid(column=o['column'], row=row_index, sticky=o['sticky'])
                 row_index += 1
-        print(f'{deleted_exer = }')
         return deleted_exer

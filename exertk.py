@@ -48,7 +48,6 @@ class ExerTk(f2s.Frame2DSet):
         print(f'{label} num_rows = {n1}/{n2}')
         sys.stdout.flush()
 
-    # def yield_sets(self) -> Generator[Tuple[str, str, str], None, None]:
     def yield_sets(self) -> Generator[List[str], None, None]:
         num_columns, num_rows = self.grid_size()
         for i in range(1, num_rows - 1):
@@ -65,55 +64,6 @@ class ExerTk(f2s.Frame2DSet):
     # @Frame2D.print_size
     def edit_sets(self):
         self.arrange()
-
-    # # @Frame2D.print_size
-    # def edit_sets(self):
-    #     self.arrange()
-    #     return
-    #     num_cols, num_rows = self.grid_size()
-    #     print(type(self))
-    #     # print(f'ExerTk.edit_sets {num_cols = }, {num_rows = }')
-    #     mb_edit_sets = self.grid_slaves(row=num_rows - 1)
-
-    #     # print(grid_info(self))
-    #     sets_sorted = sorted(
-    #         [NumberedSet.from_grid(self, row=row)
-    #          for row in range(1, num_rows - 1)],
-    #         key=NumberedSet.set_no)
-    #     # rows_sorted: Dict[int, List[tk.Widget]] = {}
-    #     rows_sorted: Dict[int, NumberedSet] = {}
-
-    #     num_row: int = 1
-    #     for row in sets_sorted:
-    #         if row.set_no() == 0:
-    #             for w in row:
-    #                 w.destroy()
-    #         else:
-    #             rows_sorted[num_row] = NumberedSet.from_list(row)
-    #             num_row += 1
-    #             for w in row:
-    #                 w.grid_forget()
-    #         self.last_set -= 1
-    #     mb_edit_sets[0].grid_forget()
-    #     self.last_set = 1
-    #     num_row = 0
-    #     self.renumber_existing_rows(rows_sorted)
-    #     for num_row, row in rows_sorted.items():
-    #         for col, w in enumerate(row):
-    #             w.grid(column=col, row=num_row)
-    #         self.last_set += 1
-    #     # self.renumber_existing_sets()
-    #     print(sets_info(rows_sorted))
-    #     mb_edit_sets[0].grid(column=0, row=num_row + 1,
-    #                          columnspan=self.NUM_COLUMNS)
-
-    # def renumber_existing_rows(self, rows: Dict[int, NumberedSet]):
-    #     set_no: int = 1
-    #     for row in rows.values():
-    #         e = row[0]
-    #         v = e.configure('textvariable')
-    #         v.set(set_no)
-    #         set_no += 1
 
     def grid_the_set(self, num_row: int):
         """Grid a set's widgets
