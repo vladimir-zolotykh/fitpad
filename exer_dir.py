@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import Dict, List
-from exertk import ExerTk
+from exertk import SetFrame
 from frame2d_exer import Frame2DExer
 from numbered_frame import NumberedFrame
 
 
-class ExerDir(Dict[str, ExerTk]):
+class ExerDir(Dict[str, SetFrame]):
     """A dict of Workout exercises
 
-    Dict[str, ExerTk]
+    Dict[str, SetFrame]
     """
 
     def __init__(self, frame: Frame2DExer):
@@ -30,5 +30,5 @@ class ExerDir(Dict[str, ExerTk]):
 
     def add_exer(self, name: str):
         numbered_frame = NumberedFrame(self.frame, self.row)
-        self[name] = ExerTk(numbered_frame.exer_box, name, 0)
+        self[name] = SetFrame(numbered_frame.exer_box, name, 0)
         self.row += 1

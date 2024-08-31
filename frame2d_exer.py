@@ -36,7 +36,7 @@ class Frame2DExer(f2.Frame2D):
         row_index = 0
         for saved_widget in sorted:
             w, o = saved_widget
-            # w[tk.Frame]: EntryVar | ExerTk
+            # w[tk.Frame]: EntryVar | SetFrame
             entry: EntryVar = w[0, 0]
             var = entry.configure('textvariable')
             if int(entry.get()) == 0:

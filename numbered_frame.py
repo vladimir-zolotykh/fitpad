@@ -12,11 +12,11 @@ class NumberedFrame(Frame2DExer):
     """Makes `NumberedFrame' grid structure
 
     of one or more rows of two columns: `exer_no' (tk.Entry),
-    `exer_box' Frame[ExerTk] where Frame is additional wrapper frame.
+    `exer_box' Frame[SetFrame] where Frame is additional wrapper frame.
 
     Usage:
     numbered_frame = NumberedFrame(self.frame, self.row)
-    self[name] = ExerTk(numbered_frame.exer_box, name, 0)
+    self[name] = SetFrame(numbered_frame.exer_box, name, 0)
     """
 
     def __init__(self, parent: tk.Frame, row: int):

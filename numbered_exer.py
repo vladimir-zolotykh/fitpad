@@ -11,7 +11,7 @@ class NumberedExer(list):
     """class to `unpack' the grid structure
 
     The grid structure represents has two widgets: tk.Entry
-    (`exer_no') and Frame2D(ExerTk) and is made in
+    (`exer_no') and Frame2D(SetFrame) and is made in
     NumberedFrame. NumberedExer.__getattr__ is used to
     grid_forget/[re-]grid_pack
     """
@@ -27,7 +27,7 @@ class NumberedExer(list):
 
     def exer_name(self) -> str:
         frame2d: Frame2DExer = self[1]
-        exertk_frame: exertk.ExerTk = frame2d[0, 0]
+        exertk_frame: exertk.SetFrame = frame2d[0, 0]
         label: tk.Label = exertk_frame[0, 0]
         return label.cget('text')
 

@@ -11,7 +11,7 @@ import frame2d_set as f2s
 # from wo_tools import NumberedSet, sets_info
 
 
-class ExerTk(f2s.Frame2DSet):
+class SetFrame(f2s.Frame2DSet):
     """Make tk widgets representing an exercise"""
 
     NUM_COLUMNS = 3
