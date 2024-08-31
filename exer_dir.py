@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import Dict, List
-from exertk import SetFrame
+from setframe import SetFrame
 from frame2d_exer import Frame2DExer
 from numbered_frame import NumberedFrame
 
