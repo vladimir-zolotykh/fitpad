@@ -9,10 +9,6 @@ from entry_var import EntryVar
 
 
 class Frame2DExer(f2.Frame2D):
-    def row_range(self) -> Tuple[int, int]:
-        _, num_rows = self.grid_size()
-        return (0, num_rows)
-
     def arrange(self):
         """Arrange exercises in exercise number order.
 
