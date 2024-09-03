@@ -12,7 +12,8 @@ from sqlalchemy.orm import Session
 import models as md
 import database as db
 from exer_dir import ExerDir
-from frame2d_exer import Frame2DExer
+# from frame2d_exer import Frame2DExer
+from exerframe import ExerFrame
 
 
 class Workout(tk.Tk):
@@ -28,25 +29,22 @@ class Workout(tk.Tk):
         menubar.add_cascade(label='File', menu=file_menu)
         add_exer_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label='Add exercise', menu=add_exer_menu)
-        self.exer_dir: Dict[str, Any] = {}
+        self.db_exer: Dict[str, Any] = {}
         with Session(engine) as session:
             for exer in session.scalars(select(md.Exercise)):
-                self.exer_dir[exer.name] = None
-        frame = Frame2DExer(self, name='workout_frame')
-        frame.grid(column=0, row=0, sticky=tk.NSEW)
+                self.db_exer[exer.name] = None
+        exer_frame = ExerFrame(self)
+        exer_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
-        frame.columnconfigure(0, weight=1)
-        self.dir = dir = ExerDir(frame)
-        for name in self.exer_dir:
-            _add_exer = partial(dir.add_exer, name)
+        for name in self.db_exer:
+            _add_exer = partial(exer_frame.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
         add_exer_menu.add_separator()
-        add_exer_menu.add_command(label='Edit', command=dir.edit_exer)
+        add_exer_menu.add_command(label='Edit', command=exer_frame.edit_exer)
         menubar.add_command(label='Save workout', command=self.save_workout)
 
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # with Session(self.engine) as session:
         with db.session_scope(self.engine) as session:
             for exer_name in self.dir:
                 exer = session.get_exer(exer_name)

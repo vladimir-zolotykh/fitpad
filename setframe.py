@@ -17,9 +17,9 @@ class SetFrame(f2s.Frame2DSet):
     NUM_COLUMNS = 3
     COL_WIDTH = {'set_no': 2, 'weight': 10, 'reps': 3}
 
-    def __init__(self, parent, name: str, row: int):
+    def __init__(self, parent, name: str):
         super().__init__(parent)
-        self.grid(column=0, row=row, sticky=tk.EW)
+        # self.grid(column=0, row=row, sticky=tk.EW)
         self.name = name
         self.last_set: int = 1
         self.set_no: Dict[int, tk.StringVar] = {}
@@ -28,7 +28,7 @@ class SetFrame(f2s.Frame2DSet):
         self.columnconfigure(0, weight=1)
         for c in range(self.NUM_COLUMNS):
             self.columnconfigure(c, weight=1)
-        label = tk.Label(self, text=name)
+        self.label = label = tk.Label(self, text=name)
         label.grid(column=0, row=0, columnspan=self.NUM_COLUMNS)
         self.add_set()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
@@ -39,6 +39,10 @@ class SetFrame(f2s.Frame2DSet):
         mb_menu.add_command(label='Edit sets', command=self.edit_sets)
         label.configure(pady=pady + (mb.winfo_reqheight() -
                                      label.winfo_reqheight()) // 2)
+
+    @property
+    def exer_name(self) -> str:
+        return self.label.cget('text')
 
     @contextmanager
     def num_rows_printed(self, label='***'):
