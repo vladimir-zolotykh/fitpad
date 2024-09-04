@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 from functools import partial
 from datetime import datetime
 import argparse
@@ -11,9 +11,9 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 import models as md
 import database as db
-from exer_dir import ExerDir
 # from frame2d_exer import Frame2DExer
 from exerframe import ExerFrame
+from setframe import SetFrame
 
 
 class Workout(tk.Tk):
@@ -47,7 +47,9 @@ class Workout(tk.Tk):
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with db.session_scope(self.engine) as session:
-            for exer_name, set_frame in self.yield_exercises:
+            exer_name: str
+            set_frame: SetFrame
+            for exer_name, set_frame in self.exer_frame.yield_exercises():
                 exer = session.get_exer(exer_name)
                 # exertk = self.dir[exer_name]
                 for _, weight, reps in set_frame.yield_sets():

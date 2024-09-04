@@ -19,12 +19,12 @@ class ExerFrame(f2e.Frame2DExer):
         return self.grid_row + 1
 
     def yield_exercises(self) -> Generator[
-            List[Tuple[str, SetFrame]], None, None]:
+            Tuple[str, SetFrame], None, None]:
         num_columns, num_rows = self.grid_size()
         for i in range(num_rows):
             ev: EntryVar = self[i, 0]
             sf: SetFrame = self[i, 1]
-            yield tuple(ev.get(), sf)
+            yield (ev.get(), sf)
 
     def add_exer(self, exer_name: str):
         var = tk.StringVar()
