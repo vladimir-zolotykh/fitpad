@@ -33,23 +33,24 @@ class Workout(tk.Tk):
         with Session(engine) as session:
             for exer in session.scalars(select(md.Exercise)):
                 self.db_exer[exer.name] = None
-        exer_frame = ExerFrame(self)
-        exer_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        self.exer_frame = ExerFrame(self)
+        self.exer_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         for name in self.db_exer:
-            _add_exer = partial(exer_frame.add_exer, name)
+            _add_exer = partial(self.exer_frame.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
         add_exer_menu.add_separator()
-        add_exer_menu.add_command(label='Edit', command=exer_frame.edit_exer)
+        add_exer_menu.add_command(label='Edit',
+                                  command=self.exer_frame.edit_exer)
         menubar.add_command(label='Save workout', command=self.save_workout)
 
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with db.session_scope(self.engine) as session:
-            for exer_name in self.dir:
+            for exer_name, set_frame in self.yield_exercises:
                 exer = session.get_exer(exer_name)
-                exertk = self.dir[exer_name]
-                for _, weight, reps in exertk.yield_sets():
+                # exertk = self.dir[exer_name]
+                for _, weight, reps in set_frame.yield_sets():
                     session.add(md.Workout(exercise=exer, when=now,
                                            weight=weight, reps=reps))
             session.commit()

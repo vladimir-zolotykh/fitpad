@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Generator, List, Tuple, cast
 import tkinter as tk
 import frame2d_exer as f2e
 from setframe import SetFrame
@@ -16,6 +17,14 @@ class ExerFrame(f2e.Frame2DExer):
     @property
     def exer_order(self):
         return self.grid_row + 1
+
+    def yield_exercises(self) -> Generator[
+            List[Tuple[str, SetFrame]], None, None]:
+        num_columns, num_rows = self.grid_size()
+        for i in range(num_rows):
+            ev: EntryVar = self[i, 0]
+            sf: SetFrame = self[i, 1]
+            yield tuple(ev.get(), sf)
 
     def add_exer(self, exer_name: str):
         var = tk.StringVar()
