@@ -53,7 +53,8 @@ class Workout(tk.Tk):
             for exer_name, set_frame in self.exer_frame:
                 exer = session.get_exer(exer_name)
                 # exertk = self.dir[exer_name]
-                for _, weight, reps in set_frame.yield_sets():
+                # for _, weight, reps in set_frame.yield_sets():
+                for _, weight, reps in set_frame:
                     session.add(md.Workout(exercise=exer, when=now,
                                            weight=weight, reps=reps))
             session.commit()
