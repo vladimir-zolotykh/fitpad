@@ -53,9 +53,9 @@ class SetFrame(f2s.Frame2DSet):
         sys.stdout.flush()
 
     def __iter__(self):
-        return self.yield_sets()
+        return self._yield_sets()
 
-    def yield_sets(self) -> Generator[List[str], None, None]:
+    def _yield_sets(self) -> Generator[List[str], None, None]:
         num_columns, num_rows = self.grid_size()
         for i in range(1, num_rows - 1):
             values = []

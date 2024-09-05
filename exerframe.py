@@ -19,9 +19,9 @@ class ExerFrame(f2e.Frame2DExer):
         return self.grid_row + 1
 
     def __iter__(self):
-        return self.yield_exercises()
+        return self._yield_exercises()
 
-    def yield_exercises(self) -> Generator[
+    def _yield_exercises(self) -> Generator[
             Tuple[str, SetFrame], None, None]:
         num_columns, num_rows = self.grid_size()
         for i in range(num_rows):
