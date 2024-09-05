@@ -49,7 +49,8 @@ class Workout(tk.Tk):
         with db.session_scope(self.engine) as session:
             exer_name: str
             set_frame: SetFrame
-            for exer_name, set_frame in self.exer_frame.yield_exercises():
+            # for exer_name, set_frame in self.exer_frame.yield_exercises():
+            for exer_name, set_frame in self.exer_frame:
                 exer = session.get_exer(exer_name)
                 # exertk = self.dir[exer_name]
                 for _, weight, reps in set_frame.yield_sets():
