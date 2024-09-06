@@ -68,7 +68,6 @@ class SetFrame(f2s.Frame2DSet):
                     raise TypeError(f'Expected EntryVar widget, got {type(w)}')
             yield values
 
-    # @Frame2D.print_size
     def edit_sets(self):
         self.arrange()
 

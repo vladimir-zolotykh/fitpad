@@ -36,19 +36,3 @@ class Frame2D(tk.Frame, ABC):
         """
         # raise NotImplementedError()
         return
-
-    @staticmethod
-    def print_size(meth):
-        """A decorator to print called method's name
-
-        and the Frame's size
-        in the form
-        NumberedFrame.edit_sets: num_cols = 2, num_rows = 2
-        """
-
-        def wrapper(self, *args, **kwargs):
-            num_cols, num_rows = self.grid_size()
-            cls_name = self.__class__.__name__
-            print(f'{cls_name}.{meth.__name__}: {num_cols = }, {num_rows = }')
-            return meth(self, *args, **kwargs)
-        return wrapper
