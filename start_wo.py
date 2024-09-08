@@ -3,10 +3,12 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import Dict, Any, Tuple
 from functools import partial
+from operator import itemgetter
 from datetime import datetime
 import argparse
 import argcomplete
 import tkinter as tk
+from tkinter import ttk
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 import models as md
@@ -44,6 +46,31 @@ class Workout(tk.Tk):
                                   command=self.exer_frame.edit_exer)
         menubar.add_command(label='Save workout', command=self.save_workout)
 
+    def show_log(self):
+        """Show completed workout"""
+
+        self.exer_frame.destroy()
+        self.log_frame = tk.Frame(self)
+        self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        log = [
+            ("Squat", "2024-09-06 18:30", 100, 8),
+            ("Bench Press", "2024-09-06 18:45", 70, 10),
+            ("Deadlift", "2024-09-06 19:00", 120, 5),
+        ]
+        columns = (('exercise', 150), ('when', 150),
+                   ('weight', 100), ('reps', 100))
+        table = ttk.Treeview(
+            self.log_frame, show="headings",
+            columns=[itemgetter(0)(t) for t in columns])
+        for n, w in columns:
+            table.heading(n, text=n)
+            table.column(n, width=w)
+        for values in log:
+            table.insert("", tk.END, values=values)
+        table.grid(column=0, row=0, sticky=tk.NSEW)
+
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with db.session_scope(self.engine) as session:
@@ -58,6 +85,7 @@ class Workout(tk.Tk):
                     session.add(md.Workout(exercise=exer, when=now,
                                            weight=weight, reps=reps))
             session.commit()
+        self.show_log()
 
 
 parser = argparse.ArgumentParser(
