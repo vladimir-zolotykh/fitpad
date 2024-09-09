@@ -11,6 +11,8 @@ import tkinter as tk
 from tkinter import ttk
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.engine.base import Engine
 import models as md
 import database as db
 # from frame2d_exer import Frame2DExer
@@ -54,11 +56,6 @@ class Workout(tk.Tk):
         self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        log = [
-            ("Squat", "2024-09-06 18:30", 100, 8),
-            ("Bench Press", "2024-09-06 18:45", 70, 10),
-            ("Deadlift", "2024-09-06 19:00", 120, 5),
-        ]
         columns = (('exercise', 150), ('when', 150),
                    ('weight', 100), ('reps', 100))
         table = ttk.Treeview(
@@ -67,25 +64,44 @@ class Workout(tk.Tk):
         for n, w in columns:
             table.heading(n, text=n)
             table.column(n, width=w)
-        for values in log:
-            table.insert("", tk.END, values=values)
+        with db.session_scope(self.engine) as session:
+            for wo in session.scalars(select(md.Workout)):
+                values = []
+                values.append(wo.exercise.name)
+                values.append(wo.when)
+                values.append(wo.weight)
+                values.append(wo.reps)
+                table.insert("", tk.END, values=values)
         table.grid(column=0, row=0, sticky=tk.NSEW)
 
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with db.session_scope(self.engine) as session:
-            exer_name: str
+            exer_no: str
             set_frame: SetFrame
-            # for exer_name, set_frame in self.exer_frame.yield_exercises():
-            for exer_name, set_frame in self.exer_frame:
-                exer = session.get_exer(exer_name)
-                # exertk = self.dir[exer_name]
-                # for _, weight, reps in set_frame.yield_sets():
+            for exer_no, set_frame in self.exer_frame:
+                exer = session.get_exer(set_frame.exer_name)
                 for _, weight, reps in set_frame:
-                    session.add(md.Workout(exercise=exer, when=now,
-                                           weight=weight, reps=reps))
+                    wo = md.Workout(when=now, weight=weight, reps=reps)
+                    wo.exercise = exer
+                    session.add(wo)
             session.commit()
         self.show_log()
+
+
+def create_exercises(engine: Engine):
+    """Create exercises once"""
+
+    try:
+        with db.session_scope(engine) as session:
+            for exer_name in ['front squat', 'squat', 'bench press',
+                              'deadlift']:
+                exer = md.Exercise(name=exer_name)
+                session.add(exer)
+                session.commit()
+    except IntegrityError:
+        # Exercises already exist
+        session.rollback()
 
 
 parser = argparse.ArgumentParser(
@@ -102,4 +118,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     engine = create_engine(f'sqlite:///{args.db}', echo=args.echo)
     db.initialize(engine)
+    create_exercises(engine)
     Workout(engine).mainloop()
