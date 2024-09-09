@@ -37,7 +37,7 @@ class Workout(Base):
 class Exercise(Base):
     __tablename__ = 'exercise'
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
     workouts: Mapped[List['Workout']] = relationship(
         'Workout', secondary='workout_exercise',
         back_populates='exercise', passive_deletes=True)
