@@ -66,12 +66,8 @@ class Workout(tk.Tk):
             table.column(n, width=w)
         with db.session_scope(self.engine) as session:
             for wo in session.scalars(select(md.Workout)):
-                values = []
-                values.append(wo.exercise.name)
-                values.append(wo.when)
-                values.append(wo.weight)
-                values.append(wo.reps)
-                table.insert("", tk.END, values=values)
+                table.insert("", tk.END, values=(wo.exercise.name, wo.when,
+                                                 wo.weight, wo.reps))
         table.grid(column=0, row=0, sticky=tk.NSEW)
 
     def save_workout(self):
@@ -82,8 +78,8 @@ class Workout(tk.Tk):
             for exer_no, set_frame in self.exer_frame:
                 exer = session.get_exer(set_frame.exer_name)
                 for _, weight, reps in set_frame:
-                    wo = md.Workout(when=now, weight=weight, reps=reps)
-                    wo.exercise = exer
+                    wo = md.Workout(exercise=exer, when=now, weight=weight,
+                                    reps=reps)
                     session.add(wo)
             session.commit()
         self.show_log()
