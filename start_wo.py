@@ -37,9 +37,16 @@ class Workout(tk.Tk):
         with Session(engine) as session:
             for exer in session.scalars(select(md.Exercise)):
                 self.db_exer[exer.name] = None
-        self.exer_frame = ExerFrame(self)
-        self.exer_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        self.notebook = ttk.Notebook(self)
+        self.notebook.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        self.exer_frame = ExerFrame(self.notebook)
+        self.exer_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        self.notebook.add(self.exer_frame, text='Workout')
+        self.log_frame = tk.Frame(self.notebook)
+        self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        self.notebook.add(self.log_frame, text='Log')
         for name in self.db_exer:
             _add_exer = partial(self.exer_frame.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
@@ -51,11 +58,6 @@ class Workout(tk.Tk):
     def show_log(self):
         """Show completed workout"""
 
-        self.exer_frame.destroy()
-        self.log_frame = tk.Frame(self)
-        self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
         columns = (('exercise', 150), ('when', 150),
                    ('weight', 100), ('reps', 100))
         table = ttk.Treeview(
@@ -69,6 +71,8 @@ class Workout(tk.Tk):
                 table.insert("", tk.END, values=(wo.exercise.name, wo.when,
                                                  wo.weight, wo.reps))
         table.grid(column=0, row=0, sticky=tk.NSEW)
+        self.log_frame.columnconfigure(0, weight=1)
+        self.log_frame.rowconfigure(0, weight=1)
 
     def save_workout(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
