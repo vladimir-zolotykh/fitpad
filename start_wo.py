@@ -47,6 +47,9 @@ class Workout(tk.Tk):
         self.log_frame = tk.Frame(self.notebook)
         self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.log_frame, text='Log')
+        self.repertoire = tk.Frame(self.notebook)
+        self.repertoire.grid(column=0, row=0, sticky=tk.NSEW)
+        self.notebook.add(self.repertoire, text='Repertoire')
         for name in self.db_exer:
             _add_exer = partial(self.exer_frame.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
