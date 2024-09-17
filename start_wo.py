@@ -47,9 +47,10 @@ class Workout(tk.Tk):
         self.log_frame = tk.Frame(self.notebook)
         self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.log_frame, text='Log')
-        self.repertoire = tk.Frame(self.notebook)
-        self.repertoire.grid(column=0, row=0, sticky=tk.NSEW)
-        self.notebook.add(self.repertoire, text='Repertoire')
+        self.repertoire_frame = tk.Frame(self.notebook)
+        self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        self.notebook.add(self.repertoire_frame, text='Repertoire')
+        self.show_repertoire()
         for name in self.db_exer:
             _add_exer = partial(self.exer_frame.add_exer, name)
             add_exer_menu.add_command(label=name, command=_add_exer)
@@ -57,6 +58,19 @@ class Workout(tk.Tk):
         add_exer_menu.add_command(label='Edit',
                                   command=self.exer_frame.edit_exer)
         menubar.add_command(label='Save workout', command=self.save_workout)
+
+    def show_repertoire(self):
+        columns = (('exercise', 150), )
+        table = ttk.Treeview(self.repertoire_frame, show='headings',
+                             columns=[itemgetter(0)(t) for t in columns])
+        for n, w in columns:
+            table.heading(n, text=n)
+            table.column(n, width=w)
+        for exer_name in self.db_exer:
+            table.insert('', tk.END, values=(exer_name, ))
+        table.grid(column=0, row=0, sticky=tk.NSEW)
+        self.repertoire_frame.columnconfigure(0, weight=1)
+        self.repertoire_frame.rowconfigure(0, weight=1)
 
     def show_log(self):
         """Show completed workout"""
