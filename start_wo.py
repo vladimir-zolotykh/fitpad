@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Optional, cast
 from functools import partial
 from operator import itemgetter
 from datetime import datetime
@@ -9,6 +9,7 @@ import argparse
 import argcomplete
 import tkinter as tk
 from tkinter import ttk
+from tkinter import simpledialog
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -47,6 +48,7 @@ class Workout(tk.Tk):
         self.log_frame = tk.Frame(self.notebook)
         self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.log_frame, text='Log')
+        self.repertoire_table: Optional[ttk.Treeview] = None
         self.repertoire_frame = tk.Frame(self.notebook)
         self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
@@ -57,18 +59,58 @@ class Workout(tk.Tk):
         add_exer_menu.add_separator()
         add_exer_menu.add_command(label='Edit',
                                   command=self.exer_frame.edit_exer)
+        repertoire_menu = tk.Menu(menubar, tearoff=0)
+        repertoire_menu.add_command(
+            label='Add exercise', command=self.add_exercise_name)
+        repertoire_menu.add_command(
+            label='Update', command=self.update_exercise_list)
+        repertoire_menu.add_command(
+            label='Delete', command=self.delete_exercise_name)
+        menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
         menubar.add_command(label='Save workout', command=self.save_workout)
+
+    def delete_exercise_name(self):
+        tab = cast(ttk.Treeview, self.repertoire_table)
+        iid = tab.selection()
+        values = tab.item(iid, 'values')
+        with db.session_scope(self.engine) as session:
+            exer_name = values[0]
+            exer = session.query(md.Exercise).filter_by(name=exer_name).first()
+            if exer:
+                session.delete(exer)
+                session.commit()
+                self.update_exercise_list()
+            else:
+                session.rollback()
+
+    def update_exercise_list(self):
+        query = db.select(md.Exercise)
+        with db.session_scope(self.engine) as session:
+            tab: ttk.Treeview = cast(ttk.Treeview, self.repertoire_table)
+            tab.delete(*tab.get_children())
+            for exer in session.scalars(query):
+                tab.insert('', tk.END, values=(exer.name, ))
+
+    def add_exercise_name(self):
+        exer_name = simpledialog.askstring(
+            'Extend repertoire', 'Enter exercise name', parent=self)
+        with db.session_scope(self.engine) as session:
+            exer = md.Exercise(name=exer_name)
+            session.add(exer)
+            session.commit()
+        self.update_exercise_list()
 
     def show_repertoire(self):
         columns = (('exercise', 150), )
-        table = ttk.Treeview(self.repertoire_frame, show='headings',
-                             columns=[itemgetter(0)(t) for t in columns])
+        self.repertoire_table = ttk.Treeview(
+            self.repertoire_frame, show='headings',
+            columns=[itemgetter(0)(t) for t in columns])
         for n, w in columns:
-            table.heading(n, text=n)
-            table.column(n, width=w)
+            self.repertoire_table.heading(n, text=n)
+            self.repertoire_table.column(n, width=w)
         for exer_name in self.db_exer:
-            table.insert('', tk.END, values=(exer_name, ))
-        table.grid(column=0, row=0, sticky=tk.NSEW)
+            self.repertoire_table.insert('', tk.END, values=(exer_name, ))
+        self.repertoire_table.grid(column=0, row=0, sticky=tk.NSEW)
         self.repertoire_frame.columnconfigure(0, weight=1)
         self.repertoire_frame.rowconfigure(0, weight=1)
 
