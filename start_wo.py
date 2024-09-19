@@ -27,18 +27,19 @@ class Workout(tk.Tk):
         self.engine = engine
         self.title('Workout')
         self.geometry('500x200+400+300')
-        menubar = tk.Menu(self, tearoff=0)
+        self.menubar = menubar = tk.Menu(self, tearoff=0)
         self['menu'] = menubar
         file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(label='Quit', command=self.quit)
         menubar.add_cascade(label='File', menu=file_menu)
         add_exer_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label='Add exercise', menu=add_exer_menu)
+        menubar.add_cascade(label='Workout', menu=add_exer_menu)
         self.db_exer: Dict[str, Any] = {}
         with Session(engine) as session:
             for exer in session.scalars(select(md.Exercise)):
                 self.db_exer[exer.name] = None
         self.notebook = ttk.Notebook(self)
+        self.notebook.bind('<<NotebookTabChanged>>', self.on_tab_change)
         self.notebook.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -113,6 +114,36 @@ class Workout(tk.Tk):
         self.repertoire_table.grid(column=0, row=0, sticky=tk.NSEW)
         self.repertoire_frame.columnconfigure(0, weight=1)
         self.repertoire_frame.rowconfigure(0, weight=1)
+
+    def on_tab_change(self, event):
+        """
+        Synchronize menus and notebook tabs
+
+        Handles the synchronization between the 'Workout' and
+        'Repertoire' menus and their corresponding notebook tabs.
+
+        Only one menu is active at a time:
+        - The 'Workout' menu is active when the 'Workout' tab is
+          selected.
+        - The 'Repertoire' menu is active when the 'Repertoire' tab is
+          selected.
+        """
+
+        win_to_tab: dict[str, str] = {}  # window name -> tab name
+        for index, t in enumerate(self.notebook.tabs()):
+            tab_name = self.notebook.tab(index, 'text')
+            win_to_tab[t] = tab_name
+        selected_tab_text = win_to_tab[self.notebook.select()]
+        label_to_index: dict[str, int] = {}  # menu label -> index
+        for index in range(self.menubar.index(tk.END) + 1):
+            menu_label = self.menubar.entrycget(index, "label")
+            label_to_index[menu_label] = index
+            if menu_label == 'Log':
+                continue
+            self.menubar.entryconfigure(index, state=tk.DISABLED)
+        if selected_tab_text != 'Log':
+            self.menubar.entryconfigure(label_to_index[selected_tab_text],
+                                        tk.NORMAL)
 
     def show_log(self):
         """Show completed workout"""
