@@ -71,8 +71,9 @@ class Workout(tk.Tk):
         menubar.add_command(label='Save workout', command=self.save_workout)
 
     def delete_exercise_name(self):
+        # tab = cast(ttk.Treeview, self.repertoire_table)
         tab = cast(ttk.Treeview, self.repertoire_table)
-        iid = tab.selection()
+        iid = tab.selection()[0]
         values = tab.item(iid, 'values')
         with db.session_scope(self.engine) as session:
             exer_name = values[0]
@@ -135,15 +136,17 @@ class Workout(tk.Tk):
             win_to_tab[t] = tab_name
         selected_tab_text = win_to_tab[self.notebook.select()]
         label_to_index: dict[str, int] = {}  # menu label -> index
-        for index in range(self.menubar.index(tk.END) + 1):
-            menu_label = self.menubar.entrycget(index, "label")
-            label_to_index[menu_label] = index
-            if menu_label == 'Log':
-                continue
-            self.menubar.entryconfigure(index, state=tk.DISABLED)
+        max_menu_index = self.menubar.index(tk.END)
+        if isinstance(max_menu_index, int):
+            for index in range(max_menu_index + 1):
+                menu_label = self.menubar.entrycget(index, "label")
+                label_to_index[menu_label] = index
+                if menu_label == 'Log':
+                    continue
+                self.menubar.entryconfigure(index, state=tk.DISABLED)
         if selected_tab_text != 'Log':
             self.menubar.entryconfigure(label_to_index[selected_tab_text],
-                                        tk.NORMAL)
+                                        state=tk.NORMAL)
 
     def show_log(self):
         """Show completed workout"""
