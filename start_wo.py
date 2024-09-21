@@ -130,9 +130,13 @@ class Workout(tk.Tk):
           selected.
         """
 
+        # Assuming nb tabs and menu labels named the same, e.g.,
+        # 'Workout', 'Repertoire'
+        NB_TABS: list[str] = ['Workout', 'Repertoire']
         win_to_tab: dict[str, str] = {}  # window name -> tab name
         for index, t in enumerate(self.notebook.tabs()):
             tab_name = self.notebook.tab(index, 'text')
+            # e.g. win_to_tab['.!notebook.!frame'] = 'Log'
             win_to_tab[t] = tab_name
         selected_tab_text = win_to_tab[self.notebook.select()]
         label_to_index: dict[str, int] = {}  # menu label -> index
@@ -141,10 +145,9 @@ class Workout(tk.Tk):
             for index in range(max_menu_index + 1):
                 menu_label = self.menubar.entrycget(index, "label")
                 label_to_index[menu_label] = index
-                if menu_label == 'Log':
-                    continue
-                self.menubar.entryconfigure(index, state=tk.DISABLED)
-        if selected_tab_text != 'Log':
+                if menu_label in NB_TABS:
+                    self.menubar.entryconfigure(index, state=tk.DISABLED)
+        if selected_tab_text in NB_TABS:
             self.menubar.entryconfigure(label_to_index[selected_tab_text],
                                         state=tk.NORMAL)
 
