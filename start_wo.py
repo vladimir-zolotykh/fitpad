@@ -32,12 +32,12 @@ class Workout(tk.Tk):
         file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(label='Quit', command=self.quit)
         menubar.add_cascade(label='File', menu=file_menu)
-        add_exer_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label='Workout', menu=add_exer_menu)
-        self.db_exer: Dict[str, Any] = {}
-        with Session(engine) as session:
-            for exer in session.scalars(select(md.Exercise)):
-                self.db_exer[exer.name] = None
+        self.add_exer_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label='Workout', menu=self.add_exer_menu)
+        # self.db_exer: Dict[str, Any] = {}
+        # with Session(engine) as session:
+        #     for exer in session.scalars(select(md.Exercise)):
+        #         self.db_exer[exer.name] = None
         self.notebook = ttk.Notebook(self)
         self.notebook.bind('<<NotebookTabChanged>>', self.on_tab_change)
         self.notebook.grid(column=0, row=0, sticky=tk.NSEW)
@@ -54,12 +54,13 @@ class Workout(tk.Tk):
         self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.show_repertoire()
-        for name in self.db_exer:
-            _add_exer = partial(self.exer_frame.add_exer, name)
-            add_exer_menu.add_command(label=name, command=_add_exer)
-        add_exer_menu.add_separator()
-        add_exer_menu.add_command(label='Edit',
-                                  command=self.exer_frame.edit_exer)
+        # for name in self.db_exer:
+        #     _add_exer = partial(self.exer_frame.add_exer, name)
+        #     self.add_exer_menu.add_command(label=name, command=_add_exer)
+        self.update_add_exer_menu()
+        self.add_exer_menu.add_separator()
+        self.add_exer_menu.add_command(label='Edit',
+                                       command=self.exer_frame.edit_exer)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
@@ -69,6 +70,26 @@ class Workout(tk.Tk):
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
         menubar.add_command(label='Save workout', command=self.save_workout)
+
+    def update_add_exer_menu(self):
+        # delete all menu items
+        index_end = self.add_exer_menu.index(tk.END)
+        if isinstance(index_end, int):
+            for i in range(index_end):
+                print(f'{i = }')
+                self.add_exer_menu.delete(i)
+        for name in self.db_exer:
+            _add_exer = partial(self.exer_frame.add_exer, name)
+            self.add_exer_menu.add_command(label=name, command=_add_exer)
+
+    @property
+    def db_exer(self):
+        self._exer_list: list[str] = []
+        with Session(engine) as session:
+            for exer in session.scalars(select(md.Exercise)):
+                self._exer_list.append(exer.name)
+
+        return self._exer_list
 
     def delete_exercise_name(self):
         # tab = cast(ttk.Treeview, self.repertoire_table)
@@ -92,6 +113,7 @@ class Workout(tk.Tk):
             tab.delete(*tab.get_children())
             for exer in session.scalars(query):
                 tab.insert('', tk.END, values=(exer.name, ))
+        self.update_add_exer_menu()
 
     def add_exercise_name(self):
         exer_name = simpledialog.askstring(
