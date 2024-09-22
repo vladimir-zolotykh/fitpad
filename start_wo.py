@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Dict, Any, Optional, cast
+from typing import Optional, cast
 from functools import partial
 from operator import itemgetter
 from datetime import datetime
@@ -54,18 +54,20 @@ class Workout(tk.Tk):
         self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.show_repertoire()
+        # cmd name -> menu item index
+        self._cmd_to_menu: dict[str, int] = {}
         # for name in self.db_exer:
         #     _add_exer = partial(self.exer_frame.add_exer, name)
         #     self.add_exer_menu.add_command(label=name, command=_add_exer)
-        self.update_add_exer_menu()
+        self.add_exer_menu.add_command(
+            label='Edit', command=self.exer_frame.edit_exer)
         self.add_exer_menu.add_separator()
-        self.add_exer_menu.add_command(label='Edit',
-                                       command=self.exer_frame.edit_exer)
+        self.update_add_exer_menu()
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
         repertoire_menu.add_command(
-            label='Update', command=self.update_exercise_list)
+            label='Update', command=self.update_exercise_list_gui)
         repertoire_menu.add_command(
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
@@ -73,14 +75,22 @@ class Workout(tk.Tk):
 
     def update_add_exer_menu(self):
         # delete all menu items
-        index_end = self.add_exer_menu.index(tk.END)
-        if isinstance(index_end, int):
-            for i in range(index_end):
-                print(f'{i = }')
-                self.add_exer_menu.delete(i)
-        for name in self.db_exer:
+        for name in self._cmd_to_menu:
+            print(f'update_add_exer_menu {name = }, {self._cmd_to_menu = }')
+            index_to_delete = 2 + self._cmd_to_menu[name]
+            print(f'update_add_exer_menu {index_to_delete = }')
+            self.add_exer_menu.delete(index_to_delete)
+        self._cmd_to_menu = {}
+        # index_end = self.add_exer_menu.index(tk.END)
+        # if isinstance(index_end, int):
+        #     for i in range(index_end):
+        #         print(f'{i = }')
+        #         self.add_exer_menu.delete(i)
+        for index, name in enumerate(self.db_exer):
             _add_exer = partial(self.exer_frame.add_exer, name)
             self.add_exer_menu.add_command(label=name, command=_add_exer)
+            self._cmd_to_menu[name] = index
+            print(f'update_add_exer_menu self._cmd_to_menu[{name}] = {index}')
 
     @property
     def db_exer(self):
@@ -101,12 +111,13 @@ class Workout(tk.Tk):
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
             if exer:
                 session.delete(exer)
+                del self._cmd_to_menu[exer.name]
                 session.commit()
-                self.update_exercise_list()
+                self.update_exercise_list_gui()
             else:
                 session.rollback()
 
-    def update_exercise_list(self):
+    def update_exercise_list_gui(self):
         query = db.select(md.Exercise)
         with db.session_scope(self.engine) as session:
             tab: ttk.Treeview = cast(ttk.Treeview, self.repertoire_table)
@@ -122,7 +133,7 @@ class Workout(tk.Tk):
             exer = md.Exercise(name=exer_name)
             session.add(exer)
             session.commit()
-        self.update_exercise_list()
+        self.update_exercise_list_gui()
 
     def show_repertoire(self):
         columns = (('exercise', 150), )
