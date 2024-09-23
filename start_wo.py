@@ -16,7 +16,6 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.engine.base import Engine
 import models as md
 import database as db
-# from frame2d_exer import Frame2DExer
 from exerframe import ExerFrame
 from setframe import SetFrame
 
@@ -34,10 +33,6 @@ class Workout(tk.Tk):
         menubar.add_cascade(label='File', menu=file_menu)
         self.add_exer_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label='Workout', menu=self.add_exer_menu)
-        # self.db_exer: Dict[str, Any] = {}
-        # with Session(engine) as session:
-        #     for exer in session.scalars(select(md.Exercise)):
-        #         self.db_exer[exer.name] = None
         self.notebook = ttk.Notebook(self)
         self.notebook.bind('<<NotebookTabChanged>>', self.on_tab_change)
         self.notebook.grid(column=0, row=0, sticky=tk.NSEW)
@@ -54,11 +49,7 @@ class Workout(tk.Tk):
         self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.show_repertoire()
-        # cmd name -> menu item index
         self._cmd_to_menu: dict[str, int] = {}
-        # for name in self.db_exer:
-        #     _add_exer = partial(self.exer_frame.add_exer, name)
-        #     self.add_exer_menu.add_command(label=name, command=_add_exer)
         self.add_exer_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
         self.add_exer_menu.add_separator()
