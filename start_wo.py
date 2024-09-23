@@ -62,7 +62,7 @@ class Workout(tk.Tk):
         self.add_exer_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
         self.add_exer_menu.add_separator()
-        self.update_add_exer_menu()
+        self.update_add_exer_menu(self.add_exer_menu)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
@@ -73,7 +73,27 @@ class Workout(tk.Tk):
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
         menubar.add_command(label='Save workout', command=self.save_workout)
 
-    def update_add_exer_menu(self):
+    def update_add_exer_menu(self, menu: tk.Menu) -> None:
+        def delete_old_submenu(menu: tk.Menu) -> None:
+            """Delete `Add exercise` submenu if exists"""
+
+            for i in range(menu.index(tk.END) + 1):
+                try:
+                    t: str = menu.entrycget(i, "label")
+                except tk.TclError:
+                    # separator has no label
+                    continue
+                if t == 'Add exercise':
+                    menu.delete(i)
+
+        delete_old_submenu(menu)
+        exer_list_menu = tk.Menu(self.add_exer_menu, tearoff=0)
+        self.add_exer_menu.add_cascade(
+            label='Add exercise', menu=exer_list_menu)
+        for exer_name in self.db_exer:
+            _add_exer = partial(self.exer_frame.add_exer, exer_name)
+            exer_list_menu.add_command(label=exer_name, command=_add_exer)
+        return
         # delete all menu items
         for name in self._cmd_to_menu:
             print(f'update_add_exer_menu {name = }, {self._cmd_to_menu = }')
@@ -111,7 +131,6 @@ class Workout(tk.Tk):
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
             if exer:
                 session.delete(exer)
-                del self._cmd_to_menu[exer.name]
                 session.commit()
                 self.update_exercise_list_gui()
             else:
