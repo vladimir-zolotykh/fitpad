@@ -73,7 +73,7 @@ class Workout(tk.Tk):
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
         menubar.add_command(label='Save workout', command=self.save_workout)
 
-    def update_add_exer_menu(self, menu: tk.Menu) -> None:
+    def update_add_exer_menu(self, menu: tk.Menu = None) -> None:
         def delete_old_submenu(menu: tk.Menu) -> None:
             """Delete `Add exercise` submenu if exists"""
 
@@ -86,6 +86,8 @@ class Workout(tk.Tk):
                 if t == 'Add exercise':
                     menu.delete(i)
 
+        if menu is None:
+            menu = self.add_exer_menu
         delete_old_submenu(menu)
         exer_list_menu = tk.Menu(self.add_exer_menu, tearoff=0)
         self.add_exer_menu.add_cascade(
