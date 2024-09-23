@@ -74,6 +74,12 @@ class Workout(tk.Tk):
         menubar.add_command(label='Save workout', command=self.save_workout)
 
     def update_add_exer_menu(self, menu: tk.Menu = None) -> None:
+        """Update `Add exercise' submenu of `Workout' menu
+
+        the menu is build anew from md.Exercise table each time
+        `update_add_exer_menu' is called
+        """
+
         def delete_old_submenu(menu: tk.Menu) -> None:
             """Delete `Add exercise` submenu if exists"""
 
@@ -95,24 +101,6 @@ class Workout(tk.Tk):
         for exer_name in self.db_exer:
             _add_exer = partial(self.exer_frame.add_exer, exer_name)
             exer_list_menu.add_command(label=exer_name, command=_add_exer)
-        return
-        # delete all menu items
-        for name in self._cmd_to_menu:
-            print(f'update_add_exer_menu {name = }, {self._cmd_to_menu = }')
-            index_to_delete = 2 + self._cmd_to_menu[name]
-            print(f'update_add_exer_menu {index_to_delete = }')
-            self.add_exer_menu.delete(index_to_delete)
-        self._cmd_to_menu = {}
-        # index_end = self.add_exer_menu.index(tk.END)
-        # if isinstance(index_end, int):
-        #     for i in range(index_end):
-        #         print(f'{i = }')
-        #         self.add_exer_menu.delete(i)
-        for index, name in enumerate(self.db_exer):
-            _add_exer = partial(self.exer_frame.add_exer, name)
-            self.add_exer_menu.add_command(label=name, command=_add_exer)
-            self._cmd_to_menu[name] = index
-            print(f'update_add_exer_menu self._cmd_to_menu[{name}] = {index}')
 
     @property
     def db_exer(self):
