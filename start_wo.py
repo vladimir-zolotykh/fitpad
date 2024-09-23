@@ -54,6 +54,8 @@ class Workout(tk.Tk):
             label='Edit', command=self.exer_frame.edit_exer)
         self.add_exer_menu.add_separator()
         self.update_add_exer_menu(self.add_exer_menu)
+        self.add_exer_menu.add_command(
+            label='Save workout', command=self.save_workout)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
@@ -62,7 +64,7 @@ class Workout(tk.Tk):
         repertoire_menu.add_command(
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
-        menubar.add_command(label='Save workout', command=self.save_workout)
+        # menubar.add_command(label='Save workout', command=self.save_workout)
 
     def update_add_exer_menu(self, menu: tk.Menu = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
