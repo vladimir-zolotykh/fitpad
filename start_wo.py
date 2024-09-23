@@ -64,7 +64,6 @@ class Workout(tk.Tk):
         repertoire_menu.add_command(
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
-        # menubar.add_command(label='Save workout', command=self.save_workout)
 
     def update_add_exer_menu(self, menu: tk.Menu = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
