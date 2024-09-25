@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Generator, List, Tuple, cast
+from typing import Generator, Tuple
 import tkinter as tk
 import frame2d_exer as f2e
 from setframe import SetFrame
