@@ -7,6 +7,7 @@ from typing import Dict
 from typing import Generator, List, cast
 import tkinter as tk
 from entry_var import EntryVar
+from combo_var import ComboVar
 import frame2d_set as f2s
 # from wo_tools import NumberedSet, sets_info
 
@@ -22,7 +23,7 @@ class SetFrame(f2s.Frame2DSet):
         # self.grid(column=0, row=row, sticky=tk.EW)
         self.name = name
         self.last_set: int = 1
-        self.set_no: Dict[int, tk.StringVar] = {}
+        # self.set_no: Dict[int, tk.StringVar] = {}
         pady: int = 2
         self.config(bd=pady, relief=tk.RIDGE)
         self.columnconfigure(0, weight=1)
@@ -77,14 +78,21 @@ class SetFrame(f2s.Frame2DSet):
         Exercises have sets. A set has tk widgets organized in a
         row. This method adds widgets for one set.
         """
-        var = tk.StringVar()
-        var.set(str(num_row))
-        self.set_no[num_row] = var
+
+        _set_no = tk.StringVar()
+        _set_no.set(str(num_row))
+        # self.set_no[num_row] = _set_no
         for c, w in enumerate(self.COL_WIDTH.values()):
-            e = EntryVar(self, width=w)
-            e.grid(column=c, row=num_row)
             if c == 0:
-                e.configure(textvariable=var)
+                e = EntryVar(self, width=2)
+                e.configure(textvariable=_set_no)
+            else:
+                cb = ComboVar(self, textvariable=_set_no, width=w)
+                cb.grid(column=c, row=num_row)
+            # e = EntryVar(self, width=w)
+            # e.grid(column=c, row=num_row)
+            # if c == 0:
+            #     e.configure(textvariable=_set_no)
         self.last_set += 1
 
     def add_set(self):
