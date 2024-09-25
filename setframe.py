@@ -78,21 +78,17 @@ class SetFrame(f2s.Frame2DSet):
         Exercises have sets. A set has tk widgets organized in a
         row. This method adds widgets for one set.
         """
-
-        _set_no = tk.StringVar()
-        _set_no.set(str(num_row))
-        # self.set_no[num_row] = _set_no
-        for c, w in enumerate(self.COL_WIDTH.values()):
-            if c == 0:
-                e = EntryVar(self, width=2)
-                e.configure(textvariable=_set_no)
-            else:
-                cb = ComboVar(self, textvariable=_set_no, width=w)
-                cb.grid(column=c, row=num_row)
-            # e = EntryVar(self, width=w)
-            # e.grid(column=c, row=num_row)
-            # if c == 0:
-            #     e.configure(textvariable=_set_no)
+        # Widget type, widget width, init values
+        cfg = ((EntryVar, 2, (num_row, )),
+               (ComboVar, 10, (50, 70, 95)),
+               (ComboVar, 3, (5, 3, 2)))
+        for col, (cls, width, values) in enumerate(cfg):
+            var = tk.StringVar()
+            var.set(values[0])
+            field = cls(self, textvariable=var, width=width)
+            if issubclass(cls, ComboVar):
+                field.configure(values=values)
+            field.grid(column=col, row=num_row)
         self.last_set += 1
 
     def add_set(self):
