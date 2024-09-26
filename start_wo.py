@@ -211,7 +211,7 @@ class Workout(tk.Tk):
             set_frame: SetFrame
             for exer_no, set_frame in self.exer_frame:
                 exer = session.get_exer(set_frame.exer_name)
-                for _, weight, reps in set_frame:
+                for weight, reps in set_frame:
                     wo = md.Workout(exercise=exer, when=now, weight=weight,
                                     reps=reps)
                     session.add(wo)

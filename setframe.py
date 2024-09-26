@@ -60,13 +60,13 @@ class SetFrame(f2s.Frame2DSet):
         num_columns, num_rows = self.grid_size()
         for i in range(1, num_rows - 1):
             values = []
-            for j in range(num_columns):
+            for j in range(1, num_columns):  # skip set_no
                 w: tk.Widget = self[i, j]
-                if isinstance(w, EntryVar):
-                    e: EntryVar = cast(EntryVar, w)
-                    values.append(e.get())
+                if isinstance(w, ComboVar):
+                    v: ComboVar = cast(ComboVar, w)
+                    values.append(v.get())
                 else:
-                    raise TypeError(f'Expected EntryVar widget, got {type(w)}')
+                    raise TypeError(f'Expected ComboVar widget, got {type(w)}')
             yield values
 
     def edit_sets(self):
