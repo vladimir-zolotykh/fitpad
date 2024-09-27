@@ -86,7 +86,7 @@ class SetFrame(f2s.Frame2DSet):
         hist: list[tuple[float, float]] = self.get_exer_history(self.exer_name)
         weight_hist = [itemgetter(0)(h) for h in hist]
         reps_hist = [itemgetter(1)(h) for h in hist]
-        reps_hist = [5, 3, 2]
+
         # Widget type, widget width, init values
         cfg = ((EntryVar, 2, (num_row, )),
                (ComboVar, 10, weight_hist),
@@ -102,8 +102,6 @@ class SetFrame(f2s.Frame2DSet):
         self.last_set += 1
 
     def get_exer_history(self, exer_name: str, hist_len: int = 10):
-        # query = select(md.Workout).where(
-        #     md.Workout.exercise.name == exer_name)
         query = (
             select(md.Workout)
             .join(md.Workout.exercise)
