@@ -94,9 +94,8 @@ class SetFrame(f2s.Frame2DSet):
         for col, (cls, width, values) in enumerate(cfg):
             var = tk.StringVar()
             w = cls(self, textvariable=var, width=width)
-            if issubclass(cls, EntryVar):
-                var.set(str(values[0]))
-            elif issubclass(cls, ComboVar):
+            var.set(str(values[0]))
+            if issubclass(cls, ComboVar):
                 field: ComboVar = cast(ComboVar, w)
                 field.configure(values=values)
             w.grid(column=col, row=num_row)
