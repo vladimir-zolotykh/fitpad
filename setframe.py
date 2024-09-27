@@ -3,9 +3,12 @@
 # PYTHON_ARGCOMPLETE_OK
 import sys
 from contextlib import contextmanager
-from typing import Generator, List, cast, Union
+from typing import Generator, List, cast
+from operator import itemgetter
 import tkinter as tk
+from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
+import models as md
 import database as db
 from entry_var import EntryVar
 from combo_var import ComboVar
@@ -79,10 +82,15 @@ class SetFrame(f2s.Frame2DSet):
         Exercises have sets. A set has tk widgets organized in a
         row. This method adds widgets for one set.
         """
+        # [(weight, reps), ...]
+        hist: list[tuple[float, float]] = self.get_exer_history(self.exer_name)
+        weight_hist = [itemgetter(0)(h) for h in hist]
+        reps_hist = [itemgetter(1)(h) for h in hist]
+        reps_hist = [5, 3, 2]
         # Widget type, widget width, init values
         cfg = ((EntryVar, 2, (num_row, )),
-               (ComboVar, 10, (50, 70, 95)),
-               (ComboVar, 3, (5, 3, 2)))
+               (ComboVar, 10, weight_hist),
+               (ComboVar, 3, reps_hist))
         for col, (cls, width, values) in enumerate(cfg):
             var = tk.StringVar()
             var.set(str(values[0]))
@@ -94,8 +102,12 @@ class SetFrame(f2s.Frame2DSet):
         self.last_set += 1
 
     def get_exer_history(self, exer_name: str, hist_len: int = 10):
+        query = select(md.Workout).where(md.Workout.exercise.name == exer_name)
+        hist: list[tuple[float, float]] = []
         with db.session_scope(self.engine) as session:
-            session
+            for wo in session.scalars(query):
+                hist.append((wo.weight, wo.reps))
+        return hist
 
     def add_set(self):
         num_rows: int = self.grid_size()[1]
