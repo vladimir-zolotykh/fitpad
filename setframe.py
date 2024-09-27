@@ -3,13 +3,13 @@
 # PYTHON_ARGCOMPLETE_OK
 import sys
 from contextlib import contextmanager
-from typing import Dict
-from typing import Generator, List, cast
+from typing import Generator, List, cast, Union
 import tkinter as tk
+from sqlalchemy.engine.base import Engine
+import database as db
 from entry_var import EntryVar
 from combo_var import ComboVar
 import frame2d_set as f2s
-# from wo_tools import NumberedSet, sets_info
 
 
 class SetFrame(f2s.Frame2DSet):
@@ -18,8 +18,9 @@ class SetFrame(f2s.Frame2DSet):
     NUM_COLUMNS = 3
     COL_WIDTH = {'set_no': 2, 'weight': 10, 'reps': 3}
 
-    def __init__(self, parent, name: str):
+    def __init__(self, parent, engine: Engine, name: str):
         super().__init__(parent)
+        self.engine: Engine = engine
         # self.grid(column=0, row=row, sticky=tk.EW)
         self.name = name
         self.last_set: int = 1
@@ -84,12 +85,17 @@ class SetFrame(f2s.Frame2DSet):
                (ComboVar, 3, (5, 3, 2)))
         for col, (cls, width, values) in enumerate(cfg):
             var = tk.StringVar()
-            var.set(values[0])
-            field = cls(self, textvariable=var, width=width)
+            var.set(str(values[0]))
+            w = cls(self, textvariable=var, width=width)
             if issubclass(cls, ComboVar):
+                field: ComboVar = cast(ComboVar, w)
                 field.configure(values=values)
-            field.grid(column=col, row=num_row)
+            w.grid(column=col, row=num_row)
         self.last_set += 1
+
+    def get_exer_history(self, exer_name: str, hist_len: int = 10):
+        with db.session_scope(self.engine) as session:
+            session
 
     def add_set(self):
         num_rows: int = self.grid_size()[1]

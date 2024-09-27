@@ -23,7 +23,7 @@ from setframe import SetFrame
 class Workout(tk.Tk):
     def __init__(self, engine, *args, **kwargs):
         super(Workout, self).__init__(*args, **kwargs)
-        self.engine = engine
+        self.engine: Engine = engine
         self.title('Workout')
         self.geometry('500x200+400+300')
         self.menubar = menubar = tk.Menu(self, tearoff=0)
@@ -38,7 +38,7 @@ class Workout(tk.Tk):
         self.notebook.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        self.exer_frame = ExerFrame(self.notebook)
+        self.exer_frame = ExerFrame(self.notebook, self.engine)
         self.exer_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.exer_frame, text='Workout')
         self.log_frame = tk.Frame(self.notebook)
@@ -65,7 +65,7 @@ class Workout(tk.Tk):
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
-    def update_add_exer_menu(self, menu: tk.Menu = None) -> None:
+    def update_add_exer_menu(self, menu: Optional[tk.Menu] = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
 
         the menu is build anew from md.Exercise table each time
@@ -75,14 +75,15 @@ class Workout(tk.Tk):
         def delete_old_submenu(menu: tk.Menu) -> None:
             """Delete `Add exercise` submenu if exists"""
 
-            for i in range(menu.index(tk.END) + 1):
-                try:
-                    t: str = menu.entrycget(i, "label")
-                except tk.TclError:
-                    # separator has no label
-                    continue
-                if t == 'Add exercise':
-                    menu.delete(i)
+            index_end: Optional[int] = menu.index(tk.END)
+            if isinstance(index_end, int):
+                for i in range(index_end + 1):
+                    try:
+                        t: str = menu.entrycget(i, "label")
+                    except tk.TclError:
+                        continue  # separator has no label
+                    if t == 'Add exercise':
+                        menu.delete(i)
 
         if menu is None:
             menu = self.add_exer_menu
