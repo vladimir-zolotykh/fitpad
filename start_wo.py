@@ -31,8 +31,8 @@ class Workout(tk.Tk):
         file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(label='Quit', command=self.quit)
         menubar.add_cascade(label='File', menu=file_menu)
-        self.add_exer_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label='Workout', menu=self.add_exer_menu)
+        self.workout_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label='Workout', menu=self.workout_menu)
         self.notebook = ttk.Notebook(self)
         self.notebook.bind('<<NotebookTabChanged>>', self.on_tab_change)
         self.notebook.grid(column=0, row=0, sticky=tk.NSEW)
@@ -50,13 +50,13 @@ class Workout(tk.Tk):
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.show_repertoire()
         self._cmd_to_menu: dict[str, int] = {}
-        self.add_exer_menu.add_command(
+        self.workout_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
-        self.add_exer_menu.add_separator()
-        self.update_add_exer_menu(self.add_exer_menu)
-        self.add_exer_menu.add_command(
+        self.workout_menu.add_separator()
+        self.update_workout_menu(self.workout_menu)
+        self.workout_menu.add_command(
             label='Load workout', command=None)
-        self.add_exer_menu.add_command(
+        self.workout_menu.add_command(
             label='Save workout', command=self.save_workout)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
@@ -67,11 +67,11 @@ class Workout(tk.Tk):
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
-    def update_add_exer_menu(self, menu: Optional[tk.Menu] = None) -> None:
+    def update_workout_menu(self, menu: Optional[tk.Menu] = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
 
         the menu is build anew from md.Exercise table each time
-        `update_add_exer_menu' is called
+        `update_workout_menu' is called
         """
 
         def delete_old_submenu(menu: tk.Menu) -> None:
@@ -88,10 +88,10 @@ class Workout(tk.Tk):
                         menu.delete(i)
 
         if menu is None:
-            menu = self.add_exer_menu
+            menu = self.workout_menu
         delete_old_submenu(menu)
-        exer_list_menu = tk.Menu(self.add_exer_menu, tearoff=0)
-        self.add_exer_menu.add_cascade(
+        exer_list_menu = tk.Menu(self.workout_menu, tearoff=0)
+        self.workout_menu.add_cascade(
             label='Add exercise', menu=exer_list_menu)
         for exer_name in self.db_exer:
             _add_exer = partial(self.exer_frame.add_exer, exer_name)
@@ -128,7 +128,7 @@ class Workout(tk.Tk):
             tab.delete(*tab.get_children())
             for exer in session.scalars(query):
                 tab.insert('', tk.END, values=(exer.name, ))
-        self.update_add_exer_menu()
+        self.update_workout_menu()
 
     def add_exercise_name(self):
         exer_name = simpledialog.askstring(
