@@ -3,8 +3,9 @@
 # PYTHON_ARGCOMPLETE_OK
 import sys
 from contextlib import contextmanager
-from typing import Generator, List, cast
+from typing import Generator, List, cast, Optional
 from operator import itemgetter
+from functools import partial
 import tkinter as tk
 from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
@@ -76,7 +77,10 @@ class SetFrame(f2s.Frame2DSet):
     def edit_sets(self):
         self.arrange()
 
-    def grid_the_set(self, num_row: int):
+    def grid_the_set(
+            self, num_row: int,
+            wo: Optional[md.Workout] = None
+    ) -> None:
         """Grid a set's widgets
 
         Exercises have sets. A set has tk widgets organized in a
@@ -86,6 +90,9 @@ class SetFrame(f2s.Frame2DSet):
         hist: list[tuple[float, float]] = self.get_exer_history(self.exer_name)
         weight_hist = [itemgetter(0)(h) for h in hist]
         reps_hist = [itemgetter(1)(h) for h in hist]
+        if wo:
+            weight_hist[0] = wo.weight
+            reps_hist[0] = wo.reps
 
         # Widget type, widget width, init values
         cfg = ((EntryVar, 2, (num_row, )),
@@ -113,14 +120,17 @@ class SetFrame(f2s.Frame2DSet):
                 hist.append((wo.weight, wo.reps))
         return hist
 
-    def add_set(self):
+    def add_set(self, wo: Optional[md.Workout] = None):
+        """Take weight, reps fields from WO parameter"""
+
         num_rows: int = self.grid_size()[1]
+        _grid_the_set = partial(self.grid_the_set, wo=wo)
         if 2 <= num_rows:
             mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
             last: int = num_rows - 1
-            self.grid_the_set(last)
+            _grid_the_set(last)
             mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
         elif num_rows == 1:
-            self.grid_the_set(self.last_set)
+            _grid_the_set(self.last_set)
         else:
             raise TypeError(f'{num_rows = }: must be 1 or >= 2')

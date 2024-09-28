@@ -31,7 +31,7 @@ class ExerFrame(f2e.Frame2DExer):
             sf: SetFrame = self[i, 1]
             yield (ev.get(), sf)
 
-    def add_exer(self, exer_name: str):
+    def add_exer(self, exer_name: str) -> SetFrame:
         var = tk.StringVar()
         var.set(str(self.exer_order))  # refactor EntryVar.set()
         exer_no: EntryVar = EntryVar(self, textvariable=var, width=2)
@@ -40,6 +40,7 @@ class ExerFrame(f2e.Frame2DExer):
         set_frame.grid(column=1, row=self.grid_row, sticky=tk.EW)
         self.columnconfigure(1, weight=1)
         self.grid_row += 1
+        return set_frame
 
     def edit_exer(self):
         self.arrange()
