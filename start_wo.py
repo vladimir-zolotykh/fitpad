@@ -55,6 +55,8 @@ class Workout(tk.Tk):
         self.add_exer_menu.add_separator()
         self.update_add_exer_menu(self.add_exer_menu)
         self.add_exer_menu.add_command(
+            label='Load workout', command=None)
+        self.add_exer_menu.add_command(
             label='Save workout', command=self.save_workout)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
