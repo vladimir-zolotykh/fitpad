@@ -70,9 +70,9 @@ class Workout(tk.Tk):
     def load_workout(self, engine: Optional[Engine] = None) -> None:
         if not engine:
             engine = self.engine
-        exer_hist = ['squat']
-        for exer_name in exer_hist:
-            self.exer_frame.add_exer(exer_name)
+        with db.session_scope(engine) as session:
+            for wo in session.scalars(select(md.Workout)):
+                self.exer_frame.add_exer(wo.exercise.name)
 
     def update_workout_menu(self, menu: Optional[tk.Menu] = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
