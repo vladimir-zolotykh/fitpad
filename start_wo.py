@@ -49,13 +49,13 @@ class Workout(tk.Tk):
         self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.show_repertoire()
-        self._cmd_to_menu: dict[str, int] = {}
+        # self._cmd_to_menu: dict[str, int] = {}
         self.workout_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
         self.workout_menu.add_separator()
         self.update_workout_menu(self.workout_menu)
         self.workout_menu.add_command(
-            label='Load workout', command=None)
+            label='Load workout', command=self.load_workout)
         self.workout_menu.add_command(
             label='Save workout', command=self.save_workout)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
@@ -66,6 +66,13 @@ class Workout(tk.Tk):
         repertoire_menu.add_command(
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
+
+    def load_workout(self, engine: Optional[Engine] = None) -> None:
+        if not engine:
+            engine = self.engine
+        exer_hist = ['squat']
+        for exer_name in exer_hist:
+            self.exer_frame.add_exer(exer_name)
 
     def update_workout_menu(self, menu: Optional[tk.Menu] = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
