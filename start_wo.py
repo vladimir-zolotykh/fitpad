@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import Optional, cast
 from functools import partial
+from itertools import groupby
 from operator import itemgetter
 from datetime import datetime
 import argparse
@@ -71,9 +72,15 @@ class Workout(tk.Tk):
         if not engine:
             engine = self.engine
         exercises: set[str] = set()
+        cache: list[str, md.Workout] = []
         with db.session_scope(engine) as session:
             for wo in session.scalars(select(md.Workout)):
                 exercises.add(wo.exercise.name)
+                cache.append((wo.exercise.name, wo))
+            for exer_name, wo_group in groupby(cache, itemgetter(0)):
+                print(f'{exer_name = }')
+                for wo in wo_group:
+                    print(f'{wo = }')
             for exer_name in exercises:
                 set_frame = self.exer_frame.add_exer(exer_name, init_exer=0)
                 for wo in self.get_all_wo_for_exer_name(session, exer_name):
