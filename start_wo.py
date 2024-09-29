@@ -70,26 +70,26 @@ class Workout(tk.Tk):
     def load_workout(self, engine: Optional[Engine] = None) -> None:
         if not engine:
             engine = self.engine
-        exercises = set()
+        exercises: set[str] = set()
         with db.session_scope(engine) as session:
             for wo in session.scalars(select(md.Workout)):
                 exercises.add(wo.exercise.name)
-                # self.exer_frame.add_exer(wo.exercise.name)
             for exer_name in exercises:
-                set_frame = self.exer_frame.add_exer(exer_name)
-                for wo in self.get_all_wo_for_exer_name(exer_name):
+                set_frame = self.exer_frame.add_exer(exer_name, init_exer=0)
+                for wo in self.get_all_wo_for_exer_name(session, exer_name):
                     set_frame.add_set(wo)
 
-    def get_all_wo_for_exer_name(self, exer_name: str) -> list[md.Workout]:
+    def get_all_wo_for_exer_name(
+            self, session: Session, exer_name: str
+    ) -> list[md.Workout]:
         """Return all md.Workout records for EXER_NAME"""
         query = (
             select(md.Workout)
             .join(md.Workout.exercise)
             .where(md.Exercise.name == exer_name))
         wo_list: list[md.Workout] = []
-        with db.session_scope(self.engine) as session:
-            for wo in session.scalars(query):
-                wo_list.append(wo)
+        for wo in session.scalars(query):
+            wo_list.append(wo)
         return wo_list
 
     def update_workout_menu(self, menu: Optional[tk.Menu] = None) -> None:

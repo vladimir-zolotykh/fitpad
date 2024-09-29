@@ -22,7 +22,9 @@ class SetFrame(f2s.Frame2DSet):
     NUM_COLUMNS = 3
     COL_WIDTH = {'set_no': 2, 'weight': 10, 'reps': 3}
 
-    def __init__(self, parent, engine: Engine, name: str):
+    def __init__(
+            self, parent, engine: Engine, name: str,
+            init_set: bool = True):  # add initial set
         super().__init__(parent)
         self.engine: Engine = engine
         # self.grid(column=0, row=row, sticky=tk.EW)
@@ -36,7 +38,8 @@ class SetFrame(f2s.Frame2DSet):
             self.columnconfigure(c, weight=1)
         self.label = label = tk.Label(self, text=name)
         label.grid(column=0, row=0, columnspan=self.NUM_COLUMNS)
-        self.add_set()
+        if init_set:
+            self.add_set()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
         mb.grid(column=0, row=2, columnspan=self.NUM_COLUMNS)
         mb_menu = tk.Menu(mb, tearoff=0)
