@@ -72,7 +72,7 @@ class Workout(tk.Tk):
         if not engine:
             engine = self.engine
         exercises: set[str] = set()
-        cache: list[str, md.Workout] = []
+        cache: list[tuple[str, md.Workout]] = []
         with db.session_scope(engine) as session:
             for wo in session.scalars(select(md.Workout)):
                 exercises.add(wo.exercise.name)
@@ -82,7 +82,8 @@ class Workout(tk.Tk):
                 for wo in wo_group:
                     print(f'{wo = }')
             for exer_name in exercises:
-                set_frame = self.exer_frame.add_exer(exer_name, init_exer=0)
+                set_frame = self.exer_frame.add_exer(exer_name,
+                                                     init_exer=False)
                 for wo in self.get_all_wo_for_exer_name(session, exer_name):
                     set_frame.add_set(wo)
 
