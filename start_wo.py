@@ -19,7 +19,7 @@ import models as md
 import database as db
 from exerframe import ExerFrame
 from setframe import SetFrame
-
+USE_GROUPBY = True
 
 class Workout(tk.Tk):
     def __init__(self, engine, *args, **kwargs):
@@ -56,7 +56,8 @@ class Workout(tk.Tk):
         self.workout_menu.add_separator()
         self.update_workout_menu(self.workout_menu)
         self.workout_menu.add_command(
-            label='Load workout', command=self.load_workout)
+            label='Load workout (groupby)',
+            command=self.load_workout_groupby)
         self.workout_menu.add_command(
             label='Save workout', command=self.save_workout)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
@@ -68,19 +69,26 @@ class Workout(tk.Tk):
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
+    def load_workout_groupby(self, engine: Optional[Engine] = None) -> None:
+        if not engine:
+            engine = self.engine
+        cache: list[tuple[str, md.Workout]] = []
+        with db.session_scope(engine) as session:
+            for wo in session.scalars(select(md.Workout)):
+                cache.append((wo.exercise.name, wo))
+            for exer_name, wo_group in groupby(cache, itemgetter(0)):
+                set_frame = self.exer_frame.add_exer(exer_name,
+                                                     init_exer=False)
+                for wo in wo_group:
+                    set_frame.add_set(wo[1])
+
     def load_workout(self, engine: Optional[Engine] = None) -> None:
         if not engine:
             engine = self.engine
         exercises: set[str] = set()
-        cache: list[tuple[str, md.Workout]] = []
         with db.session_scope(engine) as session:
             for wo in session.scalars(select(md.Workout)):
                 exercises.add(wo.exercise.name)
-                cache.append((wo.exercise.name, wo))
-            for exer_name, wo_group in groupby(cache, itemgetter(0)):
-                print(f'{exer_name = }')
-                for wo in wo_group:
-                    print(f'{wo = }')
             for exer_name in exercises:
                 set_frame = self.exer_frame.add_exer(exer_name,
                                                      init_exer=False)
