@@ -92,10 +92,10 @@ class Workout(tk.Tk):
             for exer_name in exercises:
                 set_frame = self.exer_frame.add_exer(exer_name,
                                                      init_exer=False)
-                for wo in self.get_all_wo_for_exer_name(session, exer_name):
+                for wo in self._get_exercise_sets(session, exer_name):
                     set_frame.add_set(wo)
 
-    def get_all_wo_for_exer_name(
+    def _get_exercise_sets(
             self, session: Session, exer_name: str
     ) -> list[md.Workout]:
         """Return all md.Workout records for EXER_NAME"""
