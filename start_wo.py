@@ -61,6 +61,8 @@ class Workout(tk.Tk):
             command=self.load_workout_groupby)
         self.workout_menu.add_command(
             label='Save workout', command=self.save_workout)
+        self.workout_menu.add_command(
+            label='Save schedule', command=self.save_schedule)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
@@ -69,6 +71,9 @@ class Workout(tk.Tk):
         repertoire_menu.add_command(
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
+
+    def save_schedule(self):
+        pass
 
     def load_workout_groupby(self, engine: Optional[Engine] = None) -> None:
         if not engine:

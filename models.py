@@ -19,6 +19,15 @@ workout_exercise = Table(
            ForeignKey('exercise.id', ondelete='CASCADE')))
 
 
+workout_schedule = Table(
+    'workout_schedule',
+    Base.metadata,
+    Column('workout_id', Integer,
+           ForeignKey('workout.id', ondelete='CASCADE')),
+    Column('schedule_id', Integer,
+           ForeignKey('schedule.id', ondelete='CASCADE')))
+
+
 class Workout(Base):
     __tablename__ = 'workout'
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -27,6 +36,9 @@ class Workout(Base):
     reps: Mapped[int]
     exercise: Mapped['Exercise'] = relationship(
         'Exercise', secondary='workout_exercise', back_populates='workouts',
+        cascade='all, delete')
+    schedule: Mapped['Schedule'] = relationship(
+        'Schedule', secondary='workout_schedule', back_populates='workouts',
         cascade='all, delete')
 
     def __repr__(self) -> str:
@@ -44,3 +56,15 @@ class Exercise(Base):
 
     def __repr__(self) -> str:
         return (f'Exercise(id={self.id!r}, name={self.name!r})')
+
+
+class Schedule(Base):
+    __tablename__ = 'schedule'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
+    workouts: Mapped[List['Workout']] = relationship(
+        'Workout', secondary='workout_schedule',
+        back_populates='schedule', passive_deletes=True)
+
+    def __repr__(self) -> str:
+        return (f'Schedule(id={self.id!r}, name={self.name!r})')
