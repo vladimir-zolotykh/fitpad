@@ -21,6 +21,7 @@ from exerframe import ExerFrame
 from setframe import SetFrame
 USE_GROUPBY = True
 
+
 class Workout(tk.Tk):
     def __init__(self, engine, *args, **kwargs):
         super(Workout, self).__init__(*args, **kwargs)
