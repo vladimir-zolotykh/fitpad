@@ -72,9 +72,6 @@ class Workout(tk.Tk):
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
-    def save_schedule(self):
-        pass
-
     def load_workout_groupby(self, engine: Optional[Engine] = None) -> None:
         if not engine:
             engine = self.engine
@@ -265,6 +262,25 @@ class Workout(tk.Tk):
                     wo = md.Workout(exercise=exer, when=now, weight=weight,
                                     reps=reps)
                     session.add(wo)
+            session.commit()
+        self.show_log()
+
+    def save_schedule(self):
+        schedule_name = simpledialog.askstring('Schedule', 'Save name',
+                                               parent=self)
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        with db.session_scope(self.engine) as session:
+            exer_no: str
+            set_frame: SetFrame
+            schedule: md.Schedule = md.Schedule(name=schedule_name)
+            session.add(schedule)
+            for exer_no, set_frame in self.exer_frame:
+                exer = session.get_exer(set_frame.exer_name)
+                for weight, reps in set_frame:
+                    wo = md.Workout(exercise=exer, when=now, weight=weight,
+                                    reps=reps)
+                    session.add(wo)
+                    schedule.workouts.append(wo)
             session.commit()
         self.show_log()
 
