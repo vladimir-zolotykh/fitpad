@@ -19,7 +19,7 @@ import models as md
 import database as db
 from exerframe import ExerFrame
 from setframe import SetFrame
-USE_GROUPBY = True
+from askstring import askstring
 
 
 class Workout(tk.Tk):
@@ -266,9 +266,15 @@ class Workout(tk.Tk):
         self.show_log()
 
     def save_schedule(self):
-        schedule_name = simpledialog.askstring('Schedule', 'Save name',
-                                               parent=self)
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        schedule_name = askstring(
+            'Schedule', 'Save name', message='foo', parent=self)
+        # schedule_name = simpledialog.askstring('Schedule', 'Save name',
+        #                                        parent=self)
+        print(f'{schedule_name = }')
+        return
+        if not schedule_name:
+            return
         with db.session_scope(self.engine) as session:
             exer_no: str
             set_frame: SetFrame
