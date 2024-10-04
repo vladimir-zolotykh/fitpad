@@ -20,6 +20,7 @@ import database as db
 from exerframe import ExerFrame
 from setframe import SetFrame
 from askstring import askstring
+from schedule_dialog import ScheduleDialog
 
 
 class Workout(tk.Tk):
@@ -73,8 +74,17 @@ class Workout(tk.Tk):
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
     def load_schedule(self):
-        schedule_name = simpledialog.askstring('Load schedule', 'Name',
-                                               parent=self)
+        schedule_names: list[str] = []
+        with db.session_scope(self.engine) as session:
+            schedule: md.Schedule
+            for schedule in session.scalars(select(md.Schedule)):
+                schedule_names.append(schedule.name)
+
+        dialog = ScheduleDialog(self, title="Select schedule",
+                                values=schedule_names)
+        # schedule_name = simpledialog.askstring('Load schedule', 'Name',
+        #                                        parent=self)
+        schedule_name: str = dialog.schedule_name
         if not schedule_name:
             return
         query = (select(md.Schedule)
