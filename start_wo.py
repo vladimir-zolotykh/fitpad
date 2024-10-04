@@ -143,12 +143,15 @@ class Workout(tk.Tk):
 
     @property
     def db_exer(self):
-        self._exer_list: list[str] = []
+        # self._exer_list: list[str] = []
+        exer_book: dict[str, int] = {}
         with Session(engine) as session:
             for exer in session.scalars(select(md.Exercise)):
-                self._exer_list.append(exer.name)
+                # self._exer_list.append(exer.name)
+                exer_book[exer.name] = exer.id
 
-        return self._exer_list
+        # return self._exer_list
+        return exer_book
 
     def delete_exercise_name(self):
         # tab = cast(ttk.Treeview, self.repertoire_table)
@@ -191,8 +194,9 @@ class Workout(tk.Tk):
         for n, w in columns:
             self.repertoire_table.heading(n, text=n)
             self.repertoire_table.column(n, width=w)
-        for exer_name in self.db_exer:
-            self.repertoire_table.insert('', tk.END, values=(exer_name, ))
+        for exer_name, id in self.db_exer.items():
+            self.repertoire_table.insert(
+                '', tk.END, values=(f'exer_name ({id})', ))
         self.repertoire_table.grid(column=0, row=0, sticky=tk.NSEW)
         self.repertoire_frame.columnconfigure(0, weight=1)
         self.repertoire_frame.rowconfigure(0, weight=1)
