@@ -37,7 +37,8 @@ class ExerFrame(f2e.Frame2DExer):
     ) -> SetFrame:
         var = tk.StringVar()
         var.set(str(self.exer_order))  # refactor EntryVar.set()
-        exer_no: EntryVar = EntryVar(self, textvariable=var, width=2)
+        exer_no: EntryVar = EntryVar(self, textvariable=var, takefocus=False,
+                                     width=2)
         exer_no.grid(column=0, row=self.grid_row)
         set_frame = SetFrame(self, self.engine, exer_name, init_set=init_exer)
         set_frame.grid(column=1, row=self.grid_row, sticky=tk.EW)
