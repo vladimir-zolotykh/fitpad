@@ -251,20 +251,6 @@ class Workout(tk.Tk):
         self.log_frame.columnconfigure(0, weight=1)
         self.log_frame.rowconfigure(0, weight=1)
 
-    # def save_workout(self):
-    #     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    #     with db.session_scope(self.engine) as session:
-    #         exer_no: str
-    #         set_frame: SetFrame
-    #         for exer_no, set_frame in self.exer_frame:
-    #             exer = session.get_exer(set_frame.exer_name)
-    #             for weight, reps in set_frame:
-    #                 wo = md.Workout(exercise=exer, when=now, weight=weight,
-    #                                 reps=reps)
-    #                 session.add(wo)
-    #         session.commit()
-    #     self.show_log()
-
     def save_schedule(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         schedule_name = askstring(
