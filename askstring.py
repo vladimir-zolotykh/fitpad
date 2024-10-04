@@ -8,12 +8,16 @@ from tkinter import _get_default_root  # noqa
 class QueryString(simpledialog._QueryString):
     def __init__(self, *args, **kw):
         self.message = kw.pop('message') if 'message' in kw else None
+        self.width = kw.pop('width') if 'width' in kw else 50
         super().__init__(*args, **kw)
 
     def body(self, master):
         entry = super().body(master)
         assert entry is self.entry
-        entry.insert(0, self.message)
+        if self.message:
+            entry.insert(0, self.message)
+        if isinstance(self.width, int):
+            entry.configure(width=self.width)
         return entry
 
 
