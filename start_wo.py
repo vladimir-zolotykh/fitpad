@@ -57,10 +57,10 @@ class Workout(tk.Tk):
         self.workout_menu.add_separator()
         self.update_workout_menu(self.workout_menu)
         self.workout_menu.add_command(
-            label='Load workout (groupby)',
-            command=self.load_workout_groupby)
+            label='Load schedule', command=self.load_schedule)
         # self.workout_menu.add_command(
-        #     label='Save workout', command=self.save_workout)
+        #     label='Load workout (groupby)',
+        #     command=self.load_workout_groupby)
         self.workout_menu.add_command(
             label='Save schedule', command=self.save_schedule)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
@@ -71,6 +71,18 @@ class Workout(tk.Tk):
         repertoire_menu.add_command(
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
+
+    def load_schedule(self):
+        schedule_name = simpledialog.askstring('Load schedule', 'Name',
+                                               parent=self)
+        if not schedule_name:
+            return
+        query = (select(md.Schedule)
+                 .where(md.Schedule.name == schedule_name))
+        with db.session_scope(self.engine) as session:
+            schedule = session.scalar(query)
+            for wo in schedule.workouts:
+                print(f'{wo = }')
 
     def load_workout_groupby(self, engine: Optional[Engine] = None) -> None:
         if not engine:
@@ -259,8 +271,6 @@ class Workout(tk.Tk):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         schedule_name = askstring(
             'Schedule', 'Save name', message=f'Schedule_{now}', parent=self)
-        print(f'{schedule_name = }')
-        return
         if not schedule_name:
             return
         with db.session_scope(self.engine) as session:
