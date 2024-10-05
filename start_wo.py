@@ -178,7 +178,7 @@ class Workout(tk.Tk):
             self.repertoire_table.column(n, width=w)
         for exer_name, id in self.db_exer.items():
             self.repertoire_table.insert(
-                '', tk.END, values=(f'exer_name ({id})', ))
+                '', tk.END, values=(f'{exer_name} ({id})', ))
         self.repertoire_table.grid(column=0, row=0, sticky=tk.NSEW)
         self.repertoire_frame.columnconfigure(0, weight=1)
         self.repertoire_frame.rowconfigure(0, weight=1)
