@@ -82,8 +82,6 @@ class Workout(tk.Tk):
 
         dialog = ScheduleDialog(self, title="Select schedule",
                                 values=schedule_names)
-        # schedule_name = simpledialog.askstring('Load schedule', 'Name',
-        #                                        parent=self)
         schedule_name: str = dialog.schedule_name
         if not schedule_name:
             return
@@ -91,8 +89,13 @@ class Workout(tk.Tk):
                  .where(md.Schedule.name == schedule_name))
         with db.session_scope(self.engine) as session:
             schedule = session.scalar(query)
-            for wo in schedule.workouts:
-                print(f'{wo = }')
+            for exer_name, wo_group in groupby(
+                    schedule.workouts,
+                    lambda wo: wo.exercise.name):
+                set_frame = self.exer_frame.add_exer(exer_name,
+                                                     init_exer=False)
+                for wo in wo_group:
+                    set_frame.add_set(wo)
 
     def load_workout_groupby(self, engine: Optional[Engine] = None) -> None:
         if not engine:
