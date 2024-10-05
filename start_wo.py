@@ -52,16 +52,12 @@ class Workout(tk.Tk):
         self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.show_repertoire()
-        # self._cmd_to_menu: dict[str, int] = {}
         self.workout_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
         self.workout_menu.add_separator()
         self.update_workout_menu(self.workout_menu)
         self.workout_menu.add_command(
             label='Load schedule', command=self.load_schedule)
-        # self.workout_menu.add_command(
-        #     label='Load workout (groupby)',
-        #     command=self.load_workout_groupby)
         self.workout_menu.add_command(
             label='Save schedule', command=self.save_schedule)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
@@ -96,45 +92,6 @@ class Workout(tk.Tk):
                                                      init_exer=False)
                 for wo in wo_group:
                     set_frame.add_set(wo)
-
-    def load_workout_groupby(self, engine: Optional[Engine] = None) -> None:
-        if not engine:
-            engine = self.engine
-        cache: list[tuple[str, md.Workout]] = []
-        with db.session_scope(engine) as session:
-            for wo in session.scalars(select(md.Workout)):
-                cache.append((wo.exercise.name, wo))
-            for exer_name, wo_group in groupby(cache, itemgetter(0)):
-                set_frame = self.exer_frame.add_exer(exer_name,
-                                                     init_exer=False)
-                for wo in wo_group:
-                    set_frame.add_set(wo[1])
-
-    def load_workout(self, engine: Optional[Engine] = None) -> None:
-        if not engine:
-            engine = self.engine
-        exercises: set[str] = set()
-        with db.session_scope(engine) as session:
-            for wo in session.scalars(select(md.Workout)):
-                exercises.add(wo.exercise.name)
-            for exer_name in exercises:
-                set_frame = self.exer_frame.add_exer(exer_name,
-                                                     init_exer=False)
-                for wo in self._get_exercise_sets(session, exer_name):
-                    set_frame.add_set(wo)
-
-    def _get_exercise_sets(
-            self, session: Session, exer_name: str
-    ) -> list[md.Workout]:
-        """Return all md.Workout records for EXER_NAME"""
-        query = (
-            select(md.Workout)
-            .join(md.Workout.exercise)
-            .where(md.Exercise.name == exer_name))
-        wo_list: list[md.Workout] = []
-        for wo in session.scalars(query):
-            wo_list.append(wo)
-        return wo_list
 
     def update_workout_menu(self, menu: Optional[tk.Menu] = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
