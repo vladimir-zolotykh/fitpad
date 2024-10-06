@@ -235,7 +235,6 @@ class Workout(tk.Tk):
             .where(md.Schedule.name == schedule.name)
         )
         with db.session_scope(self.engine) as session:
-            # for wo in session.scalars(select(md.Workout)):
             for wo in session.scalars(query):
                 table.insert("", tk.END, values=(wo.exercise.name, wo.when,
                                                  wo.weight, wo.reps))

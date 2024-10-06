@@ -115,10 +115,18 @@ class SetFrame(f2s.Frame2DSet):
         self.last_set += 1
 
     def get_exer_history(self, exer_name: str, hist_len: int = 10):
+        # query = (
+        #     select(md.Workout)
+        #     .join(md.Workout.exercise)
+        #     .where(md.Exercise.name == exer_name))
+
+        # Example how to use .select_from
         query = (
             select(md.Workout)
-            .join(md.Workout.exercise)
-            .where(md.Exercise.name == exer_name))
+            .select_from(md.Exercise)
+            .join(md.Exercise.workouts)
+            .where(md.Exercise.name == exer_name)
+        )
         hist: list[tuple[float, float]] = []
         with db.session_scope(self.engine) as session:
             for wo in session.scalars(query):
