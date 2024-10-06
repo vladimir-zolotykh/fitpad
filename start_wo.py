@@ -218,7 +218,7 @@ class Workout(tk.Tk):
             self.menubar.entryconfigure(label_to_index[selected_tab_text],
                                         state=tk.NORMAL)
 
-    def show_log(self):
+    def show_log(self, schedule: md.Schedule) -> None:
         """Show completed workout"""
 
         columns = (('exercise', 150), ('when', 150),
@@ -229,8 +229,14 @@ class Workout(tk.Tk):
         for n, w in columns:
             table.heading(n, text=n)
             table.column(n, width=w)
+        query = (
+            select(md.Workout)
+            .join(md.Workout.schedule)
+            .where(md.Schedule.name == schedule.name)
+        )
         with db.session_scope(self.engine) as session:
-            for wo in session.scalars(select(md.Workout)):
+            # for wo in session.scalars(select(md.Workout)):
+            for wo in session.scalars(query):
                 table.insert("", tk.END, values=(wo.exercise.name, wo.when,
                                                  wo.weight, wo.reps))
         table.grid(column=0, row=0, sticky=tk.NSEW)
@@ -256,7 +262,7 @@ class Workout(tk.Tk):
                     session.add(wo)
                     schedule.workouts.append(wo)
             session.commit()
-        self.show_log()
+            self.show_log(schedule)
 
 
 def create_exercises(engine: Engine):
