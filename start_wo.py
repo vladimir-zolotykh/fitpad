@@ -60,6 +60,8 @@ class Workout(tk.Tk):
             label='Load schedule', command=self.load_schedule)
         self.workout_menu.add_command(
             label='Save schedule', command=self.save_schedule)
+        self.workout_menu.add_command(
+            label='Clear schedule', command=self.clear_schedule)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
@@ -68,6 +70,10 @@ class Workout(tk.Tk):
         repertoire_menu.add_command(
             label='Delete', command=self.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
+
+    def clear_schedule(self):
+        if self.exer_frame:
+            self.exer_frame.delete_grids()
 
     def load_schedule(self):
         schedule_names: list[str] = []

@@ -23,6 +23,12 @@ class ExerFrame(f2e.Frame2DExer):
     def __iter__(self):
         return self._yield_exercises()
 
+    def delete_grids(self):
+        for w in self.yield_grids():
+            if isinstance(w, SetFrame):
+                w.delete_grids()
+            w.destroy()
+
     def _yield_exercises(self) -> Generator[
             Tuple[str, SetFrame], None, None]:
         num_columns, num_rows = self.grid_size()

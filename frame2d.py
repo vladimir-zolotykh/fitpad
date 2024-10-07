@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC, abstractmethod
+from typing import Generator
 import tkinter as tk
 
 
@@ -20,6 +21,17 @@ class Frame2D(tk.Frame, ABC):
         else:
             raise IndexError(f'Invalid index {rowcol}. '
                              f'Expected ({row_max = }, {col_max = })')
+
+    def yield_grids(self) -> Generator[tk.Widget, None, None]:
+        col_max, row_max = self.grid_size()
+        for row in range(row_max):
+            slaves = self.grid_slaves(row=row)
+            for widget in slaves:
+                yield widget
+
+    def delete_grids(self):
+        for w in self.yield_grids():
+            w.destroy()
 
     @abstractmethod
     def arrange(self):
