@@ -28,7 +28,7 @@ class SetFrame(f2s.Frame2DSet):
         super().__init__(parent)
         self.engine: Engine = engine
         # self.grid(column=0, row=row, sticky=tk.EW)
-        self.name = name
+        self.name: str = name   # exercise name
         self.last_set: int = 1
         # self.set_no: Dict[int, tk.StringVar] = {}
         pady: int = 2
@@ -38,6 +38,7 @@ class SetFrame(f2s.Frame2DSet):
             self.columnconfigure(c, weight=1)
         self.label = label = tk.Label(self, text=name)
         label.grid(column=0, row=0, columnspan=self.NUM_COLUMNS)
+        self.add_set_count: int = 0  # `add_set' was called times
         if init_set:
             self.add_set()
         mb = tk.Menubutton(self, relief=tk.RAISED, text='Edit')
@@ -141,6 +142,7 @@ class SetFrame(f2s.Frame2DSet):
     def add_set(self, wo: Optional[md.Workout] = None):
         """Take weight, reps fields from WO parameter"""
 
+        print(f'{self.add_set_count = }')
         num_rows: int = self.grid_size()[1]
         _grid_the_set = partial(self.grid_the_set, wo=wo)
         if 2 <= num_rows:
@@ -152,3 +154,4 @@ class SetFrame(f2s.Frame2DSet):
             _grid_the_set(self.last_set)
         else:
             raise TypeError(f'{num_rows = }: must be 1 or >= 2')
+        self.add_set_count += 1
