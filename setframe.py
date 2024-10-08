@@ -145,9 +145,9 @@ class SetFrame(f2s.Frame2DSet):
         _grid_the_set = partial(self.grid_the_set, wo=wo)
         if 2 <= num_rows:
             mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
-            last: int = num_rows - 1
-            _grid_the_set(last)
-            mb.grid(column=0, row=last + 1, columnspan=self.NUM_COLUMNS)
+            set_no: int = num_rows - 1
+            _grid_the_set(set_no)
+            mb.grid(column=0, row=set_no + 1, columnspan=self.NUM_COLUMNS)
         elif num_rows == 1:
             _grid_the_set(self.last_set)
         else:
