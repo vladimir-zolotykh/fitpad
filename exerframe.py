@@ -28,6 +28,7 @@ class ExerFrame(f2e.Frame2DExer):
             if isinstance(w, SetFrame):
                 w.delete_grids()
             w.destroy()
+        self.grid_row = 0
 
     def _yield_exercises(self) -> Generator[
             Tuple[str, SetFrame], None, None]:

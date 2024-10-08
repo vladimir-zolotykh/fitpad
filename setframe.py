@@ -67,6 +67,7 @@ class SetFrame(f2s.Frame2DSet):
     def delete_grids(self):
         for w in self.yield_grids():
             w.destroy()
+        self.last_set = 1
 
     def _yield_sets(self) -> Generator[List[str], None, None]:
         num_columns, num_rows = self.grid_size()
