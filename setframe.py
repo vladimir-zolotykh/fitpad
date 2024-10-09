@@ -142,16 +142,17 @@ class SetFrame(f2s.Frame2DSet):
     def add_set(self, wo: Optional[md.Workout] = None):
         """Take weight, reps fields from WO parameter"""
 
-        print(f'{self.add_set_count = }')
         num_rows: int = self.grid_size()[1]
         _grid_the_set = partial(self.grid_the_set, wo=wo)
         if 2 <= num_rows:
             mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
             set_no: int = num_rows - 1
-            _grid_the_set(set_no)
+            # _grid_the_set(set_no)
+            _grid_the_set(self.add_set_count + 1)
             mb.grid(column=0, row=set_no + 1, columnspan=self.NUM_COLUMNS)
         elif num_rows == 1:
-            _grid_the_set(self.last_set)
+            _grid_the_set(1)
+            # _grid_the_set(self.last_set)
         else:
             raise TypeError(f'{num_rows = }: must be 1 or >= 2')
         self.add_set_count += 1
