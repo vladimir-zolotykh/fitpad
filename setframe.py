@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from typing import Generator, List, cast, Optional
 from operator import itemgetter
 from functools import partial
+from contextlib import contextmanager
 import tkinter as tk
 from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
@@ -139,17 +140,27 @@ class SetFrame(f2s.Frame2DSet):
                 hist.append((wo.weight, wo.reps))
         return hist
 
+    @contextmanager
+    def keep_mb(self):
+        num_rows: int = self.grid_size()[1]
+        mb_row: int = num_rows - 1
+        mb = self.grid_slaves(row=mb_row)[0]
+        yield mb
+        mb.grid(column=0, row=mb_row + 1, columnspan=self.NUM_COLUMNS)
+
     def add_set(self, wo: Optional[md.Workout] = None):
         """Take weight, reps fields from WO parameter"""
 
         num_rows: int = self.grid_size()[1]
         _grid_the_set = partial(self.grid_the_set, wo=wo)
         if 2 <= num_rows:
-            mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
-            set_no: int = num_rows - 1
-            # _grid_the_set(set_no)
-            _grid_the_set(self.add_set_count + 1)
-            mb.grid(column=0, row=set_no + 1, columnspan=self.NUM_COLUMNS)
+            with self.keep_mb():
+                _grid_the_set(self.add_set_count + 1)
+            # mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
+            # set_no: int = num_rows - 1
+            # # _grid_the_set(set_no)
+            # _grid_the_set(self.add_set_count + 1)
+            # mb.grid(column=0, row=set_no + 1, columnspan=self.NUM_COLUMNS)
         elif num_rows == 1:
             _grid_the_set(1)
             # _grid_the_set(self.last_set)
