@@ -142,6 +142,14 @@ class SetFrame(f2s.Frame2DSet):
 
     @contextmanager
     def keep_mb(self):
+        """
+        Keep the menu button in the last row of the frame.
+
+        MB is placed in the last row of the frame (self). Use `keep_mb` to
+        ensure it remains in place while inserting additional rows to the frame
+        (such as those added by `grid_the_set`).
+        """
+
         num_rows: int = self.grid_size()[1]
         mb_row: int = num_rows - 1
         mb = self.grid_slaves(row=mb_row)[0]
@@ -151,19 +159,10 @@ class SetFrame(f2s.Frame2DSet):
     def add_set(self, wo: Optional[md.Workout] = None):
         """Take weight, reps fields from WO parameter"""
 
-        num_rows: int = self.grid_size()[1]
         _grid_the_set = partial(self.grid_the_set, wo=wo)
-        if 2 <= num_rows:
+        if self.add_set_count < 1:
+            _grid_the_set(1)
+        else:
             with self.keep_mb():
                 _grid_the_set(self.add_set_count + 1)
-            # mb = self.grid_slaves(row=num_rows - 1)[0]  # menu button
-            # set_no: int = num_rows - 1
-            # # _grid_the_set(set_no)
-            # _grid_the_set(self.add_set_count + 1)
-            # mb.grid(column=0, row=set_no + 1, columnspan=self.NUM_COLUMNS)
-        elif num_rows == 1:
-            _grid_the_set(1)
-            # _grid_the_set(self.last_set)
-        else:
-            raise TypeError(f'{num_rows = }: must be 1 or >= 2')
         self.add_set_count += 1
