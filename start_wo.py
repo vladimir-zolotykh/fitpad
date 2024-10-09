@@ -56,12 +56,12 @@ class Workout(tk.Tk):
             label='Edit', command=self.exer_frame.edit_exer)
         self.workout_menu.add_separator()
         self.update_workout_menu(self.workout_menu)
-        self.workout_menu.add_command(
-            label='Load schedule', command=self.load_schedule)
-        self.workout_menu.add_command(
-            label='Save schedule', command=self.save_schedule)
-        self.workout_menu.add_command(
-            label='Clear schedule', command=self.clear_schedule)
+        schedule_menu = tk.Menu(self.workout_menu, tearoff=False)
+        self.workout_menu.add_cascade(label='Schedule', menu=schedule_menu)
+        schedule_menu.add_command(label='Load', command=self.load_schedule)
+        schedule_menu.add_command(label='Save', command=self.save_schedule)
+        schedule_menu.add_command(label='Clear', command=self.clear_schedule)
+        schedule_menu.add_command(label='Rename', command=None)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
