@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from tkinter import ttk, simpledialog
+from tkinter import ttk, simpledialog  # noqa
+from ttkwidgets.autocomplete import AutocompleteCombobox
 
 
 class ScheduleDialog(simpledialog.Dialog):
@@ -11,10 +12,8 @@ class ScheduleDialog(simpledialog.Dialog):
         super().__init__(parent, title=title)
 
     def body(self, master):
-        self.combobox = ttk.Combobox(
-            master,
-            values=(self.values if self.values else
-                    ["Option 1", "Option 2", "Option 3"]))
+        self.combobox = AutocompleteCombobox(
+            master, completevalues=self.values)
         self.combobox.grid(row=0, column=1, padx=10, pady=10)
         self.combobox.current(0)
 
