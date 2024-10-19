@@ -23,17 +23,10 @@ tree.column("#0", width=100)
 tree.column("exercise", width=150)
 tree.column("weight", width=100)
 tree.column("reps", width=100)
-for group, items in groupby(data, key=itemgetter('date')):
-    parent = tree.insert("", "end", text=group)
-    for item in items:
-        # print(f'{item = }')
+for date, exercises in groupby(data, key=itemgetter('date')):
+    parent = tree.insert("", "end", text=date)
+    for exer in exercises:
         tree.insert(parent, 'end', text='',
-                    values=(item['exercise'], item['weight'], item['reps']))
-    # print(f'{group = }, {list(items) = }')
-# for i, entry in enumerate(data):
-#     parent = tree.insert("", "end", text=entry["date"],
-#                          values=(entry["exercise"], "", ""))
-#     tree.insert(parent, "end", text="",
-#                 values=("", entry["weight"], entry["reps"]))
+                    values=(itemgetter('exercise', 'weight', 'reps')(exer)))
 tree.pack(fill="both", expand=True)
 root.mainloop()
