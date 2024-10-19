@@ -43,13 +43,20 @@ class Workout(tk.Tk):
         self.rowconfigure(0, weight=1)
         self.exer_frame = ExerFrame(self.notebook, self.engine)
         self.exer_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        # <<< Workout >>>
         self.notebook.add(self.exer_frame, text='Workout')
+        # <<< Schedule >>>
+        self.schedule_frame = tk.Frame(self.notebook)
+        # self.schedule_frame.grid()
+        self.notebook.add(self.schedule_frame, text='Schedule')
+        # <<< Log >>>
         self.log_frame = tk.Frame(self.notebook)
-        self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        # self.log_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.log_frame, text='Log')
         self.repertoire_table: Optional[ttk.Treeview] = None
+        # <<< Repertoire >>>
         self.repertoire_frame = tk.Frame(self.notebook)
-        self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        # self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.show_repertoire()
         self.workout_menu.add_command(
