@@ -11,6 +11,8 @@ import database as db
 col_names: list[str] = [col.name for col in md.Workout.__table__.columns]
 # rel_names = ['exercise', 'schedule']
 rel_names: list[str] = [rel.key for rel in md.Workout.__mapper__.relationships]
+col_config = (('#0', 100, 'schedule'), ('exercise', 150),
+              ('when', 100), ('weight', 100), ('reps', 100))
 
 
 class ScheduleFrame(tk.Frame):
@@ -22,16 +24,23 @@ class ScheduleFrame(tk.Frame):
         tree.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        tree.heading('#0', text='schedule')
-        tree.heading('exercise', text="exercise")
-        tree.heading('when', text='when')
-        tree.heading("weight", text="Weight (kg)")
-        tree.heading("reps", text="Reps")
-        tree.column("#0", width=100)
-        tree.column("exercise", width=150)
-        tree.column('when', width=100)
-        tree.column("weight", width=100)
-        tree.column("reps", width=100)
+        for cid_width_text in col_config:
+            cid = text = cid_width_text[0]
+            width = cid_width_text[1]
+            if 2 < len(cid_width_text):
+                text = cid_width_text[2]
+            tree.heading(cid, text=text)
+            tree.column(cid, width=width)
+        # tree.heading('#0', text='schedule')
+        # tree.heading('exercise', text="exercise")
+        # tree.heading('when', text='when')
+        # tree.heading("weight", text="Weight (kg)")
+        # tree.heading("reps", text="Reps")
+        # tree.column("#0", width=100)
+        # tree.column("exercise", width=150)
+        # tree.column('when', width=100)
+        # tree.column("weight", width=100)
+        # tree.column("reps", width=100)
 
         with db.session_scope(self.engine) as session:
             schedule: md.Schedule
