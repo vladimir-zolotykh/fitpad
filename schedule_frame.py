@@ -19,8 +19,7 @@ class ScheduleFrame(tk.Frame):
     def __init__(self, parent, engine: Engine):
         super().__init__(parent)
         self.engine = engine
-        tree = ttk.Treeview(
-            self, columns=('exercise', 'when', 'weight', 'reps'))
+        tree = ttk.Treeview(self, columns=(rel_names[0], *col_names[1:4]))
         tree.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
