@@ -13,8 +13,6 @@ col_names: list[str] = [col.name for col in md.Workout.__table__.columns]
 rel_names: list[str] = [rel.key for rel in md.Workout.__mapper__.relationships]
 col_config = (('#0', 100, rel_names[1]), (rel_names[0], 150),
               *(zip(col_names[1:3], (100, 100, 100))))
-# col_config = (('#0', 100, 'schedule'), ('exercise', 150),
-#               ('when', 100), ('weight', 100), ('reps', 100))
 
 
 class ScheduleFrame(tk.Frame):
@@ -32,17 +30,6 @@ class ScheduleFrame(tk.Frame):
                 text = cid_width_text[2]
             tree.heading(cid, text=text)
             tree.column(cid, width=width)
-        # tree.heading('#0', text='schedule')
-        # tree.heading('exercise', text="exercise")
-        # tree.heading('when', text='when')
-        # tree.heading("weight", text="Weight (kg)")
-        # tree.heading("reps", text="Reps")
-        # tree.column("#0", width=100)
-        # tree.column("exercise", width=150)
-        # tree.column('when', width=100)
-        # tree.column("weight", width=100)
-        # tree.column("reps", width=100)
-
         with db.session_scope(self.engine) as session:
             schedule: md.Schedule
             for schedule in session.scalars(select(md.Schedule)):
