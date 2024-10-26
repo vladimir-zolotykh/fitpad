@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-import tkinter as tk
-from tkinter import ttk
 from itertools import groupby
 from operator import itemgetter
+import tkinter as tk
+from tkinter import ttk
+from sqlalchemy import select
+from sqlalchemy.engine.base import Engine
+import models as md
+import database as db
 
 data = (
     {"date": "2024-09-01", "exercise": "Squat", "weight": 100, "reps": 5},
@@ -15,8 +19,9 @@ data = (
 
 
 class ScheduleFrame(tk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, engine: Engine):
         super().__init__(parent)
+        self.engine = engine
         tree = ttk.Treeview(self, columns=('exercise', 'weight', 'reps'))
         tree.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
@@ -30,9 +35,21 @@ class ScheduleFrame(tk.Frame):
         tree.column("weight", width=100)
         tree.column("reps", width=100)
 
-        for date, exercises in groupby(data, key=itemgetter('date')):
-            parent = tree.insert("", "end", text=date)
-            for exer in exercises:
-                tree.insert(
-                    parent, 'end', text='',
-                    values=(itemgetter('exercise', 'weight', 'reps')(exer)))
+        with db.session_scope(self.engine) as session:
+            schedule: md.Schedule
+            for schedule in session.scalars(select(md.Schedule)):
+                sch = tree.insert('', 'end', text=schedule.name)
+                for wo in schedule.workouts:
+                    tree.insert(
+                        sch, 'end', text='',
+                        values=(wo.exercise.name, wo.weight, wo.reps))
+
+
+        #         schedule_names.append(schedule.name)
+        
+        # for date, exercises in groupby(data, key=itemgetter('date')):
+        #     parent = tree.insert("", "end", text=date)
+        #     for exer in exercises:
+        #         tree.insert(
+        #             parent, 'end', text='',
+        #             values=(itemgetter('exercise', 'weight', 'reps')(exer)))

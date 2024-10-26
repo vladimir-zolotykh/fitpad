@@ -48,7 +48,7 @@ class Workout(tk.Tk):
         self.notebook.add(self.exer_frame, text='Workout')
         # <<< Schedule >>>
         # self.schedule_frame = tk.Frame(self.notebook)
-        self.schedule_frame = ScheduleFrame(self.notebook)
+        self.schedule_frame = ScheduleFrame(self.notebook, self.engine)
         # self.schedule_frame.grid()
         self.notebook.add(self.schedule_frame, text='Schedule')
         # <<< Log >>>
