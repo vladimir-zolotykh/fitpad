@@ -12,7 +12,7 @@ col_names: list[str] = [col.name for col in md.Workout.__table__.columns]
 # rel_names = ['exercise', 'schedule']
 rel_names: list[str] = [rel.key for rel in md.Workout.__mapper__.relationships]
 col_config = (('#0', 100, rel_names[1]), (rel_names[0], 150),
-              *(zip(col_names[1:3], (100, 100, 100))))
+              *(zip(col_names[1:4], (100, 100, 100))))
 
 
 class ScheduleFrame(tk.Frame):
