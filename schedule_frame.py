@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from itertools import groupby
-from operator import getitem
 from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
@@ -42,17 +41,20 @@ class ScheduleFrame(tk.Frame):
                 def _wo_date(wo):
                     return datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
 
-                wo_sorted = sorted(schedule.workouts, key=_wo_date)
-                for when, wo_group in groupby(wo_sorted, key=_wo_date):
-                    parent = tree.insert(sch, 'end', text='', values=(when, ))
+                for when, wo_group in groupby(
+                        sorted(schedule.workouts, key=_wo_date),
+                        key=_wo_date):
+                    date_parent = tree.insert(
+                        sch, 'end', text='', values=(when, ))
 
                     def _wo_exer(wo):
                         return wo.exercise.name
 
-                    for exer_name, ex_grp in groupby(wo_group, key=_wo_exer):
+                    for exer_name, wo_group in groupby(wo_group, key=_wo_exer):
                         exer_parent = tree.insert(
-                            parent, 'end', text='', values=('', exer_name))
-                        for wo in ex_grp:
+                            date_parent, 'end', text='',
+                            values=('', exer_name))
+                        for wo in wo_group:
                             tree.insert(
                                 exer_parent, 'end', text='',
                                 values=('', '', wo.weight, wo.reps))
