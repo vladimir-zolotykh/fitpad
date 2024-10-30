@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from itertools import groupby
+from operator import getitem
+from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
 from sqlalchemy import select
@@ -35,7 +38,21 @@ class ScheduleFrame(tk.Frame):
             schedule: md.Schedule
             for schedule in session.scalars(select(md.Schedule)):
                 sch = tree.insert('', 'end', text=schedule.name)
-                for wo in schedule.workouts:
-                    tree.insert(
-                        sch, 'end', text='',
-                        values=(wo.when, wo.exercise.name, wo.weight, wo.reps))
+
+                def _wo_date(wo):
+                    return datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
+
+                wo_sorted = sorted(schedule.workouts, key=_wo_date)
+                for when, wo_group in groupby(wo_sorted, key=_wo_date):
+                    parent = tree.insert(sch, 'end', text='', values=(when, ))
+
+                    def _wo_exer(wo):
+                        return wo.exercise.name
+
+                    for exer_name, ex_grp in groupby(wo_group, key=_wo_exer):
+                        exer_parent = tree.insert(
+                            parent, 'end', text='', values=('', exer_name))
+                        for wo in ex_grp:
+                            tree.insert(
+                                exer_parent, 'end', text='',
+                                values=('', '', wo.weight, wo.reps))
