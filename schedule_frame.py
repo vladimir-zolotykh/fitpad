@@ -19,6 +19,12 @@ col_config = (('#0', 100, rel_names[1]), (rel_names[0], 150),
 
 class ScheduleFrame(tk.Frame):
     def __init__(self, parent, engine: Engine):
+        def _wo_exer_name(wo):
+            return wo.exercise.name
+
+        def _wo_date(wo):
+            return datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
+
         super().__init__(parent)
         self.engine = engine
         tree = ttk.Treeview(
@@ -37,19 +43,11 @@ class ScheduleFrame(tk.Frame):
             schedule: md.Schedule
             for schedule in session.scalars(select(md.Schedule)):
                 sch = tree.insert('', 'end', text=schedule.name)
-
-                def _wo_date(wo):
-                    return datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
-
                 for when, wo_group in groupby(
                         sorted(schedule.workouts, key=_wo_date),
                         key=_wo_date):
                     date_node = tree.insert(
                         sch, 'end', text='', values=(when, ))
-
-                    def _wo_exer_name(wo):
-                        return wo.exercise.name
-
                     for exer_name, wo_group in groupby(
                             sorted(wo_group, key=_wo_exer_name),
                             key=_wo_exer_name):
