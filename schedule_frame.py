@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from itertools import groupby
 from datetime import datetime
+from collections import defaultdict
 import tkinter as tk
 from tkinter import ttk
 from sqlalchemy import select
@@ -35,6 +36,34 @@ class ScheduleFrame(tk.Frame):
             tree.column(cid, width=int(width))
         with db.session_scope(self.engine) as session:
             self.make_view(tree, session.scalars(select(md.Schedule)))
+
+    def make_view2(
+            self,
+            tree: ttk.Treeview,
+            schedules: list[md.Schedule]
+    ) -> None:
+        """
+        Make collapsible/expandable ttk.Treeview
+        """
+        schedule: md.Schedule
+        for schedule in schedules:
+            sch_node = tree.insert('', 'end', text=schedule.name)
+            when_dict = defaultdict(list)
+            for wo in schedule.workouts:
+                when = datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
+                when_dict[when].append(wo)
+            exer_dict = defaultdict(list)
+            for when in when_dict:
+                for wo in when_dict[when]:
+                    exer_dict[wo.exercise.name].append(wo)
+                when_node = tree.insert(sch_node, 'end', text='',
+                                        values=(when, ))
+                for exer_name in exer_dict:
+                    exer_node = tree.insert(
+                        when_node, 'end', text='', values=('', exer_name))
+                    for wo in exer_dict[exer_name]:
+                        tree.insert(exer_node, 'end', text='',
+                                    values=('', '', wo.weight, wo.reps))
 
     def make_view(
             self,
