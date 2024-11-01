@@ -19,12 +19,6 @@ col_config = (('#0', 100, rel_names[1]), (rel_names[0], 150),
 
 class ScheduleFrame(tk.Frame):
     def __init__(self, parent, engine: Engine):
-        def _wo_exer_name(wo):
-            return wo.exercise.name
-
-        def _wo_date(wo):
-            return datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
-
         super().__init__(parent)
         self.engine = engine
         tree = ttk.Treeview(
@@ -39,6 +33,15 @@ class ScheduleFrame(tk.Frame):
                 text = cid_width_text[2]
             tree.heading(cid, text=text)
             tree.column(cid, width=width)
+        self.make_view(tree)
+
+    def make_view(self, tree: ttk.Treeview):
+        def _wo_exer_name(wo):
+            return wo.exercise.name
+
+        def _wo_date(wo):
+            return datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
+
         with db.session_scope(self.engine) as session:
             schedule: md.Schedule
             for schedule in session.scalars(select(md.Schedule)):
