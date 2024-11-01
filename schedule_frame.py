@@ -51,17 +51,13 @@ class ScheduleFrame(tk.Frame):
         for schedule in schedules:
             sch = tree.insert('', 'end', text=schedule.name)
             for when, date_group in groupby(
-                    sorted(schedule.workouts, key=_wo_date),
-                    key=_wo_date):
-                date_node = tree.insert(
-                    sch, 'end', text='', values=(when, ))
+                    sorted(schedule.workouts, key=_wo_date), key=_wo_date):
+                date_node = tree.insert(sch, 'end', text='', values=(when, ))
                 for exer_name, exer_group in groupby(
                         sorted(date_group, key=_wo_exer_name),
                         key=_wo_exer_name):
                     exer_node = tree.insert(
-                        date_node, 'end', text='',
-                        values=('', exer_name))
+                        date_node, 'end', text='', values=('', exer_name))
                     for wo in exer_group:
-                        tree.insert(
-                            exer_node, 'end', text='',
-                            values=('', '', wo.weight, wo.reps))
+                        tree.insert(exer_node, 'end', text='',
+                                    values=('', '', wo.weight, wo.reps))
