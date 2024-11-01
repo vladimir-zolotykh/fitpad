@@ -31,33 +31,37 @@ class ScheduleFrame(tk.Frame):
             width = cid_width_text[1]
             if 2 < len(cid_width_text):
                 text = cid_width_text[2]
-            tree.heading(cid, text=text)
-            tree.column(cid, width=width)
-        self.make_view(tree)
+            tree.heading(cid, text=str(text))
+            tree.column(cid, width=int(width))
+        with db.session_scope(self.engine) as session:
+            self.make_view(tree, session.scalars(select(md.Schedule)))
 
-    def make_view(self, tree: ttk.Treeview):
+    def make_view(
+            self,
+            tree: ttk.Treeview,
+            schedules: list[md.Schedule]
+    ) -> None:
         def _wo_exer_name(wo):
             return wo.exercise.name
 
         def _wo_date(wo):
             return datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
 
-        with db.session_scope(self.engine) as session:
-            schedule: md.Schedule
-            for schedule in session.scalars(select(md.Schedule)):
-                sch = tree.insert('', 'end', text=schedule.name)
-                for when, date_group in groupby(
-                        sorted(schedule.workouts, key=_wo_date),
-                        key=_wo_date):
-                    date_node = tree.insert(
-                        sch, 'end', text='', values=(when, ))
-                    for exer_name, exer_group in groupby(
-                            sorted(date_group, key=_wo_exer_name),
-                            key=_wo_exer_name):
-                        exer_node = tree.insert(
-                            date_node, 'end', text='',
-                            values=('', exer_name))
-                        for wo in exer_group:
-                            tree.insert(
-                                exer_node, 'end', text='',
-                                values=('', '', wo.weight, wo.reps))
+        schedule: md.Schedule
+        for schedule in schedules:
+            sch = tree.insert('', 'end', text=schedule.name)
+            for when, date_group in groupby(
+                    sorted(schedule.workouts, key=_wo_date),
+                    key=_wo_date):
+                date_node = tree.insert(
+                    sch, 'end', text='', values=(when, ))
+                for exer_name, exer_group in groupby(
+                        sorted(date_group, key=_wo_exer_name),
+                        key=_wo_exer_name):
+                    exer_node = tree.insert(
+                        date_node, 'end', text='',
+                        values=('', exer_name))
+                    for wo in exer_group:
+                        tree.insert(
+                            exer_node, 'end', text='',
+                            values=('', '', wo.weight, wo.reps))
