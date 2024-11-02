@@ -171,7 +171,7 @@ class Workout(tk.Tk):
             tab: ttk.Treeview = cast(ttk.Treeview, self.repertoire_table)
             tab.delete(*tab.get_children())
             for exer in session.scalars(query):
-                tab.insert('', tk.END, values=(exer.name, ))
+                tab.insert('', tk.END, values=(f'{exer.name} ({exer.id})', ))
         self.update_workout_menu()
 
     def add_exercise_name(self):
