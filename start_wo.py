@@ -7,6 +7,7 @@ from itertools import groupby
 from operator import itemgetter
 from datetime import datetime
 import argparse
+import re
 import argcomplete
 import tkinter as tk
 from tkinter import ttk
@@ -151,12 +152,19 @@ class Workout(tk.Tk):
         return exer_book
 
     def delete_exercise_name(self):
+        def remove_id(s: str) -> str:
+            m = re.match(r'^.*(?P<id> \(\d+\))$', s)
+            if m:
+                return s[:m.start(1)]
+            else:
+                return s
+
         # tab = cast(ttk.Treeview, self.repertoire_table)
         tab = cast(ttk.Treeview, self.repertoire_table)
         iid = tab.selection()[0]
         values = tab.item(iid, 'values')
         with db.session_scope(self.engine) as session:
-            exer_name = values[0]
+            exer_name = remove_id(values[0])
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
             if exer:
                 session.delete(exer)
