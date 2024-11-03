@@ -3,7 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 import re
 from operator import itemgetter
-import tkitner as tk
+import tkinter as tk
 from tkinter import simpledialog
 from tkinter import ttk
 from sqlalchemy import select
@@ -19,14 +19,14 @@ class RepertoireFrame(tk.Frame):
         self.engine = engine
         super().__init__(parent)
         self.tree = ttk.Treeview(
-            parent, show='headings',
+            self, show='headings',
             columns=[itemgetter(0)(t) for t in self.columns])
         for n, w in self.columns:
             self.tree.heading(n, text=n)
             self.tree.column(n, width=w)
         self.tree.grid(column=0, row=0, sticky=tk.NSEW)
-        # self.repertoire_frame.columnconfigure(0, weight=1)
-        # self.repertoire_frame.rowconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
         self.update_repertoire()
 
     @property

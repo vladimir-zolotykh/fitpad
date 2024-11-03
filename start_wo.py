@@ -23,6 +23,7 @@ from setframe import SetFrame
 from askstring import askstring
 from schedule_dialog import ScheduleDialog
 from schedule_frame import ScheduleFrame
+from repertoire_frame import RepertoireFrame
 
 
 class Workout(tk.Tk):
@@ -58,10 +59,14 @@ class Workout(tk.Tk):
         self.notebook.add(self.log_frame, text='Log')
         self.repertoire_table: Optional[ttk.Treeview] = None
         # <<< Repertoire >>>
-        self.repertoire_frame = tk.Frame(self.notebook)
+        self.repertoire_frame = RepertoireFrame(self.notebook, self.engine)
+        self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
+        # self.repertoire_frame.columnconfigure(0, weight=1)
+        # self.repertoire_frame.rowconfigure(0, weight=1)
+        # self.repertoire_frame = tk.Frame(self.notebook)
         # self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
-        self.show_repertoire()
+        # self.show_repertoire()
         self.workout_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
         self.workout_menu.add_separator()
@@ -75,10 +80,14 @@ class Workout(tk.Tk):
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
             label='Add exercise', command=self.add_exercise_name)
+        # repertoire_menu.add_command(
+        #     label='Update', command=self.update_exercise_list_gui)
         repertoire_menu.add_command(
-            label='Update', command=self.update_exercise_list_gui)
+            label='Update',
+            command=self.repertoire_frame.update_exercise_list_gui)
         repertoire_menu.add_command(
-            label='Delete', command=self.delete_exercise_name)
+            label='Delete',
+            command=self.repertoire_frame.delete_exercise_name)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
     def clear_schedule(self):
