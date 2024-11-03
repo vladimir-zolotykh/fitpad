@@ -52,6 +52,15 @@ class RepertoireFrame(tk.Frame):
             session.commit()
         self.update_exercise_list_gui()
 
+    def update_exercise_list_gui(self):
+        query = db.select(md.Exercise)
+        with db.session_scope(self.engine) as session:
+            self.tree.delete(*self.tree.get_children())
+            for exer in session.scalars(query):
+                self.tree.insert('', tk.END,
+                                 values=(f'{exer.name} ({exer.id})', ))
+        self.update_workout_menu()
+
     def delete_exercise_name(self):
         def remove_id(s: str) -> str:
             m = re.match(r'^.*(?P<id> \(\d+\))$', s)
