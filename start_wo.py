@@ -72,8 +72,9 @@ class Workout(tk.Tk):
         schedule_menu.add_command(label='Rename', command=None)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
-            label='Add exercise',
-            command=self.repertoire_frame.add_exercise_name)
+            label='Add', command=self.repertoire_frame.add_exercise_name)
+        repertoire_menu.add_command(
+            label='Rename', command=self.repertoire_frame.rename_exercise)
         repertoire_menu.add_command(
             label='Update',
             command=self.repertoire_frame.update_exercise_list_gui)

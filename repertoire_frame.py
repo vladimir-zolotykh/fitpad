@@ -68,6 +68,26 @@ class RepertoireFrame(tk.Frame):
                                  values=(f'{exer.name} ({exer.id})', ))
         self.update_workout_menu()
 
+    def rename_exercise(self):
+        def remove_id(s: str) -> str:
+            m = re.match(r'^.*(?P<id> \(\d+\))$', s)
+            return s[:m.start(1)] if m else s
+
+        iid = self.tree.selection()[0]
+        values = self.tree.item(iid, 'values')
+        with db.session_scope(self.engine) as session:
+            exer_name = remove_id(values[0])
+            exer = session.query(md.Exercise).filter_by(name=exer_name).first()
+            new_name = simpledialog.askstring(
+                __name__, 'Enter new exercise name', parent=self)
+            if exer and new_name:
+                exer.name = new_name
+                session.add(exer)
+                session.commit()
+                self.update_exercise_list_gui()
+            else:
+                session.rollback()
+
     def delete_exercise_name(self):
         def remove_id(s: str) -> str:
             m = re.match(r'^.*(?P<id> \(\d+\))$', s)
