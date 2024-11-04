@@ -71,16 +71,14 @@ class Workout(tk.Tk):
         schedule_menu.add_command(label='Clear', command=self.clear_schedule)
         schedule_menu.add_command(label='Rename', command=None)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
-        repertoire_menu.add_command(
-            label='Add', command=self.repertoire_frame.add_exercise_name)
-        repertoire_menu.add_command(
-            label='Rename', command=self.repertoire_frame.rename_exercise)
-        repertoire_menu.add_command(
-            label='Update',
-            command=self.repertoire_frame.update_exercise_list_gui)
-        repertoire_menu.add_command(
-            label='Delete',
-            command=self.repertoire_frame.delete_exercise_name)
+        # Experimental
+
+        def let(cmd, obj):
+            cmd(label='Add', command=obj.add_exercise_name)
+            cmd(label='Rename', command=obj.rename_exercise)
+            cmd(label='Update', command=obj.update_exercise_list_gui)
+            cmd(label='Delete', command=obj.delete_exercise_name)
+        let(repertoire_menu.add_command, self.repertoire_frame)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
     def clear_schedule(self):
