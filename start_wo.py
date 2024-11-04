@@ -59,7 +59,8 @@ class Workout(tk.Tk):
         self.notebook.add(self.log_frame, text='Log')
         self.repertoire_table: Optional[ttk.Treeview] = None
         # <<< Repertoire >>>
-        self.repertoire_frame = RepertoireFrame(self.notebook, self.engine)
+        self.repertoire_frame = RepertoireFrame(
+            self.notebook, self.engine, self.update_workout_menu)
         self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         # self.repertoire_frame.columnconfigure(0, weight=1)
         # self.repertoire_frame.rowconfigure(0, weight=1)
@@ -79,7 +80,8 @@ class Workout(tk.Tk):
         schedule_menu.add_command(label='Rename', command=None)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         repertoire_menu.add_command(
-            label='Add exercise', command=self.add_exercise_name)
+            label='Add exercise',
+            command=self.repertoire_frame.add_exercise_name)
         # repertoire_menu.add_command(
         #     label='Update', command=self.update_exercise_list_gui)
         repertoire_menu.add_command(
@@ -144,76 +146,77 @@ class Workout(tk.Tk):
         exer_list_menu = tk.Menu(self.workout_menu, tearoff=0)
         self.workout_menu.add_cascade(
             label='Add exercise', menu=exer_list_menu)
-        for exer_name in self.db_exer:
+        # for exer_name in self.db_exer:
+        for exer_name in self.repertoire_frame.db_exer:
             _add_exer = partial(self.exer_frame.add_exer, exer_name)
             exer_list_menu.add_command(label=exer_name, command=_add_exer)
 
-    @property
-    def db_exer(self):
-        # self._exer_list: list[str] = []
-        exer_book: dict[str, int] = {}
-        with Session(engine) as session:
-            for exer in session.scalars(select(md.Exercise)):
-                # self._exer_list.append(exer.name)
-                exer_book[exer.name] = exer.id
+    # @property
+    # def db_exer(self):
+    #     # self._exer_list: list[str] = []
+    #     exer_book: dict[str, int] = {}
+    #     with Session(engine) as session:
+    #         for exer in session.scalars(select(md.Exercise)):
+    #             # self._exer_list.append(exer.name)
+    #             exer_book[exer.name] = exer.id
 
-        # return self._exer_list
-        return exer_book
+    #     # return self._exer_list
+    #     return exer_book
 
-    def delete_exercise_name(self):
-        def remove_id(s: str) -> str:
-            m = re.match(r'^.*(?P<id> \(\d+\))$', s)
-            if m:
-                return s[:m.start(1)]
-            else:
-                return s
+    # def delete_exercise_name(self):
+    #     def remove_id(s: str) -> str:
+    #         m = re.match(r'^.*(?P<id> \(\d+\))$', s)
+    #         if m:
+    #             return s[:m.start(1)]
+    #         else:
+    #             return s
 
-        # tab = cast(ttk.Treeview, self.repertoire_table)
-        tab = cast(ttk.Treeview, self.repertoire_table)
-        iid = tab.selection()[0]
-        values = tab.item(iid, 'values')
-        with db.session_scope(self.engine) as session:
-            exer_name = remove_id(values[0])
-            exer = session.query(md.Exercise).filter_by(name=exer_name).first()
-            if exer:
-                session.delete(exer)
-                session.commit()
-                self.update_exercise_list_gui()
-            else:
-                session.rollback()
+    #     # tab = cast(ttk.Treeview, self.repertoire_table)
+    #     tab = cast(ttk.Treeview, self.repertoire_table)
+    #     iid = tab.selection()[0]
+    #     values = tab.item(iid, 'values')
+    #     with db.session_scope(self.engine) as session:
+    #         exer_name = remove_id(values[0])
+    #         exer = session.query(md.Exercise).filter_by(name=exer_name).first()
+    #         if exer:
+    #             session.delete(exer)
+    #             session.commit()
+    #             self.update_exercise_list_gui()
+    #         else:
+    #             session.rollback()
 
-    def update_exercise_list_gui(self):
-        query = db.select(md.Exercise)
-        with db.session_scope(self.engine) as session:
-            tab: ttk.Treeview = cast(ttk.Treeview, self.repertoire_table)
-            tab.delete(*tab.get_children())
-            for exer in session.scalars(query):
-                tab.insert('', tk.END, values=(f'{exer.name} ({exer.id})', ))
-        self.update_workout_menu()
+    # def update_exercise_list_gui(self):
+    #     query = db.select(md.Exercise)
+    #     with db.session_scope(self.engine) as session:
+    #         tab: ttk.Treeview = cast(ttk.Treeview, self.repertoire_table)
+    #         tab.delete(*tab.get_children())
+    #         for exer in session.scalars(query):
+    #             tab.insert('', tk.END, values=(f'{exer.name} ({exer.id})', ))
+    #     self.update_workout_menu()
 
-    def add_exercise_name(self):
-        exer_name = simpledialog.askstring(
-            'Extend repertoire', 'Enter exercise name', parent=self)
-        with db.session_scope(self.engine) as session:
-            exer = md.Exercise(name=exer_name)
-            session.add(exer)
-            session.commit()
-        self.update_exercise_list_gui()
+    # def add_exercise_name(self):
+    #     exer_name = simpledialog.askstring(
+    #         'Extend repertoire', 'Enter exercise name', parent=self)
+    #     with db.session_scope(self.engine) as session:
+    #         exer = md.Exercise(name=exer_name)
+    #         session.add(exer)
+    #         session.commit()
+    #     self.update_exercise_list_gui()
 
-    def show_repertoire(self):
-        columns = (('exercise', 150), )
-        self.repertoire_table = ttk.Treeview(
-            self.repertoire_frame, show='headings',
-            columns=[itemgetter(0)(t) for t in columns])
-        for n, w in columns:
-            self.repertoire_table.heading(n, text=n)
-            self.repertoire_table.column(n, width=w)
-        for exer_name, id in self.db_exer.items():
-            self.repertoire_table.insert(
-                '', tk.END, values=(f'{exer_name} ({id})', ))
-        self.repertoire_table.grid(column=0, row=0, sticky=tk.NSEW)
-        self.repertoire_frame.columnconfigure(0, weight=1)
-        self.repertoire_frame.rowconfigure(0, weight=1)
+    # def show_repertoire(self):
+    #     columns = (('exercise', 150), )
+    #     self.repertoire_table = ttk.Treeview(
+    #         self.repertoire_frame, show='headings',
+    #         columns=[itemgetter(0)(t) for t in columns])
+    #     for n, w in columns:
+    #         self.repertoire_table.heading(n, text=n)
+    #         self.repertoire_table.column(n, width=w)
+    #     for exer_name, id in self.db_exer.items():
+    #         self.repertoire_table.insert(
+    #             '', tk.END, values=(f'{exer_name} ({id})', ))
+    #     self.repertoire_table.grid(column=0, row=0, sticky=tk.NSEW)
+    #     self.repertoire_frame.columnconfigure(0, weight=1)
+    #     self.repertoire_frame.rowconfigure(0, weight=1)
 
     def on_tab_change(self, event):
         """

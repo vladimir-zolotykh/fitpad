@@ -3,8 +3,10 @@
 # PYTHON_ARGCOMPLETE_OK
 import re
 from operator import itemgetter
+from typing import Callable, Optional
 import tkinter as tk
 from tkinter import simpledialog
+from tkinter.messagebox import askokcancel
 from tkinter import ttk
 from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
@@ -15,8 +17,12 @@ import database as db
 class RepertoireFrame(tk.Frame):
     columns = (('exercise', 150), )
 
-    def __init__(self, parent, engine: Engine):
+    def __init__(
+            self, parent, engine: Engine,
+            update_workout_menu: Callable[[Optional[tk.Menu]], None]
+    ):
         self.engine = engine
+        self.update_workout_menu = update_workout_menu
         super().__init__(parent)
         self.tree = ttk.Treeview(
             self, show='headings',
@@ -46,11 +52,12 @@ class RepertoireFrame(tk.Frame):
     def add_exercise_name(self):
         exer_name = simpledialog.askstring(
             'Extend repertoire', 'Enter exercise name', parent=self)
-        with db.session_scope(self.engine) as session:
-            exer = md.Exercise(name=exer_name)
-            session.add(exer)
-            session.commit()
-        self.update_exercise_list_gui()
+        if exer_name:
+            with db.session_scope(self.engine) as session:
+                exer = md.Exercise(name=exer_name)
+                session.add(exer)
+                session.commit()
+            self.update_exercise_list_gui()
 
     def update_exercise_list_gui(self):
         query = db.select(md.Exercise)
@@ -71,7 +78,9 @@ class RepertoireFrame(tk.Frame):
         with db.session_scope(self.engine) as session:
             exer_name = remove_id(values[0])
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
-            if exer:
+            if exer and askokcancel(__name__,
+                                    f'Delete exercise "{exer.name}" ?',
+                                    parent=self):
                 session.delete(exer)
                 session.commit()
                 self.update_exercise_list_gui()
