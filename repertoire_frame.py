@@ -12,6 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
 import models as md
 import database as db
+from repertoire_dialog import askstring
 
 
 class RepertoireFrame(tk.Frame):
@@ -82,8 +83,8 @@ class RepertoireFrame(tk.Frame):
         exer_name: str = self._get_selected_exer_name()
         with db.session_scope(self.engine) as session:
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
-            new_name = simpledialog.askstring(
-                __name__, 'Enter new exercise name', parent=self)
+            new_name = askstring(__name__, 'Enter exercise name', parent=self,
+                                 default=exer.name)
             if exer and new_name:
                 exer.name = new_name
                 session.add(exer)
