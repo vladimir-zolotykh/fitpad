@@ -66,17 +66,21 @@ class RepertoireFrame(tk.Frame):
             for exer in session.scalars(query):
                 self.tree.insert('', tk.END,
                                  values=(f'{exer.name} ({exer.id})', ))
-        self.update_workout_menu()
+        self.update_workout_menu(None)
 
-    def rename_exercise(self):
+    def _get_selected_exer_name(self) -> str:
         def remove_id(s: str) -> str:
             m = re.match(r'^.*(?P<id> \(\d+\))$', s)
             return s[:m.start(1)] if m else s
 
         iid = self.tree.selection()[0]
         values = self.tree.item(iid, 'values')
+        exer_name = remove_id(values[0])
+        return exer_name
+
+    def rename_exercise(self):
+        exer_name: str = self._get_selected_exer_name()
         with db.session_scope(self.engine) as session:
-            exer_name = remove_id(values[0])
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
             new_name = simpledialog.askstring(
                 __name__, 'Enter new exercise name', parent=self)
@@ -88,15 +92,9 @@ class RepertoireFrame(tk.Frame):
             else:
                 session.rollback()
 
-    def delete_exercise_name(self):
-        def remove_id(s: str) -> str:
-            m = re.match(r'^.*(?P<id> \(\d+\))$', s)
-            return s[:m.start(1)] if m else s
-
-        iid = self.tree.selection()[0]
-        values = self.tree.item(iid, 'values')
+    def delete_exercise(self):
+        exer_name: str = self._get_selected_exer_name()
         with db.session_scope(self.engine) as session:
-            exer_name = remove_id(values[0])
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
             if exer and askokcancel(__name__,
                                     f'Delete exercise "{exer.name}" ?',

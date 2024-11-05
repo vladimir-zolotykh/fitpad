@@ -77,7 +77,7 @@ class Workout(tk.Tk):
             cmd(label='Add', command=obj.add_exercise_name)
             cmd(label='Rename', command=obj.rename_exercise)
             cmd(label='Update', command=obj.update_exercise_list_gui)
-            cmd(label='Delete', command=obj.delete_exercise_name)
+            cmd(label='Delete', command=obj.delete_exercise)
         let(repertoire_menu.add_command, self.repertoire_frame)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
