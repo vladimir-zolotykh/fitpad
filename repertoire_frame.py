@@ -9,7 +9,9 @@ from tkinter import simpledialog
 from tkinter.messagebox import askokcancel
 from tkinter import ttk
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 from sqlalchemy.engine.base import Engine
+from sqlalchemy.exc import SQLAlchemyError
 import models as md
 import database as db
 from repertoire_dialog import askstring
@@ -79,29 +81,29 @@ class RepertoireFrame(tk.Frame):
         exer_name = remove_id(values[0])
         return exer_name
 
-    def rename_exercise(self):
+    def _modify_exercise(
+            self, modify_func: Callable[[Session, md.Exercise], None]
+    ) -> None:
         exer_name: str = self._get_selected_exer_name()
         with db.session_scope(self.engine) as session:
             exer = session.query(md.Exercise).filter_by(name=exer_name).first()
-            new_name = askstring(__name__, 'Enter exercise name', parent=self,
-                                 default=exer.name)
-            if exer and new_name:
-                exer.name = new_name
-                session.add(exer)
+            if exer:
+                modify_func(session, exer)
                 session.commit()
                 self.update_exercise_list_gui()
-            else:
-                session.rollback()
 
     def delete_exercise(self):
-        exer_name: str = self._get_selected_exer_name()
-        with db.session_scope(self.engine) as session:
-            exer = session.query(md.Exercise).filter_by(name=exer_name).first()
-            if exer and askokcancel(__name__,
-                                    f'Delete exercise "{exer.name}" ?',
-                                    parent=self):
+        def delete_action(session: Session, exer: md.Exercise) -> None:
+            if askokcancel(__name__, f'Delete exercise "{exer.name}" ?',
+                           parent=self):
                 session.delete(exer)
-                session.commit()
-                self.update_exercise_list_gui()
-            else:
-                session.rollback()
+        self._modify_exercise(delete_action)
+
+    def rename_exercise(self):
+        def rename_action(session: Session, exer: md.Exercise) -> None:
+            new_name: str = askstring(__name__, 'Enter exercise name',
+                                      parent=self, default=exer.name)
+            if new_name:
+                exer.name = new_name
+                session.add(exer)
+        self._modify_exercise(rename_action)
