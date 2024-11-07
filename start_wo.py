@@ -1,27 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Optional, cast
+from typing import Optional
 from functools import partial
-from itertools import groupby
 from operator import itemgetter
-from datetime import datetime
 import argparse
-import re
 import argcomplete
 import tkinter as tk
 from tkinter import ttk
-from tkinter import simpledialog
 from sqlalchemy import create_engine, select
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.engine.base import Engine
 import models as md
 import database as db
 from exerframe import ExerFrame
-from setframe import SetFrame
-from askstring import askstring
-from schedule_dialog import ScheduleDialog
 from schedule_frame import ScheduleFrame
 from repertoire_frame import RepertoireFrame
 
