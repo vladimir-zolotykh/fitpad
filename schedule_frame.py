@@ -43,6 +43,16 @@ class ScheduleFrame(tk.Frame):
             tree.column(cid, width=int(width))
         self.update_view()
 
+    def modify_menu(self, parent: tk.Menu) -> tk.Menu:
+        """Add ScheduleFrame specific menu items
+
+        return the submenu
+        """
+
+        parent.add_command(label='Delete', command=self.delete_schedule)
+        parent.add_command(label='Rename', command=self.rename_schedule)
+        return parent
+
     def update_view(self):
         with db.session_scope(self.engine) as session:
             self._make_view(self.tree, session.scalars(select(md.Schedule)))

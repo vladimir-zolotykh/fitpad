@@ -43,9 +43,13 @@ class Workout(tk.Tk):
         # <<< Schedule >>>
         self.schedule_frame = ScheduleFrame(self.notebook, self.engine)
         self.notebook.add(self.schedule_frame, text='Schedule')
-        self.schedule_menu = schedule_menu = tk.Menu(
-            self.workout_menu, tearoff=False)
-        menubar.add_cascade(label='Schedule', menu=self.schedule_menu)
+        # self.schedule_menu = schedule_menu = tk.Menu(
+        #     self.workout_menu, tearoff=False)
+        menubar.add_cascade(
+            label='Schedule',
+            menu=self.schedule_frame.modify_menu(
+                tk.Menu(self.workout_menu, tearoff=False)))
+        # menubar.add_cascade(label='Schedule', menu=self.schedule_menu)
         # <<< Log >>>
         self.log_frame = tk.Frame(self.notebook)
         self.notebook.add(self.log_frame, text='Log')
@@ -65,19 +69,6 @@ class Workout(tk.Tk):
         self.workout_menu.add_command(
             label='Load schedule', command=self.schedule_frame.load_schedule)
         self.update_workout_menu(self.workout_menu)
-        # schedule_menu = tk.Menu(self.workout_menu, tearoff=False)
-        # self.workout_menu.add_cascade(label='Schedule', menu=schedule_menu)
-        schedule_menu.add_command(label='Load',
-                                  state=tk.DISABLED,
-                                  command=self.schedule_frame.load_schedule)
-        # schedule_menu.add_command(label='Save', command=self.save_schedule)
-        schedule_menu.add_command(label='Save',
-                                  state=tk.DISABLED,
-                                  command=self.schedule_frame.save_schedule)
-        schedule_menu.add_command(label='Delete',
-                                  command=self.schedule_frame.delete_schedule)
-        schedule_menu.add_command(label='Rename',
-                                  command=self.schedule_frame.rename_schedule)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         # Experimental
 
