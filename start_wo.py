@@ -51,6 +51,9 @@ class Workout(tk.Tk):
         # <<< Schedule >>>
         self.schedule_frame = ScheduleFrame(self.notebook, self.engine)
         self.notebook.add(self.schedule_frame, text='Schedule')
+        self.schedule_menu = schedule_menu = tk.Menu(
+            self.workout_menu, tearoff=False)
+        menubar.add_cascade(label='Schedule', menu=self.schedule_menu)
         # <<< Log >>>
         self.log_frame = tk.Frame(self.notebook)
         self.notebook.add(self.log_frame, text='Log')
@@ -63,13 +66,26 @@ class Workout(tk.Tk):
         self.workout_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
         self.workout_menu.add_separator()
+        self.workout_menu.add_command(
+            label='Clear', command=self.clear_workout_tab)
+        self.workout_menu.add_command(
+            label='Save schedule', command=self.schedule_frame.save_schedule)
+        self.workout_menu.add_command(
+            label='Load schedule', command=self.schedule_frame.load_schedule)
         self.update_workout_menu(self.workout_menu)
-        schedule_menu = tk.Menu(self.workout_menu, tearoff=False)
-        self.workout_menu.add_cascade(label='Schedule', menu=schedule_menu)
-        schedule_menu.add_command(label='Load', command=self.load_schedule)
-        schedule_menu.add_command(label='Save', command=self.save_schedule)
-        schedule_menu.add_command(label='Clear', command=self.clear_schedule)
-        schedule_menu.add_command(label='Rename', command=None)
+        # schedule_menu = tk.Menu(self.workout_menu, tearoff=False)
+        # self.workout_menu.add_cascade(label='Schedule', menu=schedule_menu)
+        schedule_menu.add_command(label='Load',
+                                  state=tk.DISABLED,
+                                  command=self.schedule_frame.load_schedule)
+        # schedule_menu.add_command(label='Save', command=self.save_schedule)
+        schedule_menu.add_command(label='Save',
+                                  state=tk.DISABLED,
+                                  command=self.schedule_frame.save_schedule)
+        schedule_menu.add_command(label='Delete',
+                                  command=self.schedule_frame.delete_schedule)
+        schedule_menu.add_command(label='Rename',
+                                  command=self.schedule_frame.rename_schedule)
         repertoire_menu = tk.Menu(menubar, tearoff=0)
         # Experimental
 
@@ -81,33 +97,9 @@ class Workout(tk.Tk):
         let(repertoire_menu.add_command, self.repertoire_frame)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 
-    def clear_schedule(self):
+    def clear_workout_tab(self):
         if self.exer_frame:
             self.exer_frame.delete_grids()
-
-    def load_schedule(self):
-        schedule_names: list[str] = []
-        with db.session_scope(self.engine) as session:
-            schedule: md.Schedule
-            for schedule in session.scalars(select(md.Schedule)):
-                schedule_names.append(schedule.name)
-
-        dialog = ScheduleDialog(self, title="Select schedule",
-                                values=schedule_names)
-        schedule_name: str = dialog.schedule_name
-        if not schedule_name:
-            return
-        query = (select(md.Schedule)
-                 .where(md.Schedule.name == schedule_name))
-        with db.session_scope(self.engine) as session:
-            schedule = session.scalar(query)
-            for exer_name, wo_group in groupby(
-                    schedule.workouts,
-                    lambda wo: wo.exercise.name):
-                set_frame = self.exer_frame.add_exer(exer_name,
-                                                     init_exer=False)
-                for wo in wo_group:
-                    set_frame.add_set(wo)
 
     def update_workout_menu(self, menu: Optional[tk.Menu] = None) -> None:
         """Update `Add exercise' submenu of `Workout' menu
@@ -155,8 +147,8 @@ class Workout(tk.Tk):
         """
 
         # Assuming nb tabs and menu labels named the same, e.g.,
-        # 'Workout', 'Repertoire'
-        NB_TABS: list[str] = ['Workout', 'Repertoire']
+        # 'Workout', 'Schedule', 'Repertoire'
+        NB_TABS: list[str] = ['Workout', 'Schedule', 'Repertoire']
         win_to_tab: dict[str, str] = {}  # window name -> tab name
         for index, t in enumerate(self.notebook.tabs()):
             tab_name = self.notebook.tab(index, 'text')
@@ -198,27 +190,6 @@ class Workout(tk.Tk):
         table.grid(column=0, row=0, sticky=tk.NSEW)
         self.log_frame.columnconfigure(0, weight=1)
         self.log_frame.rowconfigure(0, weight=1)
-
-    def save_schedule(self):
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        schedule_name = askstring(
-            'Schedule', 'Save name', message=f'Schedule_{now}', parent=self)
-        if not schedule_name:
-            return
-        with db.session_scope(self.engine) as session:
-            exer_no: str
-            set_frame: SetFrame
-            schedule: md.Schedule = md.Schedule(name=schedule_name)
-            session.add(schedule)
-            for exer_no, set_frame in self.exer_frame:
-                exer = session.get_exer(set_frame.exer_name)
-                for weight, reps in set_frame:
-                    wo = md.Workout(exercise=exer, when=now, weight=weight,
-                                    reps=reps)
-                    session.add(wo)
-                    schedule.workouts.append(wo)
-            session.commit()
-            self.show_log(schedule)
 
 
 def create_exercises(engine: Engine):
