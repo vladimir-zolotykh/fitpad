@@ -15,7 +15,7 @@ import models as md
 import database as db
 from schedule_dialog import ScheduleDialog
 from setframe import SetFrame
-import repertoire_dialog
+import defaultdlg
 
 # col_names = ['id', 'when', 'weight', 'reps']
 col_names: list[str] = [col.name for col in md.Workout.__table__.columns]
@@ -164,7 +164,7 @@ class ScheduleFrame(tk.Frame):
         """Rename selected schedule"""
 
         def rename_action(session: Session, schedule: md.Schedule) -> None:
-            new_name: str = repertoire_dialog.askstring(
+            new_name: str = defaultdlg.askstring(
                 __name__, 'Enter new schedule name',
                 parent=self, default=schedule.name)
             if new_name:

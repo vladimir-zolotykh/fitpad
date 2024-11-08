@@ -11,10 +11,10 @@ from tkinter import ttk
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.engine.base import Engine
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError  # noqa
 import models as md
 import database as db
-from repertoire_dialog import askstring
+from defaultdlg import askstring
 
 
 class RepertoireFrame(tk.Frame):
