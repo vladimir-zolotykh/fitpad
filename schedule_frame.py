@@ -154,9 +154,7 @@ class ScheduleFrame(tk.Frame):
     def delete_schedule(self):
         """Delete selected schedule"""
 
-        def delete_action(
-                session: Session, schedule: md.Schedule
-        ) -> None:
+        def delete_action(session: Session, schedule: md.Schedule) -> None:
             if askokcancel(__name__, f'Delete schedule "{schedule.name}" ?',
                            parent=self):
                 session.delete(schedule)
