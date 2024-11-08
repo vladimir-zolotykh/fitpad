@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-import tkitner as tk
+import tkinter as tk
 from tkinter import ttk
 
 
@@ -17,7 +17,7 @@ class ScrolledTreeview(ttk.Treeview):
         hbar = tk.Scrollbar(box, orient=tk.HORIZONTAL, command=self.xview)
         hbar.grid(column=0, row=1, sticky=tk.EW)
         vbar = tk.Scrollbar(box, orient=tk.VERTICAL, command=self.yview)
-        vbar.grid(columne=1, row=0, sticky=tk.NS)
+        vbar.grid(column=1, row=0, sticky=tk.NS)
         kw.update({'xscrollcommand': hbar.set, 'yscrollcommand': vbar.set})
         super().__init__(box, **kw)
         self.grid(column=0, row=0, sticky=tk.NSEW)
