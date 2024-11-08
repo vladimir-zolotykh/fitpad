@@ -16,6 +16,7 @@ import database as db
 from schedule_dialog import ScheduleDialog
 from setframe import SetFrame
 import defaultdlg
+from scrolledtreeview import ScrolledTreeview
 
 # col_names = ['id', 'when', 'weight', 'reps']
 col_names: list[str] = [col.name for col in md.Workout.__table__.columns]
@@ -29,8 +30,10 @@ class ScheduleFrame(tk.Frame):
     def __init__(self, parent, engine: Engine):
         super().__init__(parent)
         self.engine = engine
-        self.tree = tree = ttk.Treeview(
+        self.tree = tree = ScrolledTreeview(
             self, columns=(col_names[1], rel_names[0], *col_names[2:4]))
+        # self.tree = tree = ttk.Treeview(
+        #     self, columns=(col_names[1], rel_names[0], *col_names[2:4]))
         tree.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
