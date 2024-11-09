@@ -7,7 +7,6 @@ from typing import Callable, Optional
 import tkinter as tk
 from tkinter import simpledialog
 from tkinter.messagebox import askokcancel
-from tkinter import ttk
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.engine.base import Engine
@@ -15,6 +14,7 @@ from sqlalchemy.exc import SQLAlchemyError  # noqa
 import models as md
 import database as db
 from defaultdlg import askstring
+from scrolledtreeview import ScrolledTreeview
 
 
 class RepertoireFrame(tk.Frame):
@@ -27,12 +27,12 @@ class RepertoireFrame(tk.Frame):
         self.engine = engine
         self.update_workout_menu = update_workout_menu
         super().__init__(parent)
-        self.tree = ttk.Treeview(
+        self.tree = ScrolledTreeview(
             self, show='headings',
             columns=[itemgetter(0)(t) for t in self.columns])
         for n, w in self.columns:
             self.tree.heading(n, text=n)
-            self.tree.column(n, width=w)
+            self.tree.column(n, minwidth=w, width=w)
         self.tree.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)

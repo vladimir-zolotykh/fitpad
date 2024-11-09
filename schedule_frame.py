@@ -32,18 +32,16 @@ class ScheduleFrame(tk.Frame):
         self.engine = engine
         self.tree = tree = ScrolledTreeview(
             self, columns=(col_names[1], rel_names[0], *col_names[2:4]))
-        # self.tree = tree = ttk.Treeview(
-        #     self, columns=(col_names[1], rel_names[0], *col_names[2:4]))
         tree.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         for cid_width_text in col_config:
             cid = text = cid_width_text[0]
-            width = cid_width_text[1]
+            width: int = int(cid_width_text[1])
             if 2 < len(cid_width_text):
                 text = cid_width_text[2]
             tree.heading(cid, text=str(text))
-            tree.column(cid, width=int(width))
+            tree.column(cid, minwidth=width, width=width)
         self.update_view()
 
     def modify_menu(self, parent: tk.Menu) -> tk.Menu:
