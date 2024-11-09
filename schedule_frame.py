@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Callable
+from typing import Callable, Optional
 from datetime import datetime
 from collections import defaultdict
 import tkinter as tk
@@ -26,10 +26,24 @@ col_config = (('#0', 100, rel_names[1]), (rel_names[0], 150),
               *(zip(col_names[1:4], (100, 100, 100))))
 
 
+def notebooktabto_widget(
+        nb: ttk.Notebook, tab_name: str
+) -> Optional[tk.Frame]:
+    # ('.!notebook.!exerframe', '.!notebook.!scheduleframe',
+    #  '.!notebook.!repertoireframe')
+    # ['Workout', 'Schedule', 'Repertoire']
+    # [ ExerFrame, ScheduleFrame, RepertoireFrame]
+    for index, widget_name in enumerate(nb.tabs()):
+        tab: str = nb.tab(index, 'text')
+        if tab == tab_name:
+            return nb.nametowidget(widget_name)
+
+
 class ScheduleFrame(tk.Frame):
-    def __init__(self, parent, engine: Engine):
+    def __init__(self, parent: ttk.Notebook, engine: Engine):
         super().__init__(parent)
         self.engine = engine
+        self.exer_frame = notebooktabto_widget(parent, 'Workout')
         self.tree = tree = ScrolledTreeview(
             self, columns=(col_names[1], rel_names[0], *col_names[2:4]))
         tree.grid(column=0, row=0, sticky=tk.NSEW)
