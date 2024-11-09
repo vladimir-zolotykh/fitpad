@@ -14,7 +14,7 @@ from sqlalchemy.exc import SQLAlchemyError  # noqa
 import models as md
 import database as db
 from defaultdlg import askstring
-from scrolledtreeview import ScrolledTreeview
+from mutableview import RepertoireView
 
 
 class RepertoireFrame(tk.Frame):
@@ -27,9 +27,10 @@ class RepertoireFrame(tk.Frame):
         self.engine = engine
         self.update_workout_menu = update_workout_menu
         super().__init__(parent)
-        self.tree = ScrolledTreeview(
+        self.tree = RepertoireView(
             self, show='headings',
-            columns=[itemgetter(0)(t) for t in self.columns])
+            columns=[itemgetter(0)(t) for t in self.columns],
+            update_view_callback=self.update_exercise_list_gui)
         for n, w in self.columns:
             self.tree.heading(n, text=n)
             self.tree.column(n, minwidth=w, width=w)
