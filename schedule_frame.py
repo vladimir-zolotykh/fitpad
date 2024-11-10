@@ -155,37 +155,3 @@ class ScheduleFrame(tk.Frame):
                     schedule.workouts.append(wo)
             session.commit()
             self.show_log(schedule)
-
-    def _modify_schedule(
-            self, modify_func: Callable[[Session, md.Schedule], None]
-    ) -> None:
-        iid = self.tree.selection()[0]
-        schedule_name = self.tree.item(iid, 'text')
-        with db.session_scope(self.engine) as session:
-            schedule = (session.query(md.Schedule)
-                        .filter_by(name=schedule_name).first())
-            if schedule:
-                modify_func(session, schedule)
-                session.commit()
-                self.update_view()
-
-    def delete_schedule(self):
-        """Delete selected schedule"""
-
-        def delete_action(session: Session, schedule: md.Schedule) -> None:
-            if askokcancel(__name__, f'Delete schedule "{schedule.name}" ?',
-                           parent=self):
-                session.delete(schedule)
-        self._modify_schedule(delete_action)
-
-    def rename_schedule(self):
-        """Rename selected schedule"""
-
-        def rename_action(session: Session, schedule: md.Schedule) -> None:
-            new_name: str = defaultdlg.askstring(
-                __name__, 'Enter new schedule name',
-                parent=self, default=schedule.name)
-            if new_name:
-                schedule.name = new_name
-                session.add()
-        self._modify_schedule(rename_action)
