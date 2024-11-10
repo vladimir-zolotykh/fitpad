@@ -17,6 +17,7 @@ class MutableView(ScrolledTreeview, ABC):
     def __init__(self, parent, **kw):
         if 'update_view_callback' in kw:
             self.update_view_callback = kw.get('update_view_callback')
+            del kw['update_view_callback']
         super().__init__(parent, **kw)
 
     @abstractmethod
