@@ -4,12 +4,12 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import Callable, Union
+import re
 from sqlalchemy.orm import Session
 from tkinter.messagebox import askokcancel
 import models as md
 import database as db
 from scrolledtreeview import ScrolledTreeview
-from defaultdlg import askstring
 import defaultdlg
 
 
@@ -44,13 +44,28 @@ class MutableView(ScrolledTreeview, ABC):
                 if callable(self.update_view_callback):
                     self.update_view_callback()
 
-    @abstractmethod
     def delete_item(self):
-        pass
+        def delete_action(
+                session: Session,
+                item: Union[md.Exercise, md.Schedule]
+        ) -> None:
+            if askokcancel(__name__, f'Delete {type(item)} "{item.name}" ?',
+                           parent=self):
+                session.delete(item)
+        self._modify_item(delete_action)
 
-    @abstractmethod
     def rename_item(self):
-        pass
+        def rename_action(
+                session: Session,
+                item: Union[md.Exercise, md.Schedule]
+        ) -> None:
+            new_name: str = defaultdlg.askstring(
+                __name__, f'Enter new {type(item)} name',
+                parent=self, default=item.name)
+            if new_name:
+                item.name = new_name
+                session.add()
+        self._modify_item(rename_action)
 
 
 class ScheduleView(MutableView):
@@ -66,30 +81,9 @@ class ScheduleView(MutableView):
                     .filter_by(name=item_name).first())
         return schedule
 
-    def delete_item(self):
-        """Delete selected schedule"""
-
-        def delete_action(session: Session, schedule: md.Schedule) -> None:
-            if askokcancel(__name__, f'Delete schedule "{schedule.name}" ?',
-                           parent=self):
-                session.delete(schedule)
-        self._modify_item(delete_action)
-
-    def rename_item(self):
-        """Rename selected schedule"""
-
-        def rename_action(session: Session, schedule: md.Schedule) -> None:
-            new_name: str = defaultdlg.askstring(
-                __name__, 'Enter new schedule name',
-                parent=self, default=schedule.name)
-            if new_name:
-                schedule.name = new_name
-                session.add()
-        self._modify_item(rename_action)
-
 
 class RepertoireView(MutableView):
-    def _get_item_name() -> str:
+    def _get_item_name(self) -> str:
         def remove_id(s: str) -> str:
             m = re.match(r'^.*(?P<id> \(\d+\))$', s)
             return s[:m.start(1)] if m else s
@@ -97,25 +91,9 @@ class RepertoireView(MutableView):
         values = self.item(iid, 'values')
         exer_name = remove_id(values[0])
         return exer_name
-        
+
     def _get_item(
             self, session: Session, item_name: str
     ) -> md.Exercise:
         exer = (session.query(md.Exercise).filter_by(name=item_name).first())
         return exer
-
-    def delete_item(self):
-        def delete_action(session: Session, exer: md.Exercise) -> None:
-            if askokcancel(__name__, f'Delete exercise "{exer.name}" ?',
-                           parent=self):
-                session.delete(exer)
-        self._modify_item(delete_action)
-
-    def rename_item(self):
-        def rename_action(session: Session, exer: md.Exercise) -> None:
-            new_name: str = askstring(__name__, 'Enter exercise name',
-                                      parent=self, default=exer.name)
-            if new_name:
-                exer.name = new_name
-                session.add(exer)
-        self._modify_item(rename_action)
