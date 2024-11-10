@@ -28,9 +28,8 @@ class RepertoireFrame(tk.Frame):
         self.update_workout_menu = update_workout_menu
         super().__init__(parent)
         self.tree = RepertoireView(
-            self, show='headings',
-            columns=[itemgetter(0)(t) for t in self.columns],
-            update_view_callback=self.update_exercise_list_gui)
+            self, engine, update_workout_menu,
+            show='headings', columns=[itemgetter(0)(t) for t in self.columns])
         for n, w in self.columns:
             self.tree.heading(n, text=n)
             self.tree.column(n, minwidth=w, width=w)

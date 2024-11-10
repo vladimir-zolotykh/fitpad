@@ -15,6 +15,7 @@ import models as md
 import database as db
 from exerframe import ExerFrame
 from schedule_frame import ScheduleFrame
+# from repertoire_frame import RepertoireFrame
 from repertoire_frame import RepertoireFrame
 
 
@@ -57,7 +58,6 @@ class Workout(tk.Tk):
         # <<< Repertoire >>>
         self.repertoire_frame = RepertoireFrame(
             self.notebook, self.engine, self.update_workout_menu)
-        self.repertoire_frame.grid(column=0, row=0, sticky=tk.NSEW)
         self.notebook.add(self.repertoire_frame, text='Repertoire')
         self.workout_menu.add_command(
             label='Edit', command=self.exer_frame.edit_exer)
@@ -74,9 +74,11 @@ class Workout(tk.Tk):
 
         def let(cmd, obj):
             cmd(label='Add', command=obj.add_exercise_name)
-            cmd(label='Rename', command=obj.rename_exercise)
+            # cmd(label='Rename', command=obj.rename_exercise)
+            cmd(label='Rename', command=obj.tree.rename_item)
             cmd(label='Update', command=obj.update_exercise_list_gui)
-            cmd(label='Delete', command=obj.delete_exercise)
+            # cmd(label='Delete', command=obj.delete_exercise)
+            cmd(label='Delete', command=obj.tree.delete_item)
         let(repertoire_menu.add_command, self.repertoire_frame)
         menubar.add_cascade(label='Repertoire', menu=repertoire_menu)
 

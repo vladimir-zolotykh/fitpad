@@ -5,7 +5,9 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Callable, Union
 import re
+from sqlalchemy import Engine
 from sqlalchemy.orm import Session
+import tkinter as tk
 from tkinter.messagebox import askokcancel
 import models as md
 import database as db
@@ -14,10 +16,14 @@ import defaultdlg
 
 
 class MutableView(ScrolledTreeview, ABC):
-    def __init__(self, parent, **kw):
-        if 'update_view_callback' in kw:
-            self.update_view_callback = kw.get('update_view_callback')
-            del kw['update_view_callback']
+    def __init__(
+            self,
+            parent: tk.Frame,
+            engine: Engine,
+            update_view_callback: Callable[[], None], **kw
+    ) -> None:
+        self.engine = engine
+        self.update_view_callback = update_view_callback
         super().__init__(parent, **kw)
 
     @abstractmethod
@@ -50,8 +56,10 @@ class MutableView(ScrolledTreeview, ABC):
                 session: Session,
                 item: Union[md.Exercise, md.Schedule]
         ) -> None:
-            if askokcancel(__name__, f'Delete {type(item)} "{item.name}" ?',
-                           parent=self):
+            if askokcancel(
+                    __name__,
+                    f'Delete {type(item).__name__.lower()} "{item.name}" ?',
+                    parent=self):
                 session.delete(item)
         self._modify_item(delete_action)
 
@@ -61,7 +69,7 @@ class MutableView(ScrolledTreeview, ABC):
                 item: Union[md.Exercise, md.Schedule]
         ) -> None:
             new_name: str = defaultdlg.askstring(
-                __name__, f'Enter new {type(item)} name',
+                __name__, f'Enter new {type(item).__name__.lower()} name',
                 parent=self, default=item.name)
             if new_name:
                 item.name = new_name

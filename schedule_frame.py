@@ -45,8 +45,8 @@ class ScheduleFrame(tk.Frame):
         self.engine = engine
         self.exer_frame = notebooktabto_widget(parent, 'Workout')
         self.tree = tree = ScheduleView(
-            self, columns=(col_names[1], rel_names[0], *col_names[2:4]),
-            update_view_callback=self.update_view)
+            self, engine, self.update_view,
+            columns=(col_names[1], rel_names[0], *col_names[2:4]))
         tree.grid(column=0, row=0, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -65,8 +65,10 @@ class ScheduleFrame(tk.Frame):
         return the submenu
         """
 
-        parent.add_command(label='Delete', command=self.delete_schedule)
-        parent.add_command(label='Rename', command=self.rename_schedule)
+        # parent.add_command(label='Delete', command=self.delete_schedule)
+        # parent.add_command(label='Rename', command=self.rename_schedule)
+        parent.add_command(label='Delete', command=self.tree.delete_item)
+        parent.add_command(label='Rename', command=self.tree.rename_item)
         return parent
 
     def update_view(self):
