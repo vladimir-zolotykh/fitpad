@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-import re
 from operator import itemgetter
 from typing import Callable, Optional
 import tkinter as tk
 from tkinter import simpledialog
-from tkinter.messagebox import askokcancel
 from sqlalchemy import select
-from sqlalchemy.orm import Session
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.exc import SQLAlchemyError  # noqa
 import models as md
 import database as db
-from defaultdlg import askstring
 from mutableview import RepertoireView
 
 
@@ -28,6 +24,7 @@ class RepertoireFrame(tk.Frame):
         self.update_workout_menu = update_workout_menu
         super().__init__(parent)
         self.tree = RepertoireView(
+            # `update_workout_menu' serves as `update_view_callback'
             self, engine, update_workout_menu,
             show='headings', columns=[itemgetter(0)(t) for t in self.columns])
         for n, w in self.columns:

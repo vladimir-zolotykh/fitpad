@@ -22,7 +22,7 @@ class MutableView(ScrolledTreeview, ABC):
             self,
             parent: tk.Frame,
             engine: Engine,
-            update_view_callback: Callable[[], None], **kw
+            update_view_callback: Callable[Optional[tk.Menu], None], **kw
     ) -> None:
         self.engine = engine
         self.update_view_callback = update_view_callback
