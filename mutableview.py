@@ -82,21 +82,19 @@ class MutableView(ScrolledTreeview, ABC):
 
 
 class ScheduleView(MutableView):
-    def _get_item_name(self) -> str:
+    def _get_item_name(self):
         iid = self.selection()[0]
         schedule_name: str = self.item(iid, 'text')
         return schedule_name
 
-    def _get_item(
-            self, session: Session, item_name: str
-    ) -> Optional[md.Schedule]:
+    def _get_item(self, session, item_name):
         schedule = (session.query(md.Schedule)
                     .filter_by(name=item_name).first())
         return schedule
 
 
 class RepertoireView(MutableView):
-    def _get_item_name(self) -> str:
+    def _get_item_name(self):
         def remove_id(s: str) -> str:
             m = re.match(r'^.*(?P<id> \(\d+\))$', s)
             return s[:m.start(1)] if m else s
@@ -104,12 +102,6 @@ class RepertoireView(MutableView):
         values = self.item(iid, 'values')
         exer_name = remove_id(values[0])
         return exer_name
-
-    # def _get_item(
-    #         self, session: Session, item_name: str
-    # ) -> Optional[md.Exercise]:
-    #     exer = (session.query(md.Exercise).filter_by(name=item_name).first())
-    #     return exer
 
     def _get_item(self, session, item_name):
         exer = (session.query(md.Exercise).filter_by(name=item_name).first())
