@@ -3,7 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC
 from abc import abstractmethod
-from typing import Callable, Union
+from typing import Callable, Union, Optional
 import re
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session
@@ -13,6 +13,8 @@ import models as md
 import database as db
 from scrolledtreeview import ScrolledTreeview
 import defaultdlg
+
+ExerciseOrSchedule = Union[md.Exercise, md.Schedule]
 
 
 class MutableView(ScrolledTreeview, ABC):
@@ -27,23 +29,25 @@ class MutableView(ScrolledTreeview, ABC):
         super().__init__(parent, **kw)
 
     @abstractmethod
-    def _get_item_name():
+    def _get_item_name(self) -> str:
         pass
 
     @abstractmethod
     def _get_item(
             self, session: Session, item_name: str
-    ) -> Union[md.Exercise, md.Schedule]:
+    ) -> Optional[Union[md.Exercise, md.Schedule]]:
         pass
 
     def _modify_item(
-            self, modify_func: Callable[[Session, md.Schedule], None]
+            self,
+            modify_func: Callable[[Session, Union[md.Exercise, md.Schedule]],
+                                  None]
     ) -> None:
         item_name: str = self._get_item_name()
         # iid = self.selection()[0]
         # item_name: str = self.item(iid, 'text')
         with db.session_scope(self.engine) as session:
-            item: Union[md.Exercise, md.Schedule] = \
+            item: Optional[Union[md.Exercise, md.Schedule]] = \
                 self._get_item(session, item_name)
             if item:
                 modify_func(session, item)
@@ -73,7 +77,7 @@ class MutableView(ScrolledTreeview, ABC):
                 parent=self, default=item.name)
             if new_name:
                 item.name = new_name
-                session.add()
+                session.add(item)
         self._modify_item(rename_action)
 
 
@@ -85,7 +89,7 @@ class ScheduleView(MutableView):
 
     def _get_item(
             self, session: Session, item_name: str
-    ) -> md.Schedule:
+    ) -> Optional[md.Schedule]:
         schedule = (session.query(md.Schedule)
                     .filter_by(name=item_name).first())
         return schedule
@@ -101,8 +105,12 @@ class RepertoireView(MutableView):
         exer_name = remove_id(values[0])
         return exer_name
 
-    def _get_item(
-            self, session: Session, item_name: str
-    ) -> md.Exercise:
+    # def _get_item(
+    #         self, session: Session, item_name: str
+    # ) -> Optional[md.Exercise]:
+    #     exer = (session.query(md.Exercise).filter_by(name=item_name).first())
+    #     return exer
+
+    def _get_item(self, session, item_name):
         exer = (session.query(md.Exercise).filter_by(name=item_name).first())
         return exer
