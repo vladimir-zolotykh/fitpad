@@ -19,17 +19,26 @@ ExerciseOrSchedule = Union[md.Exercise, md.Schedule]
 
 class MutableView(ScrolledTreeview, ABC):
     def __init__(
-            self,
-            parent: tk.Frame,
-            engine: Engine,
-            update_view_callback: Callable[Optional[tk.Menu], None], **kw
+            self, parent: tk.Frame, engine: Engine,
+            update_view_callback: Callable[[], None], **kw
     ) -> None:
         self.engine = engine
         self.update_view_callback = update_view_callback
+        self._selected_text: Optional[str] = None
         super().__init__(parent, **kw)
+        self.bind('<<TreeviewSelect>>', self.on_select)
+
+    def on_select(self, event: tk.Event):
+        iid: tuple[str, ...] = self.selection()
+        if iid:
+            self._selected_text = self._get_view_selection(iid[0])
 
     @abstractmethod
-    def _get_item_name(self) -> str:
+    def _get_view_selection(self, iid: str) -> Optional[str]:
+        return None
+
+    @abstractmethod
+    def _get_item_name(self, iid: str) -> str:
         pass
 
     @abstractmethod
@@ -43,8 +52,8 @@ class MutableView(ScrolledTreeview, ABC):
             modify_func: Callable[[Session, Union[md.Exercise, md.Schedule]],
                                   None]
     ) -> None:
-        item_name: str = self._get_item_name()
-        # iid = self.selection()[0]
+        iid = self.selection()
+        item_name: str = self._get_item_name(iid[0])
         # item_name: str = self.item(iid, 'text')
         with db.session_scope(self.engine) as session:
             item: Optional[Union[md.Exercise, md.Schedule]] = \
@@ -54,6 +63,7 @@ class MutableView(ScrolledTreeview, ABC):
                 session.commit()
                 if callable(self.update_view_callback):
                     self.update_view_callback()
+                # recover a selection if possible
 
     def delete_item(self):
         def delete_action(
@@ -82,10 +92,11 @@ class MutableView(ScrolledTreeview, ABC):
 
 
 class ScheduleView(MutableView):
-    def _get_item_name(self):
-        iid = self.selection()[0]
-        schedule_name: str = self.item(iid, 'text')
-        return schedule_name
+    def _get_view_selection(self, iid):
+        return self.item(iid, 'text')
+
+    def _get_item_name(self, iid):
+        return self.item(iid, 'text')
 
     def _get_item(self, session, item_name):
         schedule = (session.query(md.Schedule)
@@ -94,11 +105,16 @@ class ScheduleView(MutableView):
 
 
 class RepertoireView(MutableView):
-    def _get_item_name(self):
+    def _get_view_selection(self, iid):
+        iid = self.selection()
+        if iid:
+            return self.item(iid, 'values')[0]
+
+    def _get_item_name(self, iid):
         def remove_id(s: str) -> str:
             m = re.match(r'^.*(?P<id> \(\d+\))$', s)
             return s[:m.start(1)] if m else s
-        iid = self.selection()[0]
+        # iid = self.selection()[0]
         values = self.item(iid, 'values')
         exer_name = remove_id(values[0])
         return exer_name
