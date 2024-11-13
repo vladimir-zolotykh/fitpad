@@ -53,45 +53,52 @@ class MutableView(ScrolledTreeview, ABC):
 
     def _modify_item(
             self,
+            # `modify_func' returns true if made changes, false otherwise
             modify_func: Callable[[Session, Union[md.Exercise, md.Schedule]],
-                                  None]
+                                  bool]
     ) -> None:
         iid = self.selection()
         item_name: str = self._get_item_name(iid[0])
         # item_name: str = self.item(iid, 'text')
         with db.session_scope(self.engine) as session:
-            item: Optional[Union[md.Exercise, md.Schedule]] = \
-                self._get_item(session, item_name)
+            item: Optional[Union[md.Exercise, md.Schedule]] = self._get_item(
+                session, item_name)
             if item:
-                modify_func(session, item)
-                session.commit()
-                if callable(self.update_view_callback):
-                    self.update_view_callback()
-                # recover a selection if possible
+                if modify_func(session, item):
+                    session.commit()
+                    if callable(self.update_view_callback):
+                        self.update_view_callback()
+                    # recover a selection if possible
 
     def delete_item(self):
         def delete_action(
                 session: Session,
                 item: Union[md.Exercise, md.Schedule]
-        ) -> None:
+        ) -> bool:
+            res: bool = False
             if askokcancel(
                     __name__,
                     f'Delete {type(item).__name__.lower()} "{item.name}" ?',
                     parent=self):
                 session.delete(item)
+                res = True
+            return res
         self._modify_item(delete_action)
 
     def rename_item(self):
         def rename_action(
                 session: Session,
                 item: Union[md.Exercise, md.Schedule]
-        ) -> None:
+        ) -> bool:
             new_name: str = defaultdlg.askstring(
                 __name__, f'Enter new {type(item).__name__.lower()} name',
                 parent=self, default=item.name)
+            res: bool = False
             if new_name:
                 item.name = new_name
                 session.add(item)
+                res = True
+            return res
         self._modify_item(rename_action)
 
 
