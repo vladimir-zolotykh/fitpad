@@ -1,21 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Callable, Optional
+from typing import Optional
 from datetime import datetime
 from collections import defaultdict
 import tkinter as tk
 from tkinter import ttk
-from tkinter.messagebox import askokcancel
 from tkinter.simpledialog import askstring
 from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
-from sqlalchemy.orm import Session
 import models as md
 import database as db
 from schedule_dialog import ScheduleDialog
 from setframe import SetFrame
-import defaultdlg
 from mutableview import ScheduleView
 
 # col_names = ['id', 'when', 'weight', 'reps']
