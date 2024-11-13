@@ -35,6 +35,10 @@ class MutableView(ScrolledTreeview, ABC):
 
     @abstractmethod
     def _get_view_selection(self, iid: str) -> Optional[str]:
+        """Return selected item text or values[0]
+
+        the 1st case is for ScheduleView, the 2nd -- RepertoireView"""
+
         return None
 
     @abstractmethod
