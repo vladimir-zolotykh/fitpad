@@ -15,32 +15,32 @@ class Frame2DExer(f2.Frame2D):
         Return the deleletd exer names list"""
 
         cols, rows = self.grid_size()
-        # cols = 1, rows = 2
         Options = Dict[str, Any]    # .grid_info() dict
-        SavedWidget = Tuple[f2.Frame2D, Options]
-        sorted: List[SavedWidget] = []
+        ExerFrameRow = Tuple[EntryVar, f2.Frame2D, Options]
+        sorted: List[ExerFrameRow] = []
         row_index: int
         for row_index in range(rows):
+            slaves = self.grid_slaves(row=row_index)
             w: f2.Frame2D
-            w = cast(f2.Frame2D, self.grid_slaves(column=0, row=row_index)[0])
-            sorted.append((w, cast(Options, w.grid_info())))
+            w = cast(f2.Frame2D, slaves[1])
+            e = cast(EntryVar, slaves[0])
+            sorted.append((e, w, cast(Options, w.grid_info())))
 
-        def _key(saved_widget: SavedWidget) -> int:
-            var: EntryVar = saved_widget[0][0, 0]
+        def _key(exerframerow: ExerFrameRow) -> int:
+            var: EntryVar = exerframerow[0]
             return int(var.get())
 
         sorted.sort(key=_key)
         o: Options
         deleted_exer: List[str] = []  # deleted exercises (names)
-        saved_widget: SavedWidget
+        exerframerow: ExerFrameRow
         row_index = 0
-        for saved_widget in sorted:
-            w, o = saved_widget
-            # w[tk.Frame]: EntryVar | SetFrame
-            entry: EntryVar = w[0, 0]
+        for exerframerow in sorted:
+            e, w, o = exerframerow
+            entry: EntryVar = e
             var = entry.configure('textvariable')
             if int(entry.get()) == 0:
-                frame_set: f2s.Frame2DSet = w[0, 1]
+                frame_set: f2s.Frame2DSet = cast(f2s.Frame2DSet, w)
                 label: tk.Label = frame_set[0, 0][0, 0]
                 exer_name: str = label.cget('text')
                 deleted_exer.append(exer_name)
