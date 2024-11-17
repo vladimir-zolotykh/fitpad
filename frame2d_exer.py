@@ -35,18 +35,16 @@ class Frame2DExer(f2.Frame2D):
         exerframerow: ExerFrameRow
         row_index = 0
         for exerframerow in sorted:
-            e, w, o = exerframerow
-            entry: EntryVar = e
-            var = entry.configure('textvariable')
-            if int(entry.get()) == 0:
-                frame_set: f2s.Frame2DSet = cast(f2s.Frame2DSet, w)
-                label: tk.Label = frame_set[0, 0][0, 0]
+            e, s, o = exerframerow
+            var = e.configure('textvariable')
+            if int(e.get()) == 0:
+                label: tk.Label = s[0, 0][0, 0]
                 exer_name: str = label.cget('text')
                 deleted_exer.append(exer_name)
                 e.destroy()
-                w.destroy()
+                s.destroy()
             else:
-                w.grid(column=o['column'], row=row_index, sticky=o['sticky'])
+                s.grid(column=o['column'], row=row_index, sticky=o['sticky'])
                 var.set(str(row_index + 1))
                 row_index += 1
         return deleted_exer
