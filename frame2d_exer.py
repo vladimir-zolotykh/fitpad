@@ -22,7 +22,7 @@ class Frame2DExer(f2.Frame2D):
         for row_index in range(rows):
             slaves = self.grid_slaves(row=row_index)
             w: f2.Frame2D
-            w = cast(f2.Frame2D, slaves[1])
+            w = cast(f2.Frame2D, slaves[1])  # Frame2DSet
             e = cast(EntryVar, slaves[0])
             sorted.append((e, w, cast(Options, w.grid_info())))
 
@@ -44,6 +44,7 @@ class Frame2DExer(f2.Frame2D):
                 label: tk.Label = frame_set[0, 0][0, 0]
                 exer_name: str = label.cget('text')
                 deleted_exer.append(exer_name)
+                e.destroy()
                 w.destroy()
             else:
                 w.grid(column=o['column'], row=row_index, sticky=o['sticky'])
