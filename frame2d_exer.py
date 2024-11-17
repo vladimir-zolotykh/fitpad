@@ -9,7 +9,7 @@ from entry_var import EntryVar
 
 
 class Frame2DExer(f2.Frame2D):
-    def arrange(self):
+    def arrange(self) -> list[str]:
         """Arrange exercises in exercise number order.
 
         Return the deleletd exer names list"""
@@ -20,9 +20,9 @@ class Frame2DExer(f2.Frame2D):
         sorted: List[ExerFrameRow] = []
         row_index: int
         for row_index in range(rows):
-            slaves: ExerFrameRow = cast(ExerFrameRow,
-                                        self.grid_slaves(row=row_index))
-            e, s = slaves[0], slaves[1]
+            e = cast(EntryVar, self.grid_slaves(column=0, row=row_index)[0])
+            s = cast(f2s.Frame2DSet,
+                     self.grid_slaves(column=1, row=row_index)[0])
             sorted.append((e, s, cast(Options, s.grid_info())))
 
         def _key(exerframerow: ExerFrameRow) -> int:
@@ -38,13 +38,14 @@ class Frame2DExer(f2.Frame2D):
             e, s, o = exerframerow
             var = e.configure('textvariable')
             if int(e.get()) == 0:
-                label: tk.Label = s[0, 0][0, 0]
+                label: tk.Label = s[0, 0]
                 exer_name: str = label.cget('text')
                 deleted_exer.append(exer_name)
                 e.destroy()
                 s.destroy()
             else:
-                s.grid(column=o['column'], row=row_index, sticky=o['sticky'])
                 var.set(str(row_index + 1))
+                e.grid(column=0, row=row_index)
+                s.grid(column=o['column'], row=row_index, sticky=o['sticky'])
                 row_index += 1
         return deleted_exer
