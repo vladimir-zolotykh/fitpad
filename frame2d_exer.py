@@ -16,13 +16,13 @@ class Frame2DExer(f2.Frame2D):
 
         cols, rows = self.grid_size()
         Options = Dict[str, Any]    # .grid_info() dict
-        ExerFrameRow = Tuple[EntryVar, f2.Frame2D, Options]
+        ExerFrameRow = Tuple[EntryVar, f2s.Frame2DSet, Options]
         sorted: List[ExerFrameRow] = []
         row_index: int
         for row_index in range(rows):
             slaves = self.grid_slaves(row=row_index)
-            w: f2.Frame2D
-            w = cast(f2.Frame2D, slaves[1])  # Frame2DSet
+            w: f2s.Frame2DSet
+            w = cast(f2s.Frame2DSet, slaves[1])  # Frame2DSet
             e = cast(EntryVar, slaves[0])
             sorted.append((e, w, cast(Options, w.grid_info())))
 
