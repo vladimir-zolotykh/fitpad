@@ -20,11 +20,10 @@ class Frame2DExer(f2.Frame2D):
         sorted: List[ExerFrameRow] = []
         row_index: int
         for row_index in range(rows):
-            slaves = self.grid_slaves(row=row_index)
-            w: f2s.Frame2DSet
-            w = cast(f2s.Frame2DSet, slaves[1])  # Frame2DSet
-            e = cast(EntryVar, slaves[0])
-            sorted.append((e, w, cast(Options, w.grid_info())))
+            slaves: ExerFrameRow = cast(ExerFrameRow,
+                                        self.grid_slaves(row=row_index))
+            e, s = slaves[0], slaves[1]
+            sorted.append((e, s, cast(Options, s.grid_info())))
 
         def _key(exerframerow: ExerFrameRow) -> int:
             var: EntryVar = exerframerow[0]
