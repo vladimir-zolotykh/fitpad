@@ -51,6 +51,9 @@ class Workout(tk.Tk):
             menu=self.schedule_frame.modify_menu(
                 tk.Menu(self.workout_menu, tearoff=False)))
         # menubar.add_cascade(label='Schedule', menu=self.schedule_menu)
+        # <<< Retrospect >>>
+        self.retrospect_frame = tk.Frame(self.notebook)
+        self.notebook.add(self.retrospect_frame, text='Retrospect')
         # <<< Log >>>
         self.log_frame = tk.Frame(self.notebook)
         self.notebook.add(self.log_frame, text='Log')
