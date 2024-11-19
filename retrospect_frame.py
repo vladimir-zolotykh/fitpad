@@ -16,6 +16,9 @@ class RetrospectView(ScrolledTreeview):
         self.engine = engine
         super().__init__(parent, **kw)
 
+    def refresh_view(self):
+        pass
+
 
 class RetrospectFrame(tk.Frame):
     def __init__(self, parent: ttk.Notebook, engine: Engine):
