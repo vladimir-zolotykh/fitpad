@@ -14,8 +14,6 @@ import database as db
 from scrolledtreeview import ScrolledTreeview
 import defaultdlg
 
-ExerciseOrSchedule = Union[md.Exercise, md.Schedule]
-
 
 class MutableView(ScrolledTreeview, ABC):
     def __init__(

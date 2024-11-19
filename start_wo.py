@@ -17,6 +17,7 @@ from exerframe import ExerFrame
 from schedule_frame import ScheduleFrame
 # from repertoire_frame import RepertoireFrame
 from repertoire_frame import RepertoireFrame
+from retrospect_frame import RetrospectFrame
 
 
 class Workout(tk.Tk):
@@ -52,7 +53,7 @@ class Workout(tk.Tk):
                 tk.Menu(self.workout_menu, tearoff=False)))
         # menubar.add_cascade(label='Schedule', menu=self.schedule_menu)
         # <<< Retrospect >>>
-        self.retrospect_frame = tk.Frame(self.notebook)
+        self.retrospect_frame = RetrospectFrame(self.notebook, self.engine)
         self.notebook.add(self.retrospect_frame, text='Retrospect')
         # <<< Log >>>
         self.log_frame = tk.Frame(self.notebook)
