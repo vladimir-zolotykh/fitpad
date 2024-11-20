@@ -27,8 +27,11 @@ class RetrospectView(ScrolledTreeview):
             query = select(md.Workout)
             for wo in session.scalars(query):
                 exer_date[wo.exercise.name].append(wo)
-            for exer_name in exer_date:
+            for exer_name, workouts in exer_date.items():
                 exer_node = self.insert('', 'end', text=exer_name)
+                for wo in workouts:
+                    self.insert(exer_node, 'end',
+                                values=(wo.when, wo.weight, wo.reps))
 
 
 class RetrospectFrame(tk.Frame):
