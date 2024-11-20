@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from collections import defaultdict
+from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
 import tkinter as tk
 from tkinter import ttk
 import models as md
+import database as db
 from scrolledtreeview import ScrolledTreeview
 # exercise, when, weight, reps
 col_config = (('#0', 100, md.rel_names[0]),
@@ -15,9 +18,17 @@ class RetrospectView(ScrolledTreeview):
     def __init__(self, parent: tk.Frame, engine: Engine, **kw):
         self.engine = engine
         super().__init__(parent, **kw)
+        self.refresh_view()
 
     def refresh_view(self):
-        pass
+        self.delete(*self.get_children())
+        exer_date: defaultdict[str, md.Workout] = defaultdict(list)
+        with db.session_scope(self.engine) as session:
+            query = select(md.Workout)
+            for wo in session.scalars(query):
+                exer_date[wo.exercise.name].append(wo)
+            for exer_name in exer_date:
+                exer_node = self.insert('', 'end', text=exer_name)
 
 
 class RetrospectFrame(tk.Frame):
