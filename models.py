@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import List
+from datetime import datetime
 from sqlalchemy import ForeignKey, Column, Table, Integer
 from sqlalchemy.orm import mapped_column, Mapped, DeclarativeBase, relationship
 
@@ -44,6 +45,12 @@ class Workout(Base):
     def __repr__(self) -> str:
         return (f'Workout(id={self.id!r}, when={self.when!r}, '
                 f'weight={self.weight!r}, reps={self.reps!r})')
+
+    @property
+    def dow(self) -> str:
+        """Date of workout"""
+
+        return self.when.split()[0]
 
 
 class Exercise(Base):

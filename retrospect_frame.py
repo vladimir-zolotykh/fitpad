@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from collections import defaultdict
+from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
 import tkinter as tk
@@ -29,9 +30,17 @@ class RetrospectView(ScrolledTreeview):
                 name_wo[wo.exercise.name].append(wo)
             for exer_name, workouts in name_wo.items():
                 exer_node = self.insert('', 'end', text=exer_name)
+                date_wo: defaultdict[datetime.datetime, md.Workout]
+                date_wo = defaultdict(list)
                 for wo in workouts:
-                    self.insert(exer_node, 'end',
-                                values=(wo.when, wo.weight, wo.reps))
+                    # dt = datetime.strptime(wo.when, '%Y-%m-%d %H:%M:%S')
+                    dt = datetime.strptime(wo.dow, '%Y-%m-%d')
+                    date_wo[dt].append(wo)
+                for date, workouts in date_wo.items():
+                    date_node = self.insert(exer_node, 'end', values=(wo.dow))
+                    for wo in workouts:
+                        self.insert(date_node, 'end',
+                                    values=('', wo.weight, wo.reps))
 
 
 class RetrospectFrame(tk.Frame):
