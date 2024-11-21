@@ -23,14 +23,14 @@ class RetrospectView(ScrolledTreeview):
 
     def refresh_view(self):
         self.delete(*self.get_children())
-        name_wo: defaultdict[str, md.Workout] = defaultdict(list)
+        name_wo: defaultdict[str, list[md.Workout]] = defaultdict(list)
         with db.session_scope(self.engine) as session:
             query = select(md.Workout)
             for wo in session.scalars(query):
                 name_wo[wo.exercise.name].append(wo)
             for exer_name, workouts in name_wo.items():
                 exer_node = self.insert('', 'end', text=exer_name)
-                date_wo: defaultdict[datetime.datetime, md.Workout]
+                date_wo: defaultdict[datetime, list[md.Workout]]
                 date_wo = defaultdict(list)
                 for wo in workouts:
                     dt = datetime.strptime(wo.dow, '%Y-%m-%d')
