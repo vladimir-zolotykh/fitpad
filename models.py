@@ -46,8 +46,7 @@ class Workout(Base):
         return (f'Workout(id={self.id!r}, when={self.when!r}, '
                 f'weight={self.weight!r}, reps={self.reps!r})')
 
-    @property
-    def dow(self) -> str:
+    def date(self, relative: bool = False) -> str:
         """Date of workout"""
 
         return self.when.split()[0]

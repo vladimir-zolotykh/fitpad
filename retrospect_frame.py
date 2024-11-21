@@ -33,10 +33,11 @@ class RetrospectView(ScrolledTreeview):
                 date_wo: defaultdict[datetime, list[md.Workout]]
                 date_wo = defaultdict(list)
                 for wo in workouts:
-                    dt = datetime.strptime(wo.dow, '%Y-%m-%d')
+                    dt = datetime.strptime(wo.date(), '%Y-%m-%d')
                     date_wo[dt].append(wo)
                 for date, workouts in date_wo.items():
-                    date_node = self.insert(exer_node, 'end', values=(wo.dow))
+                    date_node = self.insert(exer_node, 'end',
+                                            values=(wo.date()))
                     _workouts = sorted(workouts, key=lambda wo: wo.weight,
                                        reverse=True)
                     for wo in _workouts:
