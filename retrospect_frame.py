@@ -37,7 +37,7 @@ class RetrospectView(ScrolledTreeview):
                     date_wo[dt].append(wo)
                 for date, workouts in date_wo.items():
                     date_node = self.insert(exer_node, 'end',
-                                            values=(wo.date()))
+                                            values=(wo.date(True)))
                     _workouts = sorted(workouts, key=lambda wo: wo.weight,
                                        reverse=True)
                     for wo in _workouts:

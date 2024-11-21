@@ -48,8 +48,12 @@ class Workout(Base):
 
     def date(self, relative: bool = False) -> str:
         """Date of workout"""
-
-        return self.when.split()[0]
+        if relative:
+            date: datetime = datetime.strptime(self.when, '%Y-%m-%d %H:%M:%S')
+            td = datetime.now() - date
+            return f'-{td.days}d'
+        else:
+            return self.when.split()[0]
 
 
 class Exercise(Base):
