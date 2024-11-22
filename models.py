@@ -51,7 +51,7 @@ class Workout(Base):
         if relative:
             date: datetime = datetime.strptime(self.when, '%Y-%m-%d %H:%M:%S')
             td = datetime.now() - date
-            return f'-{td.days}d'
+            return f'"-{td.days}"'
         else:
             return self.when.split()[0]
 
