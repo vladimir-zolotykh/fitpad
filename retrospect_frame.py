@@ -3,10 +3,12 @@
 # PYTHON_ARGCOMPLETE_OK
 from collections import defaultdict
 from datetime import datetime
+import re
 from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
 import tkinter as tk
 from tkinter import ttk
+from tkinter.messagebox import askokcancel
 import models as md
 import database as db
 from scrolledtreeview import ScrolledTreeview
@@ -20,6 +22,24 @@ class RetrospectView(ScrolledTreeview):
         self.engine = engine
         super().__init__(parent, **kw)
         self.refresh_view()
+        self.bind('<<TreeviewSelect>>', self.on_select)
+
+    def on_select(self, event: tk.Event):
+        def get_schedule_name(str: str) -> str:
+            m = re.match(r'^[+-]?-[\d]+d <(?P<name>[\w\s\d]+)>$', str)
+            if m:
+                return m.group('name')
+
+        iid: tuple[str, ...] = self.selection()
+        if iid:
+            values = self.item(iid, 'values')
+            if values and values[0]:
+                schedule_name = get_schedule_name(values[0])
+                msg = f'Jump to <{schedule_name}>'
+                jump = askokcancel(title=__name__, message=msg, parent=self)
+                if jump:
+                    # Jump to schedule tab, expand the tree below `schedule_name'
+                    pass
 
     def refresh_view(self):
         self.delete(*self.get_children())
@@ -36,8 +56,6 @@ class RetrospectView(ScrolledTreeview):
                     dt = datetime.strptime(wo.date(), '%Y-%m-%d')
                     date_wo[dt].append(wo)
                 for date, workouts in date_wo.items():
-                    # .insert() implicitly splits by spaces, use
-                    # values=(val, ) to prevent this.
                     date_node = self.insert(
                         exer_node, 'end', values=(wo.date(True), ))
                     _workouts = sorted(workouts, key=lambda wo: wo.weight,
