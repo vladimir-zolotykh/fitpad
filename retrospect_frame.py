@@ -72,6 +72,8 @@ class RetrospectFrame(tk.Frame):
         self.tree = tree = RetrospectView(
             self, engine, columns=(md.col_names[1], *md.col_names[2:4]))
         tree.grid(column=0, row=0, sticky=tk.NSEW)
+        _ = tk.Button(self, text='Press me!')
+        _.grid(column=0, row=1)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         for cid_width_text in col_config:
