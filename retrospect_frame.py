@@ -8,7 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
 import tkinter as tk
 from tkinter import ttk
-from tkinter.messagebox import askokcancel
+from tkinter.messagebox import askokcancel  # noqa
 import models as md
 import database as db
 from scrolledtreeview import ScrolledTreeview
@@ -35,7 +35,7 @@ class RetrospectView(ScrolledTreeview):
             values = self.item(iid, 'values')
             if values and values[0]:
                 schedule_name = get_schedule_name(values[0])
-                msg = f'Jump to <{schedule_name}>'
+                msg = f'Jump to <{schedule_name}>'  # noqa
                 # jump = askokcancel(title=__name__, message=msg, parent=self)
                 # if jump:
                 #     # Jump to schedule tab, expand the tree below `schedule_name'
