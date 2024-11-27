@@ -69,13 +69,13 @@ class RetrospectFrame(tk.Frame):
     def __init__(self, parent: ttk.Notebook, engine: Engine):
         super().__init__(parent)
         self.engine = engine
+        _ = tk.Button(self, text='Press me!')
+        _.grid(column=0, row=0)
         self.tree = tree = RetrospectView(
             self, engine, columns=(md.col_names[1], *md.col_names[2:4]))
-        tree.grid(column=0, row=0, sticky=tk.NSEW)
-        _ = tk.Button(self, text='Press me!')
-        _.grid(column=0, row=1)
+        tree.grid(column=0, row=1, sticky=tk.NSEW)
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
         for cid_width_text in col_config:
             cid = text = cid_width_text[0]
             width: int = int(cid_width_text[1])
