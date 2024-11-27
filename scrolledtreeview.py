@@ -21,6 +21,7 @@ class ScrolledTreeview(ttk.Treeview):
         kw.update({'xscrollcommand': hbar.set, 'yscrollcommand': vbar.set})
         super().__init__(box, **kw)
         self.grid(column=0, row=0, sticky=tk.NSEW)
-        # for meth in ('grid', 'grid_forget', 'grid_configure'):
-        for meth in (meth for meth in dir(box) if meth.startswith('grid_')):
-            setattr(self, meth, getattr(box, meth))
+        for method in (m for m in dir(box) if m.startswith('grid')):
+            # Each method (like `grid') is listed 3 times. Why and how
+            # to avoid repetitions?
+            setattr(self, method, getattr(box, method))
