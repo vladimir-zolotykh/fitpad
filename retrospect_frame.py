@@ -20,6 +20,7 @@ col_config = (('#0', 100, md.rel_names[0]),
 class RetrospectView(ScrolledTreeview):
     def __init__(self, parent: tk.Frame, engine: Engine, **kw):
         self.engine = engine
+        self.retrospect_frame: RetrospectFrame = parent
         super().__init__(parent, **kw)
         self.refresh_view()
         self.bind('<<TreeviewSelect>>', self.on_select)
@@ -35,11 +36,8 @@ class RetrospectView(ScrolledTreeview):
             values = self.item(iid, 'values')
             if values and values[0]:
                 schedule_name = get_schedule_name(values[0])
-                msg = f'Jump to <{schedule_name}>'  # noqa
-                # jump = askokcancel(title=__name__, message=msg, parent=self)
-                # if jump:
-                #     # Jump to schedule tab, expand the tree below `schedule_name'
-                #     pass
+                self.retrospect_frame.schedule_var.set(schedule_name)
+                # Jump to schedule tab, expand the tree below `schedule_name'
 
     def refresh_view(self):
         self.delete(*self.get_children())
@@ -69,8 +67,10 @@ class RetrospectFrame(tk.Frame):
     def __init__(self, parent: ttk.Notebook, engine: Engine):
         super().__init__(parent)
         self.engine = engine
-        _ = tk.Button(self, text='Press me!')
-        _.grid(column=0, row=0)
+        self.schedule_var = tk.StringVar()
+        self.schedule_var.set('')
+        schedule_ent = tk.Entry(self, width=50, textvariable=self.schedule_var)
+        schedule_ent.grid(column=0, row=0)
         self.tree = tree = RetrospectView(
             self, engine, columns=(md.col_names[1], *md.col_names[2:4]))
         tree.grid(column=0, row=1, sticky=tk.NSEW)
