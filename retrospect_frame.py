@@ -37,7 +37,6 @@ class RetrospectView(ScrolledTreeview):
             if values and values[0]:
                 schedule_name = get_schedule_name(values[0])
                 self.retrospect_frame.schedule_var.set(schedule_name)
-                # Jump to schedule tab, expand the tree below `schedule_name'
 
     def refresh_view(self):
         self.delete(*self.get_children())
@@ -69,8 +68,13 @@ class RetrospectFrame(tk.Frame):
         self.engine = engine
         self.schedule_var = tk.StringVar()
         self.schedule_var.set('')
-        schedule_ent = tk.Entry(self, width=50, textvariable=self.schedule_var)
+        toolbar = tk.Frame(self)
+        toolbar.grid(column=0, row=0, sticky=tk.NSEW)
+        schedule_ent = tk.Entry(toolbar, width=50,
+                                textvariable=self.schedule_var)
         schedule_ent.grid(column=0, row=0)
+        go_btn = tk.Button(toolbar, text='Go', command=self.go_schedule)
+        go_btn.grid(column=1, row=0)
         self.tree = tree = RetrospectView(
             self, engine, columns=(md.col_names[1], *md.col_names[2:4]))
         tree.grid(column=0, row=1, sticky=tk.NSEW)
@@ -83,3 +87,9 @@ class RetrospectFrame(tk.Frame):
                 text = cid_width_text[2]
             tree.heading(cid, text=str(text))
             tree.column(cid, minwidth=width, width=width)
+
+    def go_schedule(self):
+        schedule_name: str = self.schedule_var.get()
+        # Go to the schedule tab, expand the tree below the
+        # `schedule_name' node.
+        print(f'{schedule_name = }')
