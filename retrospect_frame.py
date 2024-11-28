@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Optional, cast
+from typing import Optional, cast, TypeVar, Type
 from collections import defaultdict
 from datetime import datetime
 import re
@@ -17,6 +17,13 @@ import schedule_frame as SF
 # exercise, when, weight, reps
 col_config = (('#0', 100, md.rel_names[0]),
               *(zip(md.col_names[1:4], (100, 100, 100))))
+T = TypeVar('T')
+
+
+def assert_not_none(obj: Optional[T]) -> T:
+    if obj is None:
+        raise TypeError('Expected a non-None value')
+    return obj
 
 
 class RetrospectView(ScrolledTreeview):
@@ -100,16 +107,11 @@ class RetrospectFrame(tk.Frame):
         schedule_name: str = self.schedule_var.get()
         # Go to the schedule tab, expand the tree below the
         # `schedule_name' node.
-        _id: Optional[int] = SF.get_notebooktabid(self.nb, 'Schedule')
-        if _id:
-            scheduletab_id: int = _id
-        # scheduletab_id: int = SF.get_notebooktabid(self.nb, 'Schedule')
+        scheduletab_id: int = assert_not_none(
+            SF.get_notebooktabid(self.nb, 'Schedule'))
         print(f'{scheduletab_id = }')
         self.nb.select(scheduletab_id)
-        _schedule_frame = SF.notebooktabto_widget(self.nb, 'Schedule')
-        if _schedule_frame:
-            schedule_frame: SF.ScheduleFrame = cast(
-                'SF.ScheduleFrame',
-                SF.notebooktabto_widget(self.nb, 'Schedule'))
+        schedule_frame: SF.ScheduleFrame = assert_not_none(
+            SF.notebooktabto_widget(self.nb, 'Schedule'))
         print(f'{schedule_name = }, {schedule_frame = }')
         schedule_frame.expand(schedule_name)
