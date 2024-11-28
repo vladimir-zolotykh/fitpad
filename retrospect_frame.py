@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Optional, cast
 from collections import defaultdict
 from datetime import datetime
 import re
@@ -12,6 +13,7 @@ from tkinter.messagebox import askokcancel  # noqa
 import models as md
 import database as db
 from scrolledtreeview import ScrolledTreeview
+import schedule_frame as SF
 # exercise, when, weight, reps
 col_config = (('#0', 100, md.rel_names[0]),
               *(zip(md.col_names[1:4], (100, 100, 100))))
@@ -20,22 +22,27 @@ col_config = (('#0', 100, md.rel_names[0]),
 class RetrospectView(ScrolledTreeview):
     def __init__(self, parent: tk.Frame, engine: Engine, **kw):
         self.engine = engine
-        self.retrospect_frame: RetrospectFrame = parent
+        self.retrospect_frame: RetrospectFrame = cast(RetrospectFrame, parent)
         super().__init__(parent, **kw)
         self.refresh_view()
         self.bind('<<TreeviewSelect>>', self.on_select)
 
     def on_select(self, event: tk.Event):
-        def get_schedule_name(str: str) -> str:
+        def get_schedule_name(str: str) -> Optional[str]:
             m = re.match(r'^[+-]?-[\d]+d <(?P<name>[\w\s\d]+)>$', str)
             if m:
                 return m.group('name')
+            else:
+                return None
 
-        iid: tuple[str, ...] = self.selection()
+        _selection: tuple[str, ...] = self.selection()  # ('I001', )
+        if _selection:
+            iid: str = _selection[0]
         if iid:
             values = self.item(iid, 'values')
             if values and values[0]:
                 schedule_name = get_schedule_name(values[0])
+                assert schedule_name
                 self.retrospect_frame.schedule_var.set(schedule_name)
 
     def refresh_view(self):
@@ -64,6 +71,7 @@ class RetrospectView(ScrolledTreeview):
 
 class RetrospectFrame(tk.Frame):
     def __init__(self, parent: ttk.Notebook, engine: Engine):
+        self.nb: ttk.Notebook = parent
         super().__init__(parent)
         self.engine = engine
         self.schedule_var = tk.StringVar()
@@ -92,4 +100,16 @@ class RetrospectFrame(tk.Frame):
         schedule_name: str = self.schedule_var.get()
         # Go to the schedule tab, expand the tree below the
         # `schedule_name' node.
-        print(f'{schedule_name = }')
+        _id: Optional[int] = SF.get_notebooktabid(self.nb, 'Schedule')
+        if _id:
+            scheduletab_id: int = _id
+        # scheduletab_id: int = SF.get_notebooktabid(self.nb, 'Schedule')
+        print(f'{scheduletab_id = }')
+        self.nb.select(scheduletab_id)
+        _schedule_frame = SF.notebooktabto_widget(self.nb, 'Schedule')
+        if _schedule_frame:
+            schedule_frame: SF.ScheduleFrame = cast(
+                'SF.ScheduleFrame',
+                SF.notebooktabto_widget(self.nb, 'Schedule'))
+        print(f'{schedule_name = }, {schedule_frame = }')
+        schedule_frame.expand(schedule_name)
