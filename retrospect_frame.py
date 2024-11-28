@@ -30,18 +30,6 @@ def assert_not_none_optionalcast(
     return cast(Alias, val) if cast_to else val
 
 
-def assert_not_none_cast(val: Optional[T], cast_to: Alias) -> Alias:
-    if val is None:
-        raise TypeError('Expected a non-None value')
-    return cast(Alias, val)
-
-
-def assert_not_none(obj: Optional[T]) -> T:
-    if obj is None:
-        raise TypeError('Expected a non-None value')
-    return obj
-
-
 class RetrospectView(ScrolledTreeview):
     def __init__(self, parent: tk.Frame, engine: Engine, **kw):
         self.engine = engine
@@ -121,19 +109,10 @@ class RetrospectFrame(tk.Frame):
 
     def go_schedule(self):
         schedule_name: str = self.schedule_var.get()
-        # Go to the schedule tab, expand the tree below the
-        # `schedule_name' node.
-        # scheduletab_id: int = assert_not_none(
-        #     SF.get_notebooktabid(self.nb, 'Schedule'))
         scheduletab_id: int = assert_not_none_optionalcast(
             SF.get_notebooktabid(self.nb, 'Schedule'))
         print(f'{scheduletab_id = }')
         self.nb.select(scheduletab_id)
-        # schedule_frame: SF.ScheduleFrame = assert_not_none(
-        #     SF.notebooktabto_widget(self.nb, 'Schedule'))
-        # schedule_frame: SF.ScheduleFrame = assert_not_none_cast(
-        #     SF.notebooktabto_widget(self.nb, 'Schedule'),
-        #     SF.ScheduleFrame)
         schedule_frame: SF.ScheduleFrame = assert_not_none_optionalcast(
             SF.notebooktabto_widget(self.nb, 'Schedule'),
             SF.ScheduleFrame)
