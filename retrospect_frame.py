@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Optional, cast, TypeVar, Type
+from typing import Optional, cast, TypeVar
+from typing_extensions import TypeAlias
 from collections import defaultdict
 from datetime import datetime
 import re
@@ -18,6 +19,21 @@ import schedule_frame as SF
 col_config = (('#0', 100, md.rel_names[0]),
               *(zip(md.col_names[1:4], (100, 100, 100))))
 T = TypeVar('T')
+Alias: TypeAlias = T
+
+
+def assert_not_none_optionalcast(
+        val: Optional[T], cast_to: Optional[Alias] = None
+) -> Alias:
+    if val is None:
+        raise TypeError('Expected a non-None value')
+    return cast(Alias, val) if cast_to else val
+
+
+def assert_not_none_cast(val: Optional[T], cast_to: Alias) -> Alias:
+    if val is None:
+        raise TypeError('Expected a non-None value')
+    return cast(Alias, val)
 
 
 def assert_not_none(obj: Optional[T]) -> T:
@@ -107,11 +123,19 @@ class RetrospectFrame(tk.Frame):
         schedule_name: str = self.schedule_var.get()
         # Go to the schedule tab, expand the tree below the
         # `schedule_name' node.
-        scheduletab_id: int = assert_not_none(
+        # scheduletab_id: int = assert_not_none(
+        #     SF.get_notebooktabid(self.nb, 'Schedule'))
+        scheduletab_id: int = assert_not_none_optionalcast(
             SF.get_notebooktabid(self.nb, 'Schedule'))
         print(f'{scheduletab_id = }')
         self.nb.select(scheduletab_id)
-        schedule_frame: SF.ScheduleFrame = assert_not_none(
-            SF.notebooktabto_widget(self.nb, 'Schedule'))
+        # schedule_frame: SF.ScheduleFrame = assert_not_none(
+        #     SF.notebooktabto_widget(self.nb, 'Schedule'))
+        # schedule_frame: SF.ScheduleFrame = assert_not_none_cast(
+        #     SF.notebooktabto_widget(self.nb, 'Schedule'),
+        #     SF.ScheduleFrame)
+        schedule_frame: SF.ScheduleFrame = assert_not_none_optionalcast(
+            SF.notebooktabto_widget(self.nb, 'Schedule'),
+            SF.ScheduleFrame)
         print(f'{schedule_name = }, {schedule_frame = }')
         schedule_frame.expand(schedule_name)
