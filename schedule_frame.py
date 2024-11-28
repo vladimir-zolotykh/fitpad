@@ -36,6 +36,13 @@ def notebooktabto_widget(
             return nb.nametowidget(widget_name)
 
 
+def get_notebooktabid(nb: ttk.Notebook, tab_name: str) -> Optional[int]:
+    for index, _ in enumerate(nb.tabs()):
+        tab: str = nb.tab(index, 'text')
+        if tab == tab_name:
+            return index
+
+
 class ScheduleFrame(tk.Frame):
     def __init__(self, parent: ttk.Notebook, engine: Engine):
         super().__init__(parent)
