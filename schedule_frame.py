@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Optional
+from typing import Optional, cast
 from datetime import datetime
 from collections import defaultdict
 import tkinter as tk
 from tkinter import ttk
-from tkinter.simpledialog import askstring
+# from tkinter.simpledialog import askstring
 from sqlalchemy import select
 from sqlalchemy.engine.base import Engine
 import models as md
@@ -14,6 +14,8 @@ import database as db
 from schedule_dialog import ScheduleDialog
 from setframe import SetFrame
 from mutableview import ScheduleView
+import exerframe as EF
+import defaultdlg
 
 # col_names = ['id', 'when', 'weight', 'reps']
 col_names: list[str] = [col.name for col in md.Workout.__table__.columns]
@@ -34,6 +36,7 @@ def notebooktabto_widget(
         tab: str = nb.tab(index, 'text')
         if tab == tab_name:
             return nb.nametowidget(widget_name)
+    return None
 
 
 def get_notebooktabid(nb: ttk.Notebook, tab_name: str) -> Optional[int]:
@@ -41,13 +44,16 @@ def get_notebooktabid(nb: ttk.Notebook, tab_name: str) -> Optional[int]:
         tab: str = nb.tab(index, 'text')
         if tab == tab_name:
             return index
+    return None
 
 
 class ScheduleFrame(tk.Frame):
     def __init__(self, parent: ttk.Notebook, engine: Engine):
         super().__init__(parent)
         self.engine = engine
-        self.exer_frame = notebooktabto_widget(parent, 'Workout')
+        # self.exer_frame = notebooktabto_widget(parent, 'Workout')
+        self.exer_frame: EF.ExerFrame = cast(
+            EF.ExerFrame, notebooktabto_widget(parent, 'Workout'))
         self.tree = tree = ScheduleView(
             self, engine, self.update_view,
             columns=(col_names[1], rel_names[0], *col_names[2:4]))
@@ -77,7 +83,7 @@ class ScheduleFrame(tk.Frame):
         self.tree.see(iid)
         self.tree.item(iid, open=True)
         for child in self.tree.get_children(iid):
-            self.expand_item(child)
+            self._expand_item(child)
 
     def expand(self, schedule_name: str):
         '''Expand the tree below the `schedule_name' node'''
@@ -148,8 +154,9 @@ class ScheduleFrame(tk.Frame):
 
     def save_schedule(self):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        schedule_name = askstring(
-            'Schedule', 'Save name', message=f'Schedule_{now}', parent=self)
+        schedule_name: str = defaultdlg.askstring(
+            __name__, 'Schedule name',
+            parent=self, default=f'Schedule_{now}')
         if not schedule_name:
             return
         with db.session_scope(self.engine) as session:
@@ -170,4 +177,4 @@ class ScheduleFrame(tk.Frame):
                     session.add(wo)
                     schedule.workouts.append(wo)
             session.commit()
-            self.show_log(schedule)
+            # self.show_log(schedule)
