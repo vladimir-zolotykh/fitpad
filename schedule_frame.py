@@ -15,6 +15,7 @@ from schedule_dialog import ScheduleDialog
 from setframe import SetFrame
 from mutableview import ScheduleView
 import exerframe as EF
+from retrospect_frame import ensure_type
 import defaultdlg
 
 # col_names = ['id', 'when', 'weight', 'reps']
@@ -51,9 +52,8 @@ class ScheduleFrame(tk.Frame):
     def __init__(self, parent: ttk.Notebook, engine: Engine):
         super().__init__(parent)
         self.engine = engine
-        # self.exer_frame = notebooktabto_widget(parent, 'Workout')
-        self.exer_frame: EF.ExerFrame = cast(
-            EF.ExerFrame, notebooktabto_widget(parent, 'Workout'))
+        self.exer_frame: EF.ExerFrame = ensure_type(
+            notebooktabto_widget(parent, 'Workout'), EF.ExerFrame)
         self.tree = tree = ScheduleView(
             self, engine, self.update_view,
             columns=(col_names[1], rel_names[0], *col_names[2:4]))
