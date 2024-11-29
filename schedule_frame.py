@@ -77,7 +77,12 @@ class ScheduleFrame(tk.Frame):
 
     def expand(self, schedule_name: str):
         '''Expand the tree below the `schedule_name' node'''
-        print(f'{schedule_name = }')
+        for iid in self.tree.get_children(''):
+            name = self.tree.item(iid, 'text')
+            if name == schedule_name:
+                self.tree.see(iid)
+                self.tree.item(iid, open=True)
+                break
 
     def update_view(self):
         with db.session_scope(self.engine) as session:
