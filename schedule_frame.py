@@ -75,6 +75,10 @@ class ScheduleFrame(tk.Frame):
         parent.add_command(label='Rename', command=self.tree.rename_item)
         return parent
 
+    def expand(self, schedule_name: str):
+        '''Expand the tree below the `schedule_name' node'''
+        print(f'{schedule_name = }')
+
     def update_view(self):
         with db.session_scope(self.engine) as session:
             self._make_view(self.tree, session.scalars(select(md.Schedule)))

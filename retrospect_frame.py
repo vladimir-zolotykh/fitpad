@@ -111,10 +111,8 @@ class RetrospectFrame(tk.Frame):
         schedule_name: str = self.schedule_var.get()
         scheduletab_id: int = assert_not_none_optionalcast(
             SF.get_notebooktabid(self.nb, 'Schedule'))
-        print(f'{scheduletab_id = }')
         self.nb.select(scheduletab_id)
         schedule_frame: SF.ScheduleFrame = assert_not_none_optionalcast(
             SF.notebooktabto_widget(self.nb, 'Schedule'),
             SF.ScheduleFrame)
-        print(f'{schedule_name = }, {schedule_frame = }')
         schedule_frame.expand(schedule_name)
