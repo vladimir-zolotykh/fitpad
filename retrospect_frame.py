@@ -22,7 +22,7 @@ T = TypeVar('T')
 Alias: TypeAlias = T
 
 
-def assert_not_none_optionalcast(
+def ensure_type(
         val: Optional[T], cast_to: Optional[Alias] = None
 ) -> Alias:
     if val is None:
@@ -109,10 +109,10 @@ class RetrospectFrame(tk.Frame):
 
     def go_schedule(self):
         schedule_name: str = self.schedule_var.get()
-        scheduletab_id: int = assert_not_none_optionalcast(
+        scheduletab_id: int = ensure_type(
             SF.get_notebooktabid(self.nb, 'Schedule'))
         self.nb.select(scheduletab_id)
-        schedule_frame: SF.ScheduleFrame = assert_not_none_optionalcast(
+        schedule_frame: SF.ScheduleFrame = ensure_type(
             SF.notebooktabto_widget(self.nb, 'Schedule'),
             SF.ScheduleFrame)
         schedule_frame.expand(schedule_name)
