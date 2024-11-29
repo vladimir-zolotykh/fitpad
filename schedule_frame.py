@@ -75,9 +75,26 @@ class ScheduleFrame(tk.Frame):
         parent.add_command(label='Rename', command=self.tree.rename_item)
         return parent
 
+    def expand_all(
+            self,
+            children: Optional[list[str]] = None,
+            schedule_name: Optional[str] = None
+    ) -> None:
+        if schedule_name:
+            for iid in self.tree.get_children():
+                name: str = self.tree.item(iid, 'text')
+                if name == schedule_name:
+                    self.tree.see(iid)
+                    self.tree.item(iid, open=True)
+                    self.expand_all(self.tree.get_children(iid), None)
+        else:
+            for iid in children:
+                self.tree.item(iid, open=True)
+                self.expand_all(self.tree.get_children(iid))
+
     def expand(self, schedule_name: str):
         '''Expand the tree below the `schedule_name' node'''
-        for iid in self.tree.get_children(''):
+        for iid in self.tree.get_children():
             name = self.tree.item(iid, 'text')
             if name == schedule_name:
                 self.tree.see(iid)
